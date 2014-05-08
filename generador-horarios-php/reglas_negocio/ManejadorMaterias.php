@@ -46,7 +46,7 @@ abstract class ManejadorMaterias {
     public static function getMateriasDeCarrera($materias, $idCarrera){
         $materiasCarrera = array();
         foreach($materias as $materia){
-            if($materia->getCodigoCarrera() == $idCarrera){
+            if(strcmp($materia->getCodigoCarrera(), $idCarrera)==0){
                 $materiasCarrera[] = $materia;
             }
         }
@@ -56,7 +56,7 @@ abstract class ManejadorMaterias {
     public static function obtenerMateriasDeDepartamento($materias, $idDepar){
         $materiasDepar = array();
         foreach($materias as $materia){
-            if($materia->getDepartamento() == $idDepar){
+            if(strcmp($materia->getDepartamento(), $idDepar)==0){
                 $materiasDepar[] = $materia;
             }
         }
@@ -66,14 +66,35 @@ abstract class ManejadorMaterias {
     public static function getMateriaDeGrupo($id_agrup, $todas_mats){
         $materias = array();
         foreach ($todas_mats as $materia){
-            if($materia->getIdAgrupacion() == $id_agrup){
+            if(strcmp($materia->getIdAgrupacion(), $id_agrup)==0){
                 $materias[] = $materia;
             }
         }
         return $materias;
     }
     
-    public static function obtenerHorarioDeMateria($aulas,$cod_materia,$id_depar,$todas_mats){
-        
+    public static function obtenerHorarioDeMateria($aulas,$cod_materia,$id_depar,$todas_mats,$tabla){
+        foreach ($aulas as $aula){
+            $dias = $aula->getDias();
+            $cuentaDias = count($dias);
+            for ($x=0;$x<$cuentaDias;$x++){
+                $horas = $dias[$x]->getHoras();
+                $cuentaHoras = count($horas);
+                for ($y=0;$y<$cuentaHoras;$y++){
+                    $grupo = $horas[$y]->getGrupo();
+                    $materias = self::getMateriaDeGrupo($grupo->getId_Agrup(), $todas_mats);
+                    foreach ($materias as $materia){
+                        if($materia->getDepartamento() == $id_depar && strcmp($materia->getCodigo(),$cod_materia)==0){
+                            $texto = $materia->getNombre()+" GT: "+$grupo->getId_grupo();
+                            $tabla[$y][$x] = $texto;
+                            break;
+                        } else{
+                            $tabla[$y][$x] = '';
+                        }
+                    }
+                }
+            }
+        }
+        return $tabla;
     }
 }
