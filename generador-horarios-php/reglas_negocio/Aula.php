@@ -33,7 +33,7 @@ class Aula {
         return $this->capacidad;
     }
 
-    public function getDisponible() {
+    public function estaDisponible() {
         return $this->disponible;
     }
 
