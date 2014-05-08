@@ -12,14 +12,18 @@
  * @author arch
  */
 
-include_once '../acceso_datos/conexion.php';
-include_once './Aula.php';
-include_once './Procesador.php';
-include_once './ManejadorAgrupaciones.php';
-include_once './ManejadorDepartamentos.php';
-include_once './Procesador.php';
+include_once '../acceso_datos/Conexion.php';
+include_once 'Dia.php';
+include_once 'Hora.php';
+include_once 'Aula.php';
+include_once 'Grupo.php';
+include_once 'ManejadorAulas.php';
+include_once 'Procesador.php';
+include_once 'ManejadorDepartamentos.php';
+include_once 'ManejadorAgrupaciones.php';
 
 abstract class ManejadorAulas {
+
     
     /**
      * Devuelve todas las aulas de la facultad por capacidad ascendente
@@ -121,8 +125,7 @@ abstract class ManejadorAulas {
      * @param type $materias = Las materias
      * @return type = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula($aulas,$aula,$materias){
-        $tabla=array();
+    public static function getHorarioEnAula($aulas,$aula,$materias,$tabla){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(),$aula)==0){
                 $dias = $aulas[$i]->getDias();
@@ -156,8 +159,7 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return type = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Depar($aulas,$aula,$id_depar,$agrups,$materias){
-        $tabla = array();
+    public static function getHorarioEnAula_Depar($aulas,$aula,$id_depar,$agrups,$materias,$tabla){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(), $aula)==0){
                 $dias = $aulas[$i]->getDias();
@@ -166,7 +168,7 @@ abstract class ManejadorAulas {
                     for ($y = 0; $y < count($horas); $y++) {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
-                        if(ManejadorDepartamentos::getIdDepartamento($grupo->getId_Agrup,$agrups)==$id_depar){
+                        if(ManejadorDepartamentos::getIdDepartamento($grupo->getId_Agrup(),$agrups)==$id_depar){
                             $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
                             $tabla[$y][$x] = $texto;
                         }else{
@@ -177,7 +179,7 @@ abstract class ManejadorAulas {
                 break;
             }
         }
-        return $table;
+        return $tabla;
     }
     
     /**
@@ -189,8 +191,7 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return string = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$materias){
-        $tabla;
+    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$materias,$tabla){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(),$aula)==0){
                 $dias = $aulas[$i]->getDias();

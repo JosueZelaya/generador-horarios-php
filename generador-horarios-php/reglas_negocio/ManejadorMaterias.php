@@ -12,7 +12,14 @@
  * @author abs
  */
 
-include_once '../acceso_datos/conexion.php';
+
+include_once '../acceso_datos/Conexion.php';
+include_once 'Dia.php';
+include_once 'Hora.php';
+include_once 'Aula.php';
+include_once 'Grupo.php';
+include_once 'Materia.php';
+
 
 abstract class ManejadorMaterias {
     
