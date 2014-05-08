@@ -11,6 +11,9 @@
  *
  * @author abs
  */
+
+include_once '../acceso_datos/conexion.php';
+
 abstract class ManejadorGrupo {
     
     public static function getGrupo($aulas,$aulaElegida,$diaElegido,$idHora){

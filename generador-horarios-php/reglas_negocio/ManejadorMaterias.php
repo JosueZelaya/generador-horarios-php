@@ -11,6 +11,9 @@
  *
  * @author abs
  */
+
+include_once '../acceso_datos/conexion.php';
+
 abstract class ManejadorMaterias {
     
     public static function getTodasMaterias($cicloPar){

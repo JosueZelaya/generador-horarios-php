@@ -11,7 +11,15 @@
  *
  * @author arch
  */
-class ManejadorAulas {
+
+include_once '../acceso_datos/conexion.php';
+include_once './Aula.php';
+include_once './Procesador.php';
+include_once './ManejadorAgrupaciones.php';
+include_once './ManejadorDepartamentos.php';
+include_once './Procesador.php';
+
+abstract class ManejadorAulas {
     
     /**
      * Devuelve todas las aulas de la facultad por capacidad ascendente

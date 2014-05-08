@@ -14,7 +14,7 @@
 
 include_once '../acceso_datos/conexion.php';
 
-class ManejadorAgrupaciones {
+abstract class ManejadorAgrupaciones {
     //put your code here
     
     /**
