@@ -62,7 +62,7 @@ abstract class ManejadorDias {
         if(count($dias)-1==count($diasUsados)){
             return null;
         }
-        $elegido;
+        $elegido=null;
         do {
             $elegido = ManejadorDias::elegirDia($dias);
         } while (!ManejadorDias::sonDiferentes($elegido, $diasUsados));
@@ -99,29 +99,24 @@ abstract class ManejadorDias {
             return false;
         }
     }
-    
+
+    /**
+     * Devuelve las horas pertenecientes a determinado dia
+     * 
+     * @param type $nombre_dia = el nombre del dia en que se quieren obtener las horas
+     * @return \Hora = array con las horas
+     */
     public static function obtenerHorasDia($nombre_dia){
-        
+        $horas = array();
+        $sql_consulta = "SELECT * FROM horas WHERE id_hora IN (SELECT id_hora FROM dia_horas WHERE nombre_dia='".$nombre_dia."') ORDER BY id_hora";
+	$respuesta = Conexion::consulta($sql_consulta);
+        while ($fila = pg_fetch_array($respuesta)){            
+            $hora = new Hora($fila['id_hora']);
+            $hora->setInicio($fila['inicio']);
+            $hora->setFin($fila['fin']);
+            $horas[] = $hora;
+        }
+        return $horas;
     }
- 
-//    public static ArrayList<Hora> obtenerHorasDia(String nombre_dia){
-//        ArrayList<Hora> horas = new ArrayList();
-//        Conexion conexion = new Conexion();        
-//        ResultSet resultadoConsulta;
-//        try {
-//            conexion.conectar();
-//            resultadoConsulta = conexion.consulta("SELECT * FROM horas WHERE id_hora IN (SELECT id_hora FROM dia_horas WHERE nombre_dia='"+nombre_dia+"') ORDER BY id_hora");
-//            while(resultadoConsulta.next()){
-//                Hora hora = new Hora(resultadoConsulta.getInt("id_hora"));
-//                hora.setInicio(resultadoConsulta.getString("inicio"));
-//                hora.setFin(resultadoConsulta.getString("fin"));
-//                horas.add(hora);
-//            }
-//            conexion.cierraConexion();
-//        } catch (SQLException ex) {
-//            System.out.println(ex.getMessage());
-//        }
-//        return horas;
-//    }
     
 }
