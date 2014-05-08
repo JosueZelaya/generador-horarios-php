@@ -12,9 +12,7 @@
  * @author arch
  */
 class Procesador {
-    //put your code here
-    
-    
+
     public static function getNumeroAleatorio($desde,$hasta){
         
     }
