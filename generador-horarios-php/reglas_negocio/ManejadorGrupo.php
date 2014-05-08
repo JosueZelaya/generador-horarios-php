@@ -43,10 +43,16 @@ abstract class ManejadorGrupo {
                 $cuentaHoras = count($horas);
                 for ($y=0;$y<$cuentaHoras;$y++){
                     $grupo = $horas[$y]->getGrupo();
-                    
+                    if(ManejadorAgrupaciones::obtenerIdAgrupacion($cod_materia, $id_depar, $materias) == $grupo->getId_Agrup() && $grupo->getId_grupo() == $id_grupo){
+                        $texto = ManejadorAgrupaciones::obtenerNombrePropietario($id_agrup, $materias)+" GT: "+$grupo->getId_grupo();
+                        $tabla[$y][$x] = $texto;
+                    } else{
+                        $tabla[$y][$x] = '';
+                    }
                 }
             }
         }
+        return $tabla;
     }
     
 }

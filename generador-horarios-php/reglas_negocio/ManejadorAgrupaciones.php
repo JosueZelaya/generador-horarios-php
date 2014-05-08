@@ -24,7 +24,7 @@ class ManejadorAgrupaciones {
     public static function getAgrupaciones(){
         $agrupaciones = array();
         $sql_consulta = "SELECT * FROM agrupacion";
-	$respuesta = Conexion::consulta2($sql_consulta);
+	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){            
             $agrupacion = new Agrupacion($fila['id_agrupacion'],$fila['id_depar'],$fila['num_grupos'],$fila['num_alumnos']);            
             $agrupaciones[] = $agrupacion;
@@ -101,7 +101,7 @@ class ManejadorAgrupaciones {
     public static function obtenerAgrupacionesDeCarrera($carrera){
         $ids=array();
         $sql_consulta = "SELECT cm.id_agrupacion FROM carreras_materias as cm JOIN carreras as c ON cm.carreras_id_carrera = c.id_carrera WHERE c.nombre_carrera = '".$carrera."'";
-	$respuesta = Conexion::consulta2($sql_consulta);
+	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){                        
             $ids[] = $fila['id_agrupacion'];
         }
