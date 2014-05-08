@@ -22,7 +22,8 @@ include_once 'Procesador.php';
 include_once 'ManejadorDepartamentos.php';
 include_once 'ManejadorAgrupaciones.php';
 
-class ManejadorAulas {
+abstract class ManejadorAulas {
+
     
     /**
      * Devuelve todas las aulas de la facultad por capacidad ascendente

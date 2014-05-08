@@ -14,7 +14,10 @@
 
 include_once '../acceso_datos/Conexion.php';
 
-class ManejadorAgrupaciones {
+
+abstract class ManejadorAgrupaciones {
+    //put your code here
+ 
     /**
      * Este método devuelve todas las agrupaciones existentes en la base de datos.
      * @return \Agrupacion = array de tipo agrupacion

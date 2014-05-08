@@ -12,6 +12,7 @@
  * @author abs
  */
 class Grupo {
+    
     private $id_agrup;
     private $id_grupo;
     private $id_docente;
