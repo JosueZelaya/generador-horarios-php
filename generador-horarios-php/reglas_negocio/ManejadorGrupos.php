@@ -11,6 +11,13 @@
  *
  * @author abs
  */
+
+include_once '../acceso_datos/Conexion.php';
+include_once 'Dia.php';
+include_once 'Hora.php';
+include_once 'ManejadorAgrupaciones.php';
+include_once 'Grupo.php';
+
 abstract class ManejadorGrupo {
     
     public static function getGrupo($aulas,$aulaElegida,$diaElegido,$idHora){
