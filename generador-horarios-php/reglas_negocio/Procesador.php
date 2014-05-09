@@ -108,119 +108,69 @@ class Procesador {
         }    
     }
     
-
-//    /** Asignar dias considerando choques de horario en ellos
-//     *      
-//     * @return true si se puede hacer la asignacion de todas las horas que requiere el grupo
-//     */
-//    public boolean asignarDiasConsiderandoChoques(){
-//        ArrayList<Dia> dias = aulasConCapacidad.get(0).getDias();
-//        Dia diaElegido;
-//        ArrayList<Dia> diasUsados = new ArrayList();
-//        //Se repite el proceso hasta que todos los grupos de la materia hayan sido asignados
-//        while(materia.getTotalHorasRequeridas() > grupo.getHorasAsignadas()){
-//           //Se debe elegir un día diferente para cada clase
-//            diaElegido = elegirDiaDiferente(dias, diasUsados); //Elegimos un día entre todos que sea diferente de los días que ya hemos elegido
-//            if(diaElegido != null){
-//                System.out.println("Se probara sin choques en dia "+diaElegido.getNombre());
-//
-//                asignarHorasConsiderandoChoques(diaElegido.getNombre());
-//                diasUsados.add(diaElegido);    //Guardamos el día para no elegirlo de nuevo para esta materia                                                   
-//            } else
-//                return false;
-//        }
-//        return true;
-//    }
-//    
-//    //Asiganar dias sin considerar choques en ellos
-//    public boolean asignarDiasSinConsiderarChoques(){
-//       ArrayList<Dia> dias = aulasConCapacidad.get(0).getDias();
-//       Dia diaElegido;
-//       ArrayList<Dia> diasUsados = new ArrayList();
-//       //Se debe elegir un día diferente para cada clase
-//       while(materia.getTotalHorasRequeridas() > grupo.getHorasAsignadas()){
-//            diaElegido = elegirDiaDiferente(dias, diasUsados); //Elegimos un día entre todos
-//            if(diaElegido != null){
-//                System.out.println("Se probara con choques en dia "+diaElegido.getNombre()+" para la materia: "+materia.getCodigo());                
-//                asignarHorasSinConsiderarChoques(diaElegido.getNombre());
-//                diasUsados.add(diaElegido);    //Guardamos el día para no elegirlo de nuevo para esta materia                                                   
-//            }else
-//                return false;
-//       }
-//       return true;
-//    }
-//    
-//    /** Asignar Horas considerando choques
-//     * 
-//     * @param nombreDia = nombre del dia en el que se quiere hacer la asignacion; se utiliza para compbrobar choques
-//     */
-//    public void asignarHorasConsiderandoChoques(String nombreDia){
-//        if(grupoPresente(desde,hasta,nombreDia,grupo,aulasConCapacidad))
-//            return;
-//        
-//        ArrayList<Hora> horasDisponibles = null;
-//        int numHorasContinuas = calcularHorasContinuasRequeridas(materia, grupo);  //Calculamos el numero de horas continuas para la clase
-//        ArrayList horasNivel = getUltimasHoraDeNivel(grupo, materia, materias, agrupaciones, aulasConCapacidad, nombreDia);
-//        for(Object hora : horasNivel){
-//            if(((int)hora+numHorasContinuas)<hasta){
-//                horasDisponibles = buscarHoras(grupo.getId_docente(),numHorasContinuas, (int)hora+1, (int)hora+1+numHorasContinuas, nombreDia, materia, aulasConCapacidad, aulas, materias, grupo);
-//                if(horasDisponibles != null && !horasDisponibles.isEmpty())
-//                    break;
-//            }
-//        }
-//        if(horasDisponibles == null)
-//            horasDisponibles = buscarHorasUltimoRecurso(grupo.getId_docente(),numHorasContinuas, desde, hasta, nombreDia, materia, grupo, aulasConCapacidad, aulas, materias); //elige las primeras horas disponibles que encuentre ese día
-//        
-//        if(horasDisponibles != null){
-//            asignar(grupo, horasDisponibles);
-//        }
-//    }
-//    
-//    /**Metodo para asginar horas si no se pudo continua a una materia del mismo nivel (se consideran choques)
-//     * 
-//     * @param nombreDia nombre del Dia en el que se quiere hacer la asignacion de horas
-//     */
-//    public void ultimoRecursoConsiderandoChoques(String nombreDia){
-//        int numHorasContinuas = calcularHorasContinuasRequeridas(materia, grupo);  //Calculamos el numero de horas continuas para la clase
-//        ArrayList<Hora> horasDisponibles = buscarHorasUltimoRecurso(grupo.getId_docente(),numHorasContinuas, desde, hasta, nombreDia, materia, grupo, aulasConCapacidad, aulas, materias); //elige las primeras horas disponibles que encuentre ese día
-//        if(horasDisponibles != null)
-//            asignar(grupo, horasDisponibles);
-//    }
-//    
-//    //Asignar horas sin considerar choques
-//    public void asignarHorasSinConsiderarChoques(String nombreDia){
-//        ArrayList<Hora> horasDisponibles;
-//        int numHorasContinuas = calcularHorasContinuasRequeridas(materia, grupo);  //Calculamos el numero de horas continuas para la clase
-//        horasDisponibles = buscarHorasConChoque(numHorasContinuas, desde, hasta, nombreDia, aulasConCapacidad,grupo);
-//        if(horasDisponibles != null)
-//            asignar(grupo, horasDisponibles);
-//    }
-//    
-//    /** Realiza el procesamiento necesario para generar el horario de una materia.
-//     * 
-//     * @param materia = La materia que se quiere asignar
-//     * @param id_docente = identificador del docente que impartira el grupo a asignar horario
-//     * @param agrupacion = agrupacion a la que pertenece la materia a asignar
-//     * @throws Exception = Si no existe la informacion necesario en el objeto Facultad
-//     */
-//    public void procesarMateria(Materia materia, int id_docente, Agrupacion agrupacion) throws Exception{
-//        if(facultad!=null){
-//            this.materia = materia;             //La materia que se debe procesar
-//            this.agrupacion = agrupacion; //Se busca dentro de todas las agrupaciones, cuál es la que pertenece a la materia que se quiere asignar
-//            grupo = new Grupo(agrupacion);   //El grupo con la información de la agrupación, este grupo es el que será asignado en un aula
-//            grupo.setId_docente(id_docente); //Se le asigna al grupo a cual docente pertenecera para comprobaciones de choques
-//            aulasConCapacidad = obtenerAulasPorCapacidad(aulas,agrupacion.getNum_alumnos()+holguraAula);
-//            establecerTurno();                 //Se establece el turno
-//            localizarBloqueOptimo();  //Debe asignar la materia a un aula de la facultdad
-//        }else
-//            throw new Exception("No se encuentra la información de la facultad");           
-//    }
-//    
-//    public void asignarDatos(Facultad facultad){
-//        this.facultad = facultad;
-//        aulas = facultad.getAulas();        //Se obtienen las aulas de la facultad en las cuales se podría asignar materias
-//        materias = facultad.getMaterias();  //Se obtienen todas las materias de la facultad
-//        agrupaciones = facultad.agrupaciones;  //Se obtienen todas las agrupaciones de materias que existen
-//    }
+     /** Asignar dias considerando choques de horario en ellos
+     *      
+     * @return true si se puede hacer la asignacion de todas las horas que requiere el grupo
+     */
+    public static function asignarDiasConsiderandoChoques(){
+        $dias = $this->aulasConCapacidad[0]->getDias();
+        $diaElegido;
+        $diasUsados;
+        //Se repite el proceso hasta que todos los grupos de la materia hayan sido asignados
+        while ($this->materia->getTotalHorasRequeridas() > $this->grupo->getHorasAsignadas()) {
+            //Se debe elegir un día diferente para cada clase
+            $diaElegido = ManejadorDias::elegirDiaDiferente($dias, $diasUsados); //Elegimos un día entre todos que sea diferente de los días que ya hemos elegido
+            if($diaElegido != NULL){
+                asignarHorasConsiderandoChoques($diaElegido->getNombre());
+                $diasUsados[] = $diaElegido; //Guardamos el día para no elegirlo de nuevo para esta materia
+            }else{
+                return FALSE;
+            }                
+        }
+        return TRUE;
+    }
     
+       //Asiganar dias sin considerar choques en ellos
+    public static function asignarDiasSinConsiderarChoques(){
+        $this->dias = $this->aulasConCapacidad[0]->getDias();
+        $diaElegido;
+        $diasUsados;
+        while ($this->materia->getTotalHorasRequeridas() > $this->grupo->getHorasAsignadas()) {
+            $diaElegido = ManejadorDias::elegirDiaDiferente($dias, $diasUsados);
+            if($diaElegido != NULL){
+                asignarHorasSinConsiderarChoques($diaElegido->getNombre());
+                $diasUsados[] = $diaElegido;
+            }else{
+                return FALSE;
+            }
+        }
+        return TRUE;
+    }
+    
+     /** Asignar Horas considerando choques
+     * 
+     * @param nombreDia = nombre del dia en el que se quiere hacer la asignacion; se utiliza para compbrobar choques
+     */
+    public static function asignarHorasConsiderandoChoques($nombreDia){
+        if(ManejadorHoras::grupoPresente($this->desde, $this->hasta, $nombreDia, $this->grupo, $this->aulas))
+                return;
+        $horasDisponibles = NULL;
+        $numHorasContinuas = calcularHorasContinuasRequeridas($this->materia,  $this->grupo); //Calculamos el numero de horas continuas para la clase
+        $horasNivel = ManejadorHoras::getUltimasHoraDeNivel($this->grupo, $this->materia, $this->materias, $this->agrupaciones, $this->aulasConCapacidad, $nombreDia);
+        for ($index = 0; $index < count($horasNivel); $index++) {
+            $hora = $horasNivel[$index];
+            if($hora+$numHorasContinuas < $this->hasta){
+                $horasDisponibles = ManejadorHoras::buscarHoras($this->grupo->getId_docente(), $numHorasContinuas, $hora+1, $hora+1+$numHorasContinuas, $nombreDia, $this->materia, $this->aulasConCapacidad, $this->aulas, $this->materias, $this->grupo);
+                if($horasDisponibles != NULL && count($horasDisponibles)!=0){
+                    break;
+                }
+            }
+        }
+        if($horasDisponibles == NULL){
+            $horasDisponibles = ManejadorHoras::buscarHorasUltimoRecurso($this->grupo->getId_docente(),$numHorasContinuas, $this->desde,$this->hasta,$nombreDia,$this->materia,$this->grupo,$this->aulasConCapacidad,$this->aulas,$this->materias); //elige las primeras horas disponibles que encuentre ese día
+        }
+        if($horasDisponibles != NULL){
+            asignar($this->grupo,$horasDisponibles);
+        }
+    }    
 }
