@@ -11,7 +11,7 @@
  *
  * @author arch
  */
-include_once './ManejadorAulas.php';
+
 
 class Facultad {
     private $aulas;
