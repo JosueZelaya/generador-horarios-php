@@ -12,10 +12,10 @@
  * @author arch
  */
 
-include_once '../acceso_datos/conexion.php';
-include_once './Dia.php';
-include_once './Procesador.php';
-include_once './Hora.php';
+include_once '../acceso_datos/Conexion.php';
+include_once 'Dia.php';
+include_once 'Procesador.php';
+include_once 'Hora.php';
 
 abstract class ManejadorDias {
     //put your code here

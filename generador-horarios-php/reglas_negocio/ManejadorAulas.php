@@ -36,9 +36,9 @@ abstract class ManejadorAulas {
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){            
             $aula = new Aula();
-            $aula->setNombre($fila['nombre']);
+            $aula->setNombre($fila['cod_aula']);
             $aula->setCapacidad($fila['capacidad']);
-            $aula->setDisponible($fila['disponible']);
+            $aula->setDisponible(TRUE);
             $aulas[] = $aula;
         }
         return $aulas;
