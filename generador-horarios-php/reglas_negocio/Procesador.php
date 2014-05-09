@@ -41,7 +41,7 @@ class Procesador {
     private $desde;
     private $hasta;
     private $limite; //Separacion de hora para turno de primeros años y ultimos años
-    
+
     public function __construct() {
         $this->holguraAula=10;
         $this->limite=10;
