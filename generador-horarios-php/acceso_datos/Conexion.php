@@ -18,7 +18,6 @@ abstract class Conexion {
 		Conexion::desconectar($conexion);
 		return $respuesta;
 	}
-	
 }
 
 ?>
