@@ -172,5 +172,6 @@ class Procesador {
         if($horasDisponibles != NULL){
             asignar($this->grupo,$horasDisponibles);
         }
-    }    
+    }
+    
 }
