@@ -13,7 +13,7 @@
  */
 class Hora {
     
-    private $id;
+    private $idHora;
     private $inicio;
     private $fin;
     private $grupo;
@@ -27,7 +27,7 @@ class Hora {
         $this->disponible = true;
     }
     
-    public function getId() {
+    public function getIdHora() {
         return $this->id;
     }
 
@@ -39,7 +39,7 @@ class Hora {
         return $this->fin;
     }
 
-    public function setId($id) {
+    public function setIdHora($id) {
         $this->id = $id;
     }
 

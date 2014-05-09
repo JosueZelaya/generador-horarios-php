@@ -133,24 +133,24 @@ class Procesador {
      */
     public function localizarBloqueOptimo(){
         $sePudoAsignar=FALSE; //Informa si el grupo pudo ser asignado.
-        echo "A tratar con $this->materia->getNombre() GT: $this->grupo->getId_grupo()";
+        echo "A tratar con "+$this->materia->getNombre()+" GT: "+$this->grupo->getId_grupo();
         if(self::asignarDiasConsiderandoChoques()){ //se trata de asignar el grupo en el aula elegida comprobando si existen choques
             $sePudoAsignar = TRUE;
         }else if($this->agrupacion->getNum_grupos() > 1 && self::asignarDiasSinConsiderarChoques()){ 
             //se asignan las horas que no se pudieron asignar debido a que hubieron choques de horario, esta vez ya no se consideran choques
             $sePudoAsignar = TRUE;
         }
-        if(!sePudoAsignar){ //Se asigna el día sábado si no se pudieron asignar las horas del grupo durante la semana
+        if(!$sePudoAsignar){ //Se asigna el día sábado si no se pudieron asignar las horas del grupo durante la semana
             $dia = $this->aulasConCapacidad[0]->getDia("Sabado");
             $horas = $dia->getHoras();
             $this->desde = $horas[0]->getIdHora()-1;
             $this->hasta = $horas[count($horas)-1]->getIdHora();
-            $horasDisponibles = buscarHoras($this->grupo->getId_docente(),  $this->materia->getTotalHorasRequeridas()-$this->grupo->getHorasAsignadas(),  $this->desde,  $this->hasta,"Sabado",  $this->materia,  $this->aulasConCapacidad,  $this->aulas,  $this->materias,  $this->grupo);
+            $horasDisponibles = ManejadorHoras::buscarHoras($this->grupo->getId_docente(),  $this->materia->getTotalHorasRequeridas()-$this->grupo->getHorasAsignadas(),  $this->desde,  $this->hasta,"Sabado",  $this->materia,  $this->aulasConCapacidad,  $this->aulas,  $this->materias);
             if($horasDisponibles != NULL){                  //Si hay horas disponibles
-                asignar($this->grupo,$horasDisponibles);    //Asignamos la materia
+                self::asignar($this->grupo,$horasDisponibles);    //Asignamos la materia
             }else{
                 $this->grupo->setIncompleto(TRUE);
-                throw Exception("¡Ya no hay aulas disponibles para el grupo ".$this->grupo.getId_grupo()." Materia: ".ManejadorAgrupaciones::obtenerNombrePropietario($this->grupo.getId_Agrup(),$this->materias)." Departamento: ".ManejadorAgrupaciones::obtenerIdDepartamento($this->grupo.getId_Agrup(),  $this->agrupaciones));
+                throw new Exception("¡Ya no hay aulas disponibles para el grupo ".$this->grupo->getId_grupo()." Materia: ".ManejadorAgrupaciones::obtenerNombrePropietario($this->grupo->getId_Agrup(),$this->materias)." Departamento: ".ManejadorAgrupaciones::obtenerIdDepartamento($this->grupo->getId_Agrup(),  $this->agrupaciones));
             }
         }    
     }
@@ -168,7 +168,7 @@ class Procesador {
             //Se debe elegir un día diferente para cada clase
             $diaElegido = ManejadorDias::elegirDiaDiferente($dias, $diasUsados); //Elegimos un día entre todos que sea diferente de los días que ya hemos elegido
             if($diaElegido != NULL){
-                echo "Se probara sin choques en dia $diaElegido->getNombre()";
+                echo "Se probara sin choques en dia "+$diaElegido->getNombre();
                 self::asignarHorasConsiderandoChoques($diaElegido->getNombre());
                 $diasUsados[] = $diaElegido; //Guardamos el día para no elegirlo de nuevo para esta materia
             }else{
@@ -180,13 +180,13 @@ class Procesador {
     
        //Asiganar dias sin considerar choques en ellos
     public function asignarDiasSinConsiderarChoques(){
-        $this->dias = $this->aulasConCapacidad[0]->getDias();
+        $dias = $this->aulasConCapacidad[0]->getDias();
         $diaElegido;
-        $diasUsados;
+        $diasUsados = array();
         while ($this->materia->getTotalHorasRequeridas() > $this->grupo->getHorasAsignadas()) {
             $diaElegido = ManejadorDias::elegirDiaDiferente($dias, $diasUsados);
             if($diaElegido != NULL){
-                echo "Se probara con choques en dia $diaElegido->getNombre() para la materia: $materia->getCodigo()";
+                echo "Se probara con choques en dia "+$diaElegido->getNombre()+" para la materia: "+$this->materia->getCodigo();
                 self::asignarHorasSinConsiderarChoques($diaElegido->getNombre());
                 $diasUsados[] = $diaElegido;
             }else{
@@ -216,10 +216,10 @@ class Procesador {
             }
         }
         if($horasDisponibles == NULL){
-            $horasDisponibles = ManejadorHoras::buscarHorasUltimoRecurso($this->grupo->getId_docente(),$numHorasContinuas, $this->desde,$this->hasta,$nombreDia,$this->materia,$this->grupo,$this->aulasConCapacidad,$this->aulas,$this->materias); //elige las primeras horas disponibles que encuentre ese día
+            $horasDisponibles = ManejadorHoras::buscarHorasUltimoRecurso($this->grupo->getId_docente(),$numHorasContinuas, $this->desde,$this->hasta,$nombreDia,$this->materia,$this->aulasConCapacidad,$this->aulas,$this->materias); //elige las primeras horas disponibles que encuentre ese día
         }
         if($horasDisponibles != NULL){
-            asignar($this->grupo,$horasDisponibles);
+            self::asignar($this->grupo,$horasDisponibles);
         }
     }
     
