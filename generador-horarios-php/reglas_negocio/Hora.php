@@ -55,7 +55,7 @@ class Hora {
         return $this->grupo;
     }
 
-    public function getDisponible() {
+    public function estaDisponible() {
         return $this->disponible;
     }
 

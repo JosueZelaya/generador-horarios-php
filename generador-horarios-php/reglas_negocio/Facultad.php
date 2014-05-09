@@ -13,6 +13,8 @@
  */
 
 require_once 'ManejadorAulas.php';
+require_once 'ManejadorDias.php';
+require_once 'ManejadorHoras.php';
 
 class Facultad {
     private $aulas;

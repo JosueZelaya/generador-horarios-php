@@ -278,10 +278,10 @@ class ManejadorHoras {
      * @return 
      */
     public static function grupoPresente($desde, $hasta, $nombre_dia, $grupo, $aulas){
-        foreach ($aulas as $$aula) {
+        foreach ($aulas as $aula) {
             $dia = $aula->getDia($nombre_dia);
             for($i=$desde; $i<$hasta; $i++){
-                $hora = $dia->getHoras()[i];
+                $hora = $dia->getHoras()[$i];
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
                     if($grupoHora->getId_Agrup() == $grupo->getId_Agrup() && $grupoHora->getId_grupo() == $grupo->getId_grupo()){
@@ -309,7 +309,7 @@ class ManejadorHoras {
             $hora = -1;
             $horas = $aula->getDia($nombreDia)->getHoras();
             for($x=0; $x<count($horas); $x++){
-                if(!$horas[x]->estaDisponible() && ManejadorAgrupaciones::obtenerIdDepartamento($horas[x]->getGrupo()->getId_Agrup(),$todas_agrups) == $materia->getDepartamento()){
+                if(!$horas[$x]->estaDisponible() && ManejadorAgrupaciones::obtenerIdDepartamento($horas[$x]->getGrupo()->getId_Agrup(),$todas_agrups) == $materia->getDepartamento()){
                     $grupoHora = $horas[x]->getGrupo();
                     $materias = ManejadorMaterias::getMateriaDeGrupo($grupoHora->getId_Agrup(), $todas_mats);
                     foreach ($materias as $materiaHora) {

@@ -58,4 +58,18 @@ class Aula {
         $this->dias = $dias;
     }    
     
+    /*
+     * Devuelve el día que le indiquemos por medio del nombre
+     * Si no lo encuentra devuelve null
+     */
+    public function getDia($nombre_dia){
+        for ($i = 0; $i < count($this->dias); $i++) {
+            $dia = $this->dias[$i];
+            if(strcmp($dia->getNombre(),$nombre_dia)==0){
+                return $dia;            
+            }                
+        }
+        return null;
+    }
+    
 }
