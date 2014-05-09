@@ -175,7 +175,6 @@ class ManejadorHoras {
      */
     public static function buscarHorasDisponiblesParaChoque($horas,$cantidadHoras,$desde,$hasta,$nombre_dia,$aulasConCapa,$grupo){
         $horasDisponibles = array();
-        $resultado = null;
         for($i=$desde;$i<$hasta;$i++){
             $hayBloquesDisponibles=false;
             if($horas[$i]->estaDisponible() && $horas[$i]->getIdHora()<=($hasta+1)-$cantidadHoras){
@@ -224,7 +223,6 @@ class ManejadorHoras {
     public static function buscarHoras($idDocente,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas,$todas_mats){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
-            echo "A probar en aula "+$aulasConCapa[$x]->getNombre();
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
             $resul = self::buscarHorasDisponibles($idDocente,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,$todas_mats,false);
             if($resul != null && $resul == "Choque"){

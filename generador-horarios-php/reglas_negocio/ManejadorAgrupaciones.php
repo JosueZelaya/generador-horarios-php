@@ -87,7 +87,7 @@ abstract class ManejadorAgrupaciones {
     public static function obtenerIdDepartamento($id_agrup,$agrupaciones){
         foreach ($agrupaciones as $agrupacion) {
             if($agrupacion->getId()==$id_agrup){
-                return $agrupacion->getDepartamento();                
+                return $agrupacion->getDepartamento();
             }
         }
         return 0;

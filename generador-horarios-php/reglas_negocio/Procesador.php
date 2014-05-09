@@ -186,7 +186,6 @@ class Procesador {
         while ($this->materia->getTotalHorasRequeridas() > $this->grupo->getHorasAsignadas()) {
             $diaElegido = ManejadorDias::elegirDiaDiferente($dias, $diasUsados);
             if($diaElegido != NULL){
-                echo "Se probara con choques en dia "+$diaElegido->getNombre()+" para la materia: "+$this->materia->getCodigo();
                 self::asignarHorasSinConsiderarChoques($diaElegido->getNombre());
                 $diasUsados[] = $diaElegido;
             }else{
@@ -225,7 +224,6 @@ class Procesador {
     
     //Asignar horas sin considerar choques
     public function asignarHorasSinConsiderarChoques($nombreDia){
-        $horasDisponibles = array();
         $numHorasContinuas = self::calcularHorasContinuasRequeridas($this->materia, $this->grupo);  //Calculamos el numero de horas continuas para la clase
         $horasDisponibles = ManejadorHoras::buscarHorasConChoque($numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->aulasConCapacidad, $this->grupo);
         if($horasDisponibles != null){
