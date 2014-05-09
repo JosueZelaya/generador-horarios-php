@@ -51,6 +51,4 @@ class Facultad {
         $this->materias = $materias;
     }
 
-
-    
 }
