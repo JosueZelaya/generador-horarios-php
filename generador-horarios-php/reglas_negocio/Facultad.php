@@ -12,6 +12,7 @@
  * @author arch
  */
 
+require_once 'ManejadorAulas.php';
 
 class Facultad {
     private $aulas;

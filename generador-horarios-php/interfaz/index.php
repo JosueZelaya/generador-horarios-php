@@ -5,6 +5,8 @@ include_once '../reglas_negocio/Facultad.php';
 include_once '../reglas_negocio/ManejadorMaterias.php';
 include_once '../reglas_negocio/ManejadorReservaciones.php';
 include_once '../reglas_negocio/ManejadorAgrupaciones.php';
+include_once '../reglas_negocio/ManejadorDepartamentos.php';
+include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
 
     $cicloPar = FALSE;
     $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());

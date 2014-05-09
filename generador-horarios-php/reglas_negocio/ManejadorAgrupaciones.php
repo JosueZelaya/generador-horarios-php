@@ -13,6 +13,7 @@
  */
 
 include_once '../acceso_datos/Conexion.php';
+require_once 'Agrupacion.php';
 
 
 abstract class ManejadorAgrupaciones {
