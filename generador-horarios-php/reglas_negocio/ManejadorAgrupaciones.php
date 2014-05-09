@@ -70,7 +70,7 @@ abstract class ManejadorAgrupaciones {
     public static function obtenerNombrePropietario($id_agrup,$materias){
         $propietario="";
         for ($index = 0; $index < count($materias); $index++) {
-            if($materias[$index]->getAgrupacion()==$id_agrup){
+            if($materias[$index]->getIdAgrupacion()==$id_agrup){
                 return $materias[$index]->getNombre();
             }
         }
@@ -88,7 +88,7 @@ abstract class ManejadorAgrupaciones {
         $id_departamento=0;
         for ($index = 0; $index < count($agrupaciones); $index++) {
             if($agrupaciones[$index]->getId()==$id_agrup){
-                return $agrupaciones->getDepartamento();                
+                return $agrupaciones[$index]->getDepartamento();                
             }
         }
         return $id_departamento;

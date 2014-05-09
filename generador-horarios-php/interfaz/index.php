@@ -8,6 +8,8 @@ include_once '../reglas_negocio/ManejadorAgrupaciones.php';
 include_once '../reglas_negocio/ManejadorDepartamentos.php';
 include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
 
+    echo "Generando Horario<br/>";
+    
     $cicloPar = FALSE;
     $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());
     $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar));    
@@ -27,12 +29,14 @@ include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
                     $procesador->procesarMateria($materias[$i], $asignacion->getId_docente(), $agrup);
                 } catch (Exception $exc) {
                     //Se produce cuando ya no hay aulas disponibles
-                    echo $exc->getMessage();
+                    echo $exc->getMessage()."<br/>";
                 }
                 $agrup->setNumGruposAsignados($agrup->getNumGruposAsignados()+1);
             }
         }
 
     }
+    
+    echo "Horario Generado<br/>";
 ?>
 

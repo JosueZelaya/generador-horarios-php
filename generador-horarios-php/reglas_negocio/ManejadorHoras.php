@@ -58,7 +58,7 @@ class ManejadorHoras {
         foreach($aulas as $aula){
             $dia = $aula->getDia($nombre_dia);
             for($h=$id_hora; $h<$id_hora+$num_horas; $h++){
-                $hora = $dia->getHoras()[h-1];
+                $hora = $dia->getHoras()[$h-1];
                 if(!$hora->estaDisponible()){
                     $grupo = $hora->getGrupo();
                     $materias = ManejadorMaterias::getMateriaDeGrupo($grupo->getId_Agrup(), $todas_mats);
@@ -74,10 +74,10 @@ class ManejadorHoras {
     }
 
     public static function chocaGrupoDocente($idDocente, $desde, $hasta, $aulas, $nombre_dia){
-        foreach ($aulas as $$aula) {
+        foreach ($aulas as $aula) {
             $dia = $aula->getDia($nombre_dia);
             for($h=$desde; $h<$hasta; $h++){
-                $hora = $dia->getHoras()[h-1];
+                $hora = $dia->getHoras()[$h-1];
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
                     if($idDocente==$grupoHora->getId_docente()){
@@ -90,10 +90,10 @@ class ManejadorHoras {
     }
     
     public static function chocaGrupo($nombre_dia,$desde,$hasta,$aulas,$grupo){
-        foreach ($aulas as $$aula) {
+        foreach ($aulas as $aula) {
             $dia = $aula->getDia($nombre_dia);
             for($h=$desde; $h<$hasta; $h++){
-                $hora = $dia->getHoras()[h-1];
+                $hora = $dia->getHoras()[$h-1];
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
                     if($grupoHora->getId_Agrup() == $grupo->getId_Agrup() && $grupoHora->getId_grupo() == $grupo->getId_grupo()){
@@ -144,7 +144,7 @@ class ManejadorHoras {
                 $chocaDocente = self::chocaGrupoDocente($idDocente, $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulas, $nombre_dia);
                 if(!$chocaMateria && !$chocaDocente){
                     for ($j = $i; $j < $i+$cantidadHoras; $j++) {
-                        $horasDisponibles[] = $horas[j];
+                        $horasDisponibles[] = $horas[$j];
                     }
                     $resultado = $horasDisponibles;
                     return $resultado;
@@ -195,7 +195,7 @@ class ManejadorHoras {
                 $chocaDocente = self::chocaGrupoDocente($grupo->getId_docente(), $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulasConCapa, $nombre_dia);
                 if(!$grupoChocaConElMismo && !$chocaDocente){
                     for ($j = $i; $j < $i+$cantidadHoras; $j++) {
-                        $horasDisponibles[] = $horas[j];
+                        $horasDisponibles[] = $horas[$j];
                     }
                     return $horasDisponibles;
                 }
@@ -221,7 +221,7 @@ class ManejadorHoras {
     public static function buscarHoras($idDocente,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas,$todas_mats,$grupo){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
-            $dia = $aulasConCapa[x]->getDia(nombre_dia);
+            $dia = $aulasConCapa[$x]->getDia($nombre_dia);
             $resul = self::buscarHorasDisponibles($idDocente,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,$todas_mats,false);
             if($resul != null && $resul == "Choque"){
                 break;
@@ -249,9 +249,9 @@ class ManejadorHoras {
     public static function buscarHorasConChoque($cantidadHoras,$desde,$hasta,$nombre_dia,$aulasConCapa,$grupo){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
-            $dia = $aulasConCapa[x]->getDia($nombre_dia);
+            $dia = $aulasConCapa[$x]->getDia($nombre_dia);
             if(!self::grupoPresente($desde, $hasta, $nombre_dia, $grupo, $aulasConCapa)){
-                $horasDisponibles = self::buscarHorasDisponibles($dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$aulasConCapa,$grupo);
+                $horasDisponibles = self::buscarHorasDisponiblesParaChoque($dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$aulasConCapa,$grupo);
             }
             else{
                 break;
@@ -305,11 +305,11 @@ class ManejadorHoras {
             $horas = $aula->getDia($nombreDia)->getHoras();
             for($x=0; $x<count($horas); $x++){
                 if(!$horas[$x]->estaDisponible() && ManejadorAgrupaciones::obtenerIdDepartamento($horas[$x]->getGrupo()->getId_Agrup(),$todas_agrups) == $materia->getDepartamento()){
-                    $grupoHora = $horas[x]->getGrupo();
+                    $grupoHora = $horas[$x]->getGrupo();
                     $materias = ManejadorMaterias::getMateriaDeGrupo($grupoHora->getId_Agrup(), $todas_mats);
                     foreach ($materias as $materiaHora) {
                         if(strcmp($materiaHora->getCodigoCarrera(),$materia->getCodigoCarrera())==0 && $materiaHora->getCiclo() == $materia->getCiclo()){
-                            if(strcmp($materiaHora->getCodigo(),materia.getCodigo())==0 && $grupoHora->getId_grupo() != $grupo->getId_grupo()){
+                            if(strcmp($materiaHora->getCodigo(),$materia->getCodigo())==0 && $grupoHora->getId_grupo() != $grupo->getId_grupo()){
                                 $hora = $x;
                                 break;
                             }

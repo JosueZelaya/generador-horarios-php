@@ -27,7 +27,7 @@ class Hora {
         $this->disponible = true;
     }
     
-    public function getId() {
+    public function getIdHora() {
         return $this->id;
     }
 
