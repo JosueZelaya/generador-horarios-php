@@ -64,7 +64,10 @@ class ManejadorHoras {
                     $materias = ManejadorMaterias::getMateriaDeGrupo($grupo->getId_Agrup(), $todas_mats);
                     foreach ($materias as $materiaDeAgrup) {
                         if(strcmp($materiaDeAgrup->getCodigoCarrera(),$materia->getCodigoCarrera())==0 && $materiaDeAgrup->getCiclo() == $materia->getCiclo()){
-                            echo "Esta materia "+$materia->getCodigo()+" choca con "+ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$todas_mats) + " GT "+$grupo->getId_grupo()+" en hora: "+$h+" del dia "+$nombre_dia;
+                            $m = $materia->getCodigo();
+                            $p = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$todas_mats);
+                            $g = $grupo->getId_grupo();
+                            error_log ("Esta materia $m choca con $p GT $g en hora: $h del dia $nombre_dia",0);
                             return true;
                         }
                     }
@@ -82,7 +85,9 @@ class ManejadorHoras {
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
                     if($idDocente==$grupoHora->getId_docente()){
-                        echo "El docente: $idDocente atiende ya el grupo: "+$grupoHora->getId_grupo()+" a la hora: "+$hora->getIdHora();
+                        $g = $grupoHora->getId_grupo();
+                        $ho = $hora->getIdHora();
+                        error_log ("El docente: $idDocente atiende ya el grupo: $g a la hora: $ho",0);
                         return true;
                     }
                 }
@@ -99,7 +104,9 @@ class ManejadorHoras {
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
                     if($grupoHora->getId_Agrup() == $grupo->getId_Agrup() && $grupoHora->getId_grupo() == $grupo->getId_grupo()){
-                        echo "Este grupo: "+$grupo->getId_grupo()+" de la Agrupacion "+$grupo->getId_Agrup()+" choca en hora: "+$h+" del dia "+$nombre_dia;
+                        $g = $grupo->getId_grupo();
+                        $a = $grupo->getId_Agrup();
+                        error_log ("Este grupo: $g de la Agrupacion $a choca en hora: $h del dia $nombre_dia",0);
                         return true;
                     }
                 }
@@ -223,6 +230,8 @@ class ManejadorHoras {
     public static function buscarHoras($idDocente,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas,$todas_mats){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
+            $a = $aulasConCapa[$x]->getNombre();
+            error_log ("A probar en aula $a",0);
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
             $resul = self::buscarHorasDisponibles($idDocente,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,$todas_mats,false);
             if($resul != null && $resul == "Choque"){
@@ -238,7 +247,8 @@ class ManejadorHoras {
     public static function buscarHorasUltimoRecurso($idDocente,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas,$todas_mats){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
-            print "A probar en aula "+$aulasConCapa[$x]->getNombre()+" Desde: "+$desde+" Hasta: "+$hasta;
+            $a = $aulasConCapa[$x]->getNombre();
+            error_log ("A probar en aula $a Desde: $desde Hasta: $hasta",0);
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
             $resul = self::buscarHorasDisponibles($idDocente,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,$todas_mats,true);
             if($resul != null && $resul != "Choque"){

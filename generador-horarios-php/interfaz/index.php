@@ -25,7 +25,7 @@ include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
         $asignaciones = ManejadorAsignacionesDocs::obtenerAsignacionesDeAgrup($agrup->getId(), $facultad->asignaciones_docs);
         for ($j = 0; $j < count($asignaciones); $j++) {
             $asignacion = $asignaciones[$j];
-            for ($k = 0; $k < $asignacion->getNum_grupos(); $k++) {
+            for ($k = 0; $k < $asignacion->getNum_grupos(); $k++){
                 try {
                     $procesador->procesarMateria($materias[$i], $asignacion->getId_docente(), $agrup);
                 } catch (Exception $exc) {
@@ -39,4 +39,3 @@ include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
     }
     
     echo "Horario Generado<br/>";
-?>

@@ -31,7 +31,7 @@ abstract class ManejadorMaterias {
             $respuesta = Conexion::consulta("select m.cod_materia,m.nombre_materia,cm.unidades_valorativas,cm.ciclo,c.id_carrera,c.plan_estudio,cm.id_agrupacion,d.id_depar from materias as m join carreras_materias as cm on m.cod_materia=cm.materias_cod_materia join carreras as c on cm.carreras_id_carrera=c.id_carrera and cm.carreras_plan_estudio=c.plan_estudio join departamentos as d on c.id_depar=d.id_depar WHERE cm.ciclo IN (2,4,6,8,10)");
         }
         while($fila = pg_fetch_array($respuesta)){
-            $materia = new Materia($fila[0],$fila[1],$fila[3],$fila[2],$fila[7],$fila[4],$fila[5],$fila[6],false);
+            $materia = new Materia($fila[0],$fila[1],$fila[3],$fila[2],$fila[7],$fila[4],$fila[5],$fila[6],true);
             $materias[] = $materia;
         }
         return $materias;
@@ -76,7 +76,8 @@ abstract class ManejadorMaterias {
     public static function getMateriaDeGrupo($id_agrup, $todas_mats){
         $materias = array();
         foreach ($todas_mats as $materia){
-            if(strcmp($materia->getIdAgrupacion(), $id_agrup)==0){
+            $id = $materia->getIdAgrupacion();
+            if(strcmp($id, $id_agrup)==0){
                 $materias[] = $materia;
             }
         }

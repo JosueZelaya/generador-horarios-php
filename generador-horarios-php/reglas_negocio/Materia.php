@@ -107,7 +107,7 @@ class Materia {
     }
     
     public function getTotalHorasRequeridas(){
-        $total = round(($this->unidadesValorativas*20)/16, 0,PHP_ROUND_HALF_UP);
+        $total = round(($this->unidadesValorativas*20)/16);
         return $total;
     }
 }
