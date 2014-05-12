@@ -123,6 +123,7 @@ abstract class ManejadorAulas {
      * @param type $aulas = Las aulas
      * @param type $aula = El nombre del aula
      * @param type $materias = Las materias
+     * @param array $tabla Matriz que contendra el horario
      * @return type = una tabla que representa al horario de la semana
      */
     public static function getHorarioEnAula($aulas,$aula,$materias,$tabla){
@@ -135,11 +136,11 @@ abstract class ManejadorAulas {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
                         if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){
-                            $propietario = obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
+                            $propietario = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
                             $texto = $propietario." GT: ".$grupo->getId_grupo();
-                            $tabla[$y][$x] = $texto;
+                            $tabla[$x+1][$y+1] = $texto;
                         }else{
-                            $tabla[$y][$x] = "";
+                            $tabla[$x+1][$y+1] = "";
                         }
                     }
                 }
@@ -170,9 +171,9 @@ abstract class ManejadorAulas {
                         $grupo = $hora->getGrupo();
                         if(ManejadorDepartamentos::getIdDepartamento($grupo->getId_Agrup(),$agrups)==$id_depar){
                             $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
-                            $tabla[$y][$x] = $texto;
+                            $tabla[$x][$y] = $texto;
                         }else{
-                            $tabla[$y][$x] = "";
+                            $tabla[$x][$y] = "";
                         }
                     }
                 }
@@ -203,9 +204,9 @@ abstract class ManejadorAulas {
                         for ($z = 0; $z < count($ids_agrups); $z++) {
                             if($ids_agrups[$z]==$grupo->getId_Agrup()){
                                 $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
-                                $tabla[$y][$x] = $texto;
+                                $tabla[$x][$y] = $texto;
                             }else{
-                                $tabla[$y][$x] = "";
+                                $tabla[$x][$y] = "";
                             }
                         }
                     }                    

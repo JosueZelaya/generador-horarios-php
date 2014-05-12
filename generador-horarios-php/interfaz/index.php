@@ -1,18 +1,22 @@
 <?php
 
-include_once '../reglas_negocio/Procesador.php';
-include_once '../reglas_negocio/Facultad.php';
-include_once '../reglas_negocio/ManejadorMaterias.php';
-include_once '../reglas_negocio/ManejadorReservaciones.php';
-include_once '../reglas_negocio/ManejadorAgrupaciones.php';
-include_once '../reglas_negocio/ManejadorDepartamentos.php';
-include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
+    session_start();
 
-    echo "Generando Horario<br/>";
+    ini_set('max_execution_time', 300);
+    include_once '../reglas_negocio/Procesador.php';
+    include_once '../reglas_negocio/Facultad.php';
+    include_once '../reglas_negocio/ManejadorMaterias.php';
+    include_once '../reglas_negocio/ManejadorReservaciones.php';
+    include_once '../reglas_negocio/ManejadorAgrupaciones.php';
+    include_once '../reglas_negocio/ManejadorDepartamentos.php';
+    include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
+    include_once 'ManejadorInterfaz.php';
+
+    echo "<html><head><link rel=stylesheet type=text/css href=css/index.css></head><body>";
     
     $cicloPar = FALSE;
     $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar));    
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar));
     ManejadorReservaciones::asignarRerservaciones($facultad);
     $materias = $facultad->getMaterias();
     $procesador = new Procesador();
@@ -35,7 +39,10 @@ include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
                 $agrup->setNumGruposAsignados($agrup->getNumGruposAsignados()+1);
             }
         }
-
     }
     
-    echo "Horario Generado<br/>";
+    $_SESSION['facultad'] = $facultad;
+    
+    echo imprimir('S2E');
+    
+    echo '</body></html>';
