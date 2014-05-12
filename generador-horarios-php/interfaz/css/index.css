@@ -1,0 +1,15 @@
+.box{
+    width: 100%;
+    height: 40px;
+}
+.col{
+    width: 14%;
+    float: left;
+}
+.col-header{
+    background-color: red;
+    color: white;
+}
+.hora{
+    background-color: skyblue;
+}
