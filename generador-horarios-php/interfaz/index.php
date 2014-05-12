@@ -27,7 +27,6 @@
    </div>
  
  </div>
-    
  
 <!-- Cargamos los scripts --> 
     <script type="text/javascript" src="js/jquery-ui/jquery-1.10.2.js"></script>    
@@ -35,3 +34,4 @@
     <script type="text/javascript" src="js/funciones.js"></script>
 </body>
 </html>
+

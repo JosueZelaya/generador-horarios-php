@@ -69,9 +69,9 @@ abstract class ManejadorAgrupaciones {
      */
     public static function obtenerNombrePropietario($id_agrup,$materias){
         $propietario="";
-        for ($index = 0; $index < count($materias); $index++) {
-            if($materias[$index]->getIdAgrupacion()==$id_agrup){
-                return $materias[$index]->getNombre();
+        foreach ($materias as $materia) {
+            if($materia->getIdAgrupacion()==$id_agrup){
+                return $materia->getNombre();
             }
         }
         return $propietario;
@@ -85,13 +85,12 @@ abstract class ManejadorAgrupaciones {
      * @return int = el id del departamento
      */
     public static function obtenerIdDepartamento($id_agrup,$agrupaciones){
-        $id_departamento=0;
-        for ($index = 0; $index < count($agrupaciones); $index++) {
-            if($agrupaciones[$index]->getId()==$id_agrup){
-                return $agrupaciones[$index]->getDepartamento();                
+        foreach ($agrupaciones as $agrupacion) {
+            if($agrupacion->getId()==$id_agrup){
+                return $agrupacion->getDepartamento();
             }
         }
-        return $id_departamento;
+        return 0;
     }
     
     /**

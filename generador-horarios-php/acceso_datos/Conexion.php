@@ -3,8 +3,8 @@
 abstract class Conexion {
 	
 	public static function conectar(){
-		$cadena_de_conexion = "host=localhost port=5432 dbname=horarios_bd user=horarios_bd password=password connect_timeout=5";
-		$conexion = $dbconn4 = pg_connect($cadena_de_conexion) or die ('No se ha podido conectar a la Base de Datos');
+		$cadena_de_conexion = "host=localhost port=5432 dbname=horarios_bd user=postgres password=password connect_timeout=5";
+		$conexion = pg_connect($cadena_de_conexion) or die ('No se ha podido conectar a la Base de Datos');
 		return $conexion;	
 	}
 	

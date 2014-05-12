@@ -54,7 +54,6 @@ abstract class ManejadorReservaciones {
     }    
     
     public static function asignarRerservaciones($facultad){
-        $resultado;
         $aulas = $facultad->getAulas();
         $sql_consulta = "SELECT * FROM reservaciones;";
 	$respuesta = Conexion::consulta($sql_consulta);
