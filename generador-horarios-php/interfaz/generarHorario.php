@@ -28,7 +28,7 @@ include_once './ManejadorInterfaz.php';
                     $procesador->procesarMateria($materias[$i], $asignacion->getId_docente(), $agrup);
                 } catch (Exception $exc) {
                     //Se produce cuando ya no hay aulas disponibles
-                    echo $exc->getMessage()."<br/>";
+                    //echo $exc->getMessage()."<br/>";
                 }
                 $agrup->setNumGruposAsignados($agrup->getNumGruposAsignados()+1);
             }
@@ -38,8 +38,7 @@ include_once './ManejadorInterfaz.php';
 
     $_SESSION['facultad'] = $facultad;
     
-    echo imprimir('S2E');
-    
+    //echo imprimir('S2E');    
     
     
 ?>

@@ -25,7 +25,8 @@ body {
 }
 
 .mate{
-	height: 9.09%;
+	//height: 9.09%;
+        height: 50px;
 	width: 100%;
 	
 	border-radius: 0.5em;

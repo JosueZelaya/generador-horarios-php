@@ -74,7 +74,7 @@ body {
 	vertical-align: middle;
 }
 
-.ciclo{
+.ciclo_original{
 	height: 9.09%;
 	width: 100%;	
 	background-color: white;
@@ -93,6 +93,18 @@ body {
 	font-size: 15px; 
 	font-weight: bold; 
 	border-left: 1px solid #B01C26; 
+}
+
+.ciclo{
+        display: table;
+        height: 9.09%;
+	width: 100%;	
+	background-color: black;
+	color: white; 
+        font-size: 15px; 
+	font-weight: bold; 
+	border-left: 1px solid white; 
+	text-align: center;
 }
 	
 .footer{
