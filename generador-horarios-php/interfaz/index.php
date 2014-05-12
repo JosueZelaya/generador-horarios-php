@@ -1,48 +1,36 @@
-<?php
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">         
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Generador Horarios de Clase</title>
+<!-- Bootstrap -->
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<!-- Estilo de pagina -->
+<link href="css/estilo3.css" rel="stylesheet" type="text/css">
+<!-- FontAwesome -->
+<!--<link rel="stylesheet" href="css/font-awesome.min.css">-->
+</head>
+<body>
 
-    session_start();
-
-    ini_set('max_execution_time', 300);
-    include_once '../reglas_negocio/Procesador.php';
-    include_once '../reglas_negocio/Facultad.php';
-    include_once '../reglas_negocio/ManejadorMaterias.php';
-    include_once '../reglas_negocio/ManejadorReservaciones.php';
-    include_once '../reglas_negocio/ManejadorAgrupaciones.php';
-    include_once '../reglas_negocio/ManejadorDepartamentos.php';
-    include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
-    include_once 'ManejadorInterfaz.php';
-
-    echo "<html><head><link rel=stylesheet type=text/css href=css/index.css></head><body>";
-    
-    $cicloPar = FALSE;
-    $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar));
-    ManejadorReservaciones::asignarRerservaciones($facultad);
-    $materias = $facultad->getMaterias();
-    $procesador = new Procesador();
-    $procesador->asignarDatos($facultad);
-    for ($i = 0; $i < count($materias); $i++) {
-        $agrup = ManejadorAgrupaciones::getAgrupacion($materias[$i]->getIdAgrupacion(), $facultad->agrupaciones);
-        if($agrup->getNum_grupos()==$agrup->getNumGruposAsignados()){
-            continue;
-        }
-        $asignaciones = ManejadorAsignacionesDocs::obtenerAsignacionesDeAgrup($agrup->getId(), $facultad->asignaciones_docs);
-        for ($j = 0; $j < count($asignaciones); $j++) {
-            $asignacion = $asignaciones[$j];
-            for ($k = 0; $k < $asignacion->getNum_grupos(); $k++){
-                try {
-                    $procesador->procesarMateria($materias[$i], $asignacion->getId_docente(), $agrup);
-                } catch (Exception $exc) {
-                    //Se produce cuando ya no hay aulas disponibles
-                    echo $exc->getMessage()."<br/>";
-                }
-                $agrup->setNumGruposAsignados($agrup->getNumGruposAsignados()+1);
-            }
-        }
-    }
-    
-    $_SESSION['facultad'] = $facultad;
-    
-    echo imprimir('S2E');
-    
-    echo '</body></html>';
+ <!-- Barra de menu -->
+    <?php include './menuPrincipal.php';?>
+ 
+ <div class="row">  
+ <!-- barra vertical con opciones de administración -->
+    <?php include './barraVertical.php';?>
+ 
+    <div id="contenido" class="contenido col-sm-10">
+        
+    </div>
+ 
+ </div>
+ 
+<!-- Cargamos los scripts --> 
+<script type="text/javascript" src="js/jquery-ui/jquery-1.10.2.js"></script>    
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>    
+<script type="text/javascript" src="js/funciones.js"></script>
+</body>
+</html>

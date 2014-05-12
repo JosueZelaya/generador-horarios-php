@@ -10,14 +10,14 @@
         $modelo = create_model($facultad);
         $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo);
         for($i=0;$i<count($tabla);$i++){
-            echo '<div class=col>';
+            echo "<div class='col'>";
             for($j=0;$j<count($tabla[$i]);$j++){
                 if($j == 0){
-                    echo '<div class="col-header box">';
+                    echo "<div class='ciclo'>";
                 } else{
-                    echo '<div class="box hora">';
+                    echo "<div class='mate'>";
                 }
-                echo $tabla[$i][$j].'</div>';
+                echo "<div id='centrar' class='centrar'>".$tabla[$i][$j].'</div></div>';
             }
             echo '</div>';
         }

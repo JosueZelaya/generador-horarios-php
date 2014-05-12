@@ -152,7 +152,7 @@ class Procesador {
                 self::asignar($this->grupo,$horasDisponibles);    //Asignamos la materia
             }else{
                 $this->grupo->setIncompleto(TRUE);
-                throw new Exception("¡Ya no hay aulas disponibles para el grupo ".$this->grupo->getId_grupo()." Materia: ".ManejadorAgrupaciones::obtenerNombrePropietario($this->grupo->getId_Agrup(),$this->materias)." Departamento: ".ManejadorAgrupaciones::obtenerIdDepartamento($this->grupo->getId_Agrup(),  $this->agrupaciones));
+                throw new Exception("¡Ya no hay aulas disponibles para el grupo ".$this->grupo->getId_grupo()." Materia: ".ManejadorAgrupaciones::obtenerNombrePropietario($this->grupo->getId_Agrup(),$this->materias)." Departamento: ".ManejadorAgrupaciones::obtenerIdDepartamento($this->grupo->getId_Agrup(),  $this->agrupaciones)."!");
             }
         }    
     }
