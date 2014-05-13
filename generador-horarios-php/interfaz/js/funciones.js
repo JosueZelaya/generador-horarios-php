@@ -26,20 +26,12 @@ $(function (){
                 $('.verInfoGrupo').popover({
                     title : "Informacion del Grupo",
                     animation : true,
-                    trigger : 'hover',                    
+                    trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
                     html : true
                 });
             }
         }); 
    });
-    
-//   $(document).on("click",".verInfoGrupo",function(){              
-//       $(this).popover({            
-//            placement : 'top',
-//            html : true,
-//            title : "Información Grupo",
-//            content : $(this).html()
-//        });        
-//   });
+
          
 });
