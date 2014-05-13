@@ -151,7 +151,14 @@ abstract class ManejadorAulas {
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }else{
-                            $tabla[$x+1][$y+1] = "";
+                            $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                            ];
+                            $tabla[$x+1][$y+1] = $array;
                         }
                     }
                 }
