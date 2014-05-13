@@ -25,6 +25,8 @@ $(function (){
                 $('#contenido').html(data);
                 $('.verInfoGrupo').popover({
                     title : "Informacion del Grupo",
+                    animation : true,
+                    trigger : 'hover',                    
                     html : true
                 });
             }
