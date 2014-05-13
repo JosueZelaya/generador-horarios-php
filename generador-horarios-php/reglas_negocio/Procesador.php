@@ -116,7 +116,6 @@ class Procesador {
 
     //Asigna la materia en las horas correspondientes
     public function asignar($grupo,$horasDisponibles){
-        $hora;
         for ($j = 0; $j < count($horasDisponibles); $j++) {
             $hora = $horasDisponibles[$j];
             $hora->setGrupo($grupo);
@@ -230,7 +229,7 @@ class Procesador {
         $numHorasContinuas = self::calcularHorasContinuasRequeridas($this->materia, $this->grupo);  //Calculamos el numero de horas continuas para la clase
         $horasDisponibles = ManejadorHoras::buscarHorasConChoque($numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->aulasConCapacidad, $this->grupo);
         if($horasDisponibles != null){
-            self::asignar($this->grupo, $horasDisponibles);
+                    self::asignar($this->grupo, $horasDisponibles);
         }
     }
 }

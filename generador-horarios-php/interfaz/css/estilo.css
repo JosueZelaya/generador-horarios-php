@@ -39,7 +39,8 @@ body {
 }
 
 .mate{
-	height: 9.09%;
+	//height: 9.09%;
+        height: 50px;
 	width: 100%;
 	
 	vertical-align: middle;

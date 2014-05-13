@@ -22,6 +22,10 @@
  <!-- barra vertical con opciones de administración -->
     <?php include './barraVertical.php';?>
  
+    <div id="filtro" class="filtro col-sm-10">
+        
+    </div>
+ 
     <div id="contenido" class="contenido col-sm-10">
         
     </div>
