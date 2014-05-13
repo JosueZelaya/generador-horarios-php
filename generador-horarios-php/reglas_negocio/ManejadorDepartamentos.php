@@ -37,6 +37,7 @@ abstract class ManejadorDepartamentos {
     }
     
     public static function getNombreDepartamento($idDepartamento,$depars){
+        $nombreDepar="";
         foreach ($depars as $depar){
             if($depar->getId() == $idDepartamento){
                 $nombreDepar = $depar->getNombre();
@@ -65,4 +66,7 @@ abstract class ManejadorDepartamentos {
         }
         return $idDepartamento;
     }
+    
+    
+    
 }
