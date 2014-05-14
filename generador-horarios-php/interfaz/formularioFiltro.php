@@ -53,7 +53,19 @@ if(isset($_GET['criterio'])){
     <?php
     $departamentos = $facultad->departamentos;
     for ($index = 0; $index < count($departamentos); $index++) {    
-        echo "<option value='".$departamentos[$index]->getNombre()."'>".$departamentos[$index]->getNombre()."</option>";    
+        echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
+    }
+    ?>
+    </select>
+    
+    <label for="carrera">Carreras:</label>
+    <select id='carrera' class='carrera form-control'>
+        <option value='todos'>TODAS</option>    
+    <?php
+    $carreras=array();
+    for ($index = 0; $index < count($carreras); $index++) {
+        echo "id: ".$carreras[$index]->getId();
+        echo "<option value='".$carreras[$index]->getId()."'>".$carreras[$index]->getNombre()."</option>";    
     }
     ?>
     </select>

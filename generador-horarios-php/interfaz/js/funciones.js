@@ -15,8 +15,12 @@ $(function (){
    });
    
    $(document).on("click","#mostrarHorario",function(){
+       var dataString;
        var aula = $("#aula").val();
-       var dataString = 'aula='+aula;
+       var departamento = $('#departamento').val();       
+       var carrera = $('#carrera').val();
+       dataString = 'aula='+aula+"&departamento="+departamento+"&carrera="+carrera;      
+       
        $.ajax({            
             type: "GET",
             url: "mostrarHorario.php",
@@ -29,6 +33,9 @@ $(function (){
                     trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
                     html : true
                 });
+            },
+            error: function(data){
+                alert("error: "+data);
             }
         }); 
    });

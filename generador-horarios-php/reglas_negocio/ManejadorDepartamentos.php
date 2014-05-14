@@ -58,6 +58,17 @@ abstract class ManejadorDepartamentos {
         return $id;
     }
     
+    public static function getIdDepartamentoAgrupacion($idagrupacion,$agrupaciones){
+        $id = 0;
+        foreach ($agrupaciones as $agrupacion){
+            if(strcmp($agrupacion->getId(), $idagrupacion)==0){
+                $id = $agrupacion->getDepartamento();
+                break;
+            }
+        }
+        return $id;
+    }
+    
     public static function getIdDepartamento($nombreDepartamento){
         $idDepartamento=0;
         $respuesta = Conexion::consulta("SELECT id_depar FROM departamentos WHERE nombre_depar='$nombreDepartamento'");

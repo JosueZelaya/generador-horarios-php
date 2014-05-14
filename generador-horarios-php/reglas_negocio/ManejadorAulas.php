@@ -178,21 +178,52 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return type = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Depar($aulas,$aula,$id_depar,$agrups,$materias,$tabla){
-        for ($i = 0; $i < count($aulas); $i++) {
-            if(strcmp($aulas[$i]->getNombre(), $aula)==0){
-                $dias = $aulas[$i]->getDias();
+    public static function getHorarioEnAula_Depar($aula,$id_depar,$tabla,$facultad){
+        for ($i = 0; $i < count($facultad->getAulas()); $i++) {
+            if(strcmp($facultad->getAulas()[$i]->getNombre(), $aula)==0){
+                $dias = $facultad->getAulas()[$i]->getDias();
                 for ($x = 0; $x < count($dias); $x++) {
                     $horas = $dias[$x]->getHoras();
                     for ($y = 0; $y < count($horas); $y++) {
-                        $hora = $horas[$y];
+                        $hora = $horas[$y];                        
                         $grupo = $hora->getGrupo();
-                        if(ManejadorDepartamentos::getIdDepartamento($grupo->getId_Agrup(),$agrups)==$id_depar){
-                            $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
-                            $tabla[$x][$y] = $texto;
+                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){                            
+                            if(ManejadorDepartamentos::getIdDepartamentoAgrupacion($grupo->getId_agrup(),$facultad->agrupaciones)==$id_depar){                                
+                                $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$facultad->getMaterias());
+                                $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $facultad->getMaterias());                                
+                                $departamento = ManejadorDepartamentos::getNombreDepartamento($id_depar, $facultad->departamentos);
+                                $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                                $array = [
+                                "texto" => $texto,
+                                "nombre" => $nombre,
+                                "codigo" => $cod_materia,                                
+                                "grupo" => $grupo->getId_grupo(),
+                                "departamento" => $departamento
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
+                            }else{
+                                 $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
+                            }
+                            
                         }else{
-                            $tabla[$x][$y] = "";
+                            $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                            ];
+                            $tabla[$x+1][$y+1] = $array;
                         }
+                        
+                        
                     }
                 }
                 break;
