@@ -1,23 +1,22 @@
 $(function (){
-      
-   $(document).on("click","#generarHorario",function(){
-       $('#filtro').html("");
-       $('#contenido').load("cargando.php");
-       //$('#contenido').load("generarHorario.php");       
-       $.ajax({            
-            type: "GET",
-            url: "generarHorario.php",            
-            success: function(data){                
-                $('#contenido').html(data);
-                $('#filtro').load("formularioFiltro.php");
-            }
-        });        
-   });
+    $(document).on("click","#generarHorario",function(){
+        $('#filtro').html("");
+        $('#contenido').load("cargando.php",function(){
+            $.ajax({
+                type: "GET",
+                url: "generarHorario.php",
+                complete: function(data){
+                    $('#contenido').html(data);
+                    $('#filtro').load("formularioFiltro.php");
+                }
+            });
+        });
+    });
    
    $(document).on("click","#mostrarHorario",function(){
        var aula = $("#aula").val();
        var dataString = 'aula='+aula;
-       $.ajax({            
+       $.ajax({
             type: "GET",
             url: "mostrarHorario.php",
             data: dataString,
