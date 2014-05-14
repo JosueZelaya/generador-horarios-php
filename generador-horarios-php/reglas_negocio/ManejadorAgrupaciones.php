@@ -77,6 +77,16 @@ abstract class ManejadorAgrupaciones {
         return $propietario;
     }
     
+    public static function obtenerCodigoPropietario($id_agrup,$materias){
+        $propietario="";
+        foreach ($materias as $materia) {
+            if($materia->getIdAgrupacion()==$id_agrup){
+                return $materia->getCodigo();
+            }
+        }
+        return $propietario;
+    }
+    
     /**
      * Sirve para conocer a qué departamento pertenece una agrupación
      * 

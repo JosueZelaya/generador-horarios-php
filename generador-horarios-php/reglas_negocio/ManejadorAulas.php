@@ -136,8 +136,9 @@ abstract class ManejadorAulas {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
                         if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){
-                            $propietario = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
-                            $texto = $propietario." GT: ".$grupo->getId_grupo();
+                            //$propietario = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
+                            $propietario = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_Agrup(),$materias);
+                            $texto = $propietario."<br/> GT: ".$grupo->getId_grupo();
                             $tabla[$x+1][$y+1] = $texto;
                         }else{
                             $tabla[$x+1][$y+1] = "";

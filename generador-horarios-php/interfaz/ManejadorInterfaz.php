@@ -17,10 +17,10 @@
                 } else{
                     echo "<div class='mate'>";
                 }
-                echo "<div id='centrar' class='centrar'>".$tabla[$i][$j].'</div></div>';
+                echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover'>".$tabla[$i][$j].'</div></div>';
             }
             echo '</div>';
-        }
+        }        
     }
     
     function create_model($facultad){
