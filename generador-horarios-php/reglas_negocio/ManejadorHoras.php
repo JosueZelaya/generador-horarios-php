@@ -156,6 +156,7 @@ class ManejadorHoras {
                     for ($j = $i; $j < $i+$cantidadHoras; $j++) {
                         $horasDisponibles[] = $horas[$j];
                     }
+                    error_log("ahi va un bloque para asignar",0);
                     $resultado = $horasDisponibles;
                     return $resultado;
                 } else{
