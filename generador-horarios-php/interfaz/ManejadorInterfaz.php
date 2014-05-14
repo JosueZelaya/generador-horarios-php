@@ -63,7 +63,7 @@
                     continue;
                 }
                 elseif ($i == 0) {
-                    $modelo[$i][$y] = $horas[$y-1]->getIdHora();
+                    $modelo[$i][$y] = $horas[$y-1]->getInicio()." - ".$horas[$y-1]->getFin();
                     continue;
                 }
                 elseif($i != 0 && $y == 0){
