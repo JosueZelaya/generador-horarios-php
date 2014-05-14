@@ -25,6 +25,8 @@ $(function (){
                 $('#contenido').html(data);
                 $('.verInfoGrupo').popover({
                     title : "Informacion del Grupo",
+                    animation : true,
+                    trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
                     html : true
                 });
             }
