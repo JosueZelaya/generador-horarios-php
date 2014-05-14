@@ -62,12 +62,12 @@ if(isset($_GET['criterio'])){
     <select id='carrera' class='carrera form-control'>
         <option value='todos'>TODAS</option>    
     <?php
-    $carreras=array();
-    for ($index = 0; $index < count($carreras); $index++) {
-        echo "id: ".$carreras[$index]->getId();
-        echo "<option value='".$carreras[$index]->getId()."'>".$carreras[$index]->getNombre()."</option>";    
-    }
-    ?>
+//    $carreras=array();
+//    for ($index = 0; $index < count($carreras); $index++) {
+//        echo "id: ".$carreras[$index]->getId();
+//        echo "<option value='".$carreras[$index]->getId()."'>".$carreras[$index]->getNombre()."</option>";    
+//    }
+//    ?>
     </select>
     
     <input type='button' name='mostrarHorario' id='mostrarHorario' class='btn btn-primary' value='Filtrar' tabindex='4'>    

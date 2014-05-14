@@ -1,6 +1,8 @@
 <?php
 
     include_once '../reglas_negocio/ManejadorAgrupaciones.php';
+    include_once '../reglas_negocio/ManejadorCarreras.php';
+    include_once '../reglas_negocio/ManejadorMaterias.php';
     include_once '../reglas_negocio/Facultad.php';
 
     session_start();
@@ -9,7 +11,10 @@
         $facultad = $_SESSION['facultad'];
         $modelo = create_model($facultad);
         if($carrera!='todos'){
-            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
+            $codigoCarrera = ManejadorCarreras::getCodigoCarrera($carrera);
+            $materiasCarrera = ManejadorMaterias::getMateriasDeCarrera($facultad->getMaterias(), $codigoCarrera);
+            $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
+            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones ,$materiasCarrera,$modelo,$facultad);
         }else if($departamento!='todos'){                        
             $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
         }else{

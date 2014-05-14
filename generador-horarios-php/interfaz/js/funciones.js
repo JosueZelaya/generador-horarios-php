@@ -40,4 +40,16 @@ $(function (){
         }); 
    });
          
+    $(document).on("click","#departamento",function(){
+        var dataString = 'departamento='+$(this).val();      
+        $.ajax({            
+            type: "GET",
+            url: "carreras.php",
+            data: dataString,
+            success: function(data){                
+                $('#carrera').html(data);
+            }
+        }); 
+    });
+         
 });

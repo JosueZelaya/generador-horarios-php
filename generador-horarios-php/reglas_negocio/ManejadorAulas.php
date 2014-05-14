@@ -135,8 +135,7 @@ abstract class ManejadorAulas {
                     for ($y = 0; $y < count($horas); $y++) {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
-                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){
-                            //$propietario = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
+                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){                            
                             $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$materias);
                             $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $materias);
                             $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
@@ -241,7 +240,7 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return string = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$materias,$tabla){
+    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$materias,$tabla,$facultad){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(),$aula)==0){
                 $dias = $aulas[$i]->getDias();
@@ -250,12 +249,31 @@ abstract class ManejadorAulas {
                     for ($y = 0; $y < count($horas); $y++) {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
-                        for ($z = 0; $z < count($ids_agrups); $z++) {
-                            if($ids_agrups[$z]==$grupo->getId_Agrup()){
-                                $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
-                                $tabla[$x][$y] = $texto;
-                            }else{
-                                $tabla[$x][$y] = "";
+                        for ($z = 0; $z < count($ids_agrups); $z++) {                            
+                            if(strcmp($ids_agrups[$z],$grupo->getId_Agrup())==0){                                                                
+                                $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$facultad->getMaterias());
+                                $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $facultad->getMaterias());
+                                $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
+                                $departamento = ManejadorDepartamentos::getNombreDepartamento($idDepartamento, $facultad->departamentos);
+                                $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                                $array = [
+                                    "texto" => $texto,
+                                    "nombre" => $nombre,
+                                    "codigo" => $cod_materia,                                
+                                    "grupo" => $grupo->getId_grupo(),
+                                    "departamento" => $departamento
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
+                                break;
+                            }else{                                
+                                 $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
                             }
                         }
                     }                    
