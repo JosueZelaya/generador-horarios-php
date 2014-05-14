@@ -126,7 +126,7 @@ abstract class ManejadorAulas {
      * @param array $tabla Matriz que contendra el horario
      * @return type = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula($aulas,$aula,$materias,$tabla){
+    public static function getHorarioEnAula($aulas,$aula,$materias,$tabla,$facultad){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(),$aula)==0){
                 $dias = $aulas[$i]->getDias();
@@ -137,9 +137,19 @@ abstract class ManejadorAulas {
                         $grupo = $hora->getGrupo();
                         if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){
                             //$propietario = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
-                            $propietario = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_Agrup(),$materias);
-                            $texto = $propietario."<br/> GT: ".$grupo->getId_grupo();
-                            $tabla[$x+1][$y+1] = $texto;
+                            $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$materias);
+                            $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $materias);
+                            $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
+                            $departamento = ManejadorDepartamentos::getNombreDepartamento($idDepartamento, $facultad->departamentos);
+                            $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                            $array = [
+                                "texto" => $texto,
+                                "nombre" => $nombre,
+                                "codigo" => $cod_materia,                                
+                                "grupo" => $grupo->getId_grupo(),
+                                "departamento" => $departamento
+                            ];
+                            $tabla[$x+1][$y+1] = $array;
                         }else{
                             $tabla[$x+1][$y+1] = "";
                         }

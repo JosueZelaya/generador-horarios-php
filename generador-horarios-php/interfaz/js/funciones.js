@@ -22,18 +22,22 @@ $(function (){
             url: "mostrarHorario.php",
             data: dataString,
             success: function(data){                
-                $('#contenido').html(data);                
+                $('#contenido').html(data);
+                $('.verInfoGrupo').popover({
+                    title : "Informacion del Grupo",
+                    html : true
+                });
             }
         }); 
    });
     
-   $(document).on("click",".verInfoGrupo",function(){              
-       $(this).popover({            
-            placement : 'top',
-            html : true,
-            title : "Información Grupo",
-            content : $(this).html()
-        });        
-   });
+//   $(document).on("click",".verInfoGrupo",function(){              
+//       $(this).popover({            
+//            placement : 'top',
+//            html : true,
+//            title : "Información Grupo",
+//            content : $(this).html()
+//        });        
+//   });
          
 });
