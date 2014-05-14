@@ -38,6 +38,3 @@ include_once './ManejadorInterfaz.php';
     } 
 
     $_SESSION['facultad'] = $facultad;
-?>
-
-

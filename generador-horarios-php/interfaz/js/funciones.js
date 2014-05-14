@@ -30,14 +30,5 @@ $(function (){
             }
         }); 
    });
-    
-//   $(document).on("click",".verInfoGrupo",function(){              
-//       $(this).popover({            
-//            placement : 'top',
-//            html : true,
-//            title : "Información Grupo",
-//            content : $(this).html()
-//        });        
-//   });
          
 });

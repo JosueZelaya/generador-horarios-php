@@ -9,7 +9,7 @@
 <!-- Bootstrap -->
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
 <!-- Estilo de pagina -->
-<link href="css/estilo3.css" rel="stylesheet" type="text/css">
+<link href="css/index.css" rel="stylesheet" type="text/css">
 <!-- FontAwesome -->
 <!--<link rel="stylesheet" href="css/font-awesome.min.css">-->
 </head>
