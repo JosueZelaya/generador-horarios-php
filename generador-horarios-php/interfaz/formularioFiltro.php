@@ -49,6 +49,7 @@ if(isset($_GET['criterio'])){
     
     <label for="departamento">Departamentos:</label>
     <select id='departamento' class='departamento form-control'>
+        <option value='todos'>TODOS</option>    
     <?php
     $departamentos = $facultad->departamentos;
     for ($index = 0; $index < count($departamentos); $index++) {    
@@ -57,7 +58,7 @@ if(isset($_GET['criterio'])){
     ?>
     </select>
     
-    <input type='button' name='mostrarHorario' id='mostrarHorario' class='btn btn-primary' value='Mostrar Horario' tabindex='4'>    
+    <input type='button' name='mostrarHorario' id='mostrarHorario' class='btn btn-primary' value='Filtrar' tabindex='4'>    
 
     </form>
 

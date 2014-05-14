@@ -11,8 +11,8 @@
 .col{
     width: 13%;
     float: left;
-    margin-right: 2px;
-    margin-left: 2px;
+/*    margin-right: 2px;
+    margin-left: 2px;*/
 }
 .col-header{
     display: table;
