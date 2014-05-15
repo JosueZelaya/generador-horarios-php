@@ -138,8 +138,8 @@ $(function (){
                 $('#contenido').html(data);
                 var aula = $("#aula-intercambio1").val();
                 var dataString = 'aula='+aula;
-                $('#frame-antes').attr("src","/interfaz/bodyIFrames.php?"+dataString);
-                $('#frame-despues').attr("src","/interfaz/bodyIFrames.php?"+dataString);
+                $('#frame-antes').attr("src","./interfaz/bodyIFrames.php?"+dataString);
+                $('#frame-despues').attr("src","./interfaz/bodyIFrames.php?"+dataString);
             }
         });
     });
