@@ -16,25 +16,19 @@
 <body>
 
  <!-- Barra de menu -->
-    <?php include './menuPrincipal.php';?>
+    <?php include './interfaz/menuPrincipal.php';?>
  
  <div class="row">  
  <!-- barra vertical con opciones de administración -->
-    <?php include './barraVertical.php';?>
- 
-    <div id="filtro" class="filtro col-sm-10">
-        <?php // include './formularioFiltro.php';?>
-    </div>
- 
-    <div id="contenido" class="contenido col-sm-10">
+    <?php include './interfaz/barraVertical.php';?>
+    <div class="col-sm-10" id="main-content">
         
     </div>
- 
  </div>
  
 <!-- Cargamos los scripts --> 
-<script type="text/javascript" src="js/jquery-ui/jquery-1.10.2.js"></script>    
-<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>    
+<script type="text/javascript" src="js/jquery-ui/jquery-1.10.2.js"></script>  
+<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/funciones.js"></script>
 </body>
 </html>

@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorDias
  *
@@ -119,4 +113,16 @@ abstract class ManejadorDias {
         return $horas;
     }
     
+    public static function getHorasDia($dia){
+        $horas = array();
+        $respuesta = Conexion::consulta("select * from horas where id_hora in (select id_hora from dia_horas where nombre_dia='$dia') order by id_hora asc");
+        while($fila = pg_fetch_array($respuesta)){
+            $hora = new Hora();
+            $hora->setIdHora($fila[0]);
+            $hora->setInicio($fila[1]);
+            $hora->setFin($fila[2]);
+            $horas[] = $hora;
+        }
+        return $horas;
+    }
 }

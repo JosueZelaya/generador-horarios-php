@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorHoras
  *
@@ -29,19 +23,6 @@ class ManejadorHoras {
         while($fila = pg_fetch_array($respuesta)){
             $hora = new Hora();
             $hora->setId($fila[0]);
-            $hora->setInicio($fila[1]);
-            $hora->setFin($fila[2]);
-            $horas[] = $hora;
-        }
-        return $horas;
-    }
-    
-    public static function getHorasDia($dia){
-        $horas = array();
-        $respuesta = Conexion::consulta("select * from horas where id_hora in (select id_hora from dia_horas where nombre_dia='$dia') order by id_hora asc");
-        while($fila = pg_fetch_array($respuesta)){
-            $hora = new Hora();
-            $hora->setIdHora($fila[0]);
             $hora->setInicio($fila[1]);
             $hora->setFin($fila[2]);
             $horas[] = $hora;
@@ -148,7 +129,6 @@ class ManejadorHoras {
                     }
                 }
             }
-            
             if($hayBloquesDisponibles){
                 $chocaMateria = self::chocaMateria($nombre_dia, $horas[$i]->getIdHora(), $aulas, $materia, $cantidadHoras, $todas_mats);
                 $chocaDocente = self::chocaGrupoDocente($idDocente, $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulas, $nombre_dia);
@@ -199,7 +179,6 @@ class ManejadorHoras {
                     }
                 }
             }
-            
             if($hayBloquesDisponibles){
                 $grupoChocaConElMismo = self::chocaGrupo($nombre_dia, $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulasConCapa, $grupo);
                 $chocaDocente = self::chocaGrupoDocente($grupo->getId_docente(), $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulasConCapa, $nombre_dia);

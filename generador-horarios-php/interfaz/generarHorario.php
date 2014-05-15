@@ -1,14 +1,14 @@
 <?php
-
-ini_set('max_execution_time', 300);
-include_once '../reglas_negocio/Procesador.php';
-include_once '../reglas_negocio/Facultad.php';
-include_once '../reglas_negocio/ManejadorMaterias.php';
-include_once '../reglas_negocio/ManejadorReservaciones.php';
-include_once '../reglas_negocio/ManejadorAgrupaciones.php';
-include_once '../reglas_negocio/ManejadorDepartamentos.php';
-include_once '../reglas_negocio/ManejadorAsignacionesDocs.php'; 
-include_once './ManejadorInterfaz.php';
+    session_start();
+    ini_set('max_execution_time', 300);
+    include_once '../reglas_negocio/Procesador.php';
+    include_once '../reglas_negocio/Facultad.php';
+    include_once '../reglas_negocio/ManejadorMaterias.php';
+    include_once '../reglas_negocio/ManejadorReservaciones.php';
+    include_once '../reglas_negocio/ManejadorAgrupaciones.php';
+    include_once '../reglas_negocio/ManejadorDepartamentos.php';
+    include_once '../reglas_negocio/ManejadorAsignacionesDocs.php'; 
+    include_once './ManejadorInterfaz.php';
     
     $cicloPar = FALSE;
     $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());

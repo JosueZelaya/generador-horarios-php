@@ -1,22 +1,16 @@
-<div class="navbar navbar-inverse navbar-static-top">
-    <div class="container">       
-        
-            <a href="index.php" class="navbar-brand">Generador Horarios</a>        
-               
-        
-        <button id="botonBarraPrincipal" class="navbar-toggle navbar-brand" data-toggle="collapse" data-target=".enlacesBarra">
-            <span id="spanBP" class="glyphicon glyphicon-plus"></span>
-<!--            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>                        -->
-        </button>
-        
-        <div id="barraPrincipal" class="collapse navbar-collapse enlacesBarra">
-            
+<div class="navbar navbar-inverse navbar-static-top" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button class="navbar-toggle navbar-brand" data-toggle="collapse" data-target="#enlacesBarra">
+                <span id="spanBP" class="glyphicon glyphicon-plus"></span>
+            </button>
+            <a href="index.php" class="navbar-brand">Generador Horarios</a>
+        </div>
+        <div class="collapse navbar-collapse" id="enlacesBarra">
             <ul class="nav navbar-nav navbar-right">                
                 <li><a class="active" href="#" >Inicio</a></li>
                 <li><a href="#" >Acerca de</a></li>
-                <li><a href="#" >Contactanos</a></li>               
+                <li><a href="#" >Contactanos</a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Bienvenido <?php //echo htmlentities($_SESSION['usuario_nombres']);?>! <b class="caret"></b></a>
                     <ul class="dropdown-menu">
@@ -29,10 +23,7 @@
                     </ul>
                 </li>            
             </ul>
-            
         </div>
-        
     </div>
-    
 </div>
 

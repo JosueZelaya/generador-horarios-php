@@ -6,10 +6,13 @@
     include_once '../reglas_negocio/Facultad.php';
 
     session_start();
-    
-    function imprimir($aula,$departamento,$carrera){
-        $facultad = $_SESSION['facultad'];
-        $modelo = create_model($facultad);
+    $facultad = $_SESSION['facultad'];
+    $modelo = create_model($facultad);
+
+    if(isset($_GET['aula']) && isset($_GET['departamento']) && isset($_GET['carrera'])){
+        $aula = $_GET['aula'];
+        $departamento = $_GET['departamento'];
+        $carrera = $_GET['carrera'];
         if($carrera!='todos'){                        
             $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
             $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones,$modelo,$facultad);
@@ -17,8 +20,15 @@
             $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
         }else{
             $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
-        }        
-        
+        }
+        echo imprimir($tabla);
+    } elseif (isset($_GET['aula'])) {
+        $aula = $_GET['aula'];
+        $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
+        echo imprimir($tabla);
+    }
+    
+    function imprimir($tabla){
         for($i=0;$i<count($tabla);$i++){         
             echo "<div class='col'>";
             for($j=0;$j<count($tabla[$i]);$j++){                
@@ -54,7 +64,6 @@
                     $inicio = $horas[$y-1]->getInicio();
                     $fin = $horas[$y-1]->getFin();
                     $modelo[$i][$y] = "$inicio - $fin";
-
                     continue;
                 }
                 elseif($i != 0 && $y == 0){

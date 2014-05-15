@@ -1,30 +1,10 @@
-<nav class="col-sm-2">
-  <div id="barraVertical" class="collapse navbar-collapse barraVertical">
-        <ul class="nav">
-          <li>
-                <a href="#" id="generarHorario" class="generarHorario list-group-item"> Generar Horario <!--<b class="caret"></b>--></a> 
-          </li>
-          <li>
-              <a href="#" class="dropdown-toggle list-group-item"> Guardar <!--<b class="caret"></b>--></a>
-
-          </li>
-          <li>
-              <a href="#" class="dropdown-toggle list-group-item"> Abrir <!--<b class="caret"></b>--></a>
-
-          </li>
-          <li>
-              <a href="#" class="dropdown-toggle list-group-item"> Exportar <!--<b class="caret"></b>--></a>
-
-          </li>
-          <li>
-              <a href="#" class="dropdown-toggle list-group-item"> Filtrar <!--<b class="caret"></b>--></a>
-
-          </li>
-          <li>
-              <a href="#" class="dropdown-toggle list-group-item"> Imprimir <!--<b class="caret"></b>--></a>
-
-          </li>
-        </ul>
-  </div>              
-
-</nav>    
+<div class="col-sm-2">
+    <div class="list-group" id="barraVertical">
+        <a href="#" id="generarHorario" class="list-group-item"> Generar Horario</a> 
+        <a href="#" id="intercambioHorario" class="list-group-item"> Intercambios</a> 
+        <a href="#" id="abrirHorario" class="list-group-item"> Abrir</a>
+        <a href="#" id="guardarHorario" class="list-group-item"> Guardar</a>
+        <a href="#" class="list-group-item"> Exportar</a>
+        <a href="#" class="list-group-item"> Imprimir</a>
+    </div>
+</div>    

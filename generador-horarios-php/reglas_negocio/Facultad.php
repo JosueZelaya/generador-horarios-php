@@ -14,7 +14,6 @@
 
 require_once 'ManejadorAulas.php';
 require_once 'ManejadorDias.php';
-require_once 'ManejadorHoras.php';
 
 class Facultad {
     private $aulas;
@@ -28,7 +27,7 @@ class Facultad {
         for ($i = 0; $i < count($this->aulas); $i++) {
             $dias = ManejadorDias::getDias();
             for ($x = 0; $x < count($dias); $x++) {
-                $horas = ManejadorHoras::getHorasDia($dias[$x]->getNombre());
+                $horas = ManejadorDias::getHorasDia($dias[$x]->getNombre());
                 $dias[$x]->setHoras($horas);
             }
             $this->aulas[$i]->setDias($dias);
