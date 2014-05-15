@@ -112,6 +112,7 @@ abstract class ManejadorAgrupaciones {
     public static function obtenerAgrupacionesDeCarrera($carrera){
         $ids=array();
         $sql_consulta = "SELECT cm.id_agrupacion FROM carreras_materias as cm JOIN carreras as c ON cm.carreras_id_carrera = c.id_carrera WHERE c.nombre_carrera = '".$carrera."'";
+//        error_log($sql_consulta,0);
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){                        
             $ids[] = $fila['id_agrupacion'];

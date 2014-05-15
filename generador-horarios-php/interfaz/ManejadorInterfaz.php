@@ -10,11 +10,9 @@
     function imprimir($aula,$departamento,$carrera){
         $facultad = $_SESSION['facultad'];
         $modelo = create_model($facultad);
-        if($carrera!='todos'){
-            $codigoCarrera = ManejadorCarreras::getCodigoCarrera($carrera);
-            $materiasCarrera = ManejadorMaterias::getMateriasDeCarrera($facultad->getMaterias(), $codigoCarrera);
+        if($carrera!='todos'){                        
             $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
-            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones ,$materiasCarrera,$modelo,$facultad);
+            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones,$modelo,$facultad);
         }else if($departamento!='todos'){                        
             $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
         }else{

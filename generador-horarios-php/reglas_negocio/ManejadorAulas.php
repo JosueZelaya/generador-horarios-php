@@ -240,7 +240,7 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return string = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$materias,$tabla,$facultad){
+    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$tabla,$facultad){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(),$aula)==0){
                 $dias = $aulas[$i]->getDias();
@@ -282,5 +282,61 @@ abstract class ManejadorAulas {
             }            
         }
         return $tabla;
-    }   
+    }
+    
+    /**
+     * Devuelve las aulas en las cuales el departamento especificado tiene clases
+     * 
+     * @param type $idDepartamento = departamento
+     * @return string $aulas = array de aulas (solo el nombre del aula)
+     */
+    public static function getAulasDepartamento($id_depar,$facultad){
+        $aulas=array();
+        $numAulas = count($facultad->getAulas());
+        for ($i = 0; $i < $numAulas; $i++) {
+            $aula = $facultad->getAulas()[$i];            
+                $dias = $aula->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $horas = $dias[$x]->getHoras();                    
+                    for ($y = 0; $y < count($horas); $y++) {                        
+                        $hora = $horas[$y];                        
+                        $grupo = $hora->getGrupo();
+                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){                            
+                            if(ManejadorDepartamentos::getIdDepartamentoAgrupacion($grupo->getId_agrup(),$facultad->agrupaciones)==$id_depar){                                
+                                $aulas[] = $aula->getNombre();                                
+                                goto next;
+                            }   
+                        }                      
+                    }
+                }
+            next:    
+        }
+        return $aulas;
+    }
+    
+    public static function getAulasCarrera($ids_agrups,$facultad){
+        $aulasSeleccionadas=array();
+        $aulas = $facultad->getAulas();
+        $numAulas = count($aulas);                
+        for ($i = 0; $i < $numAulas; $i++) {            
+            $aula = $aulas[$i];                        
+            $dias = $aula->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $horas = $dias[$x]->getHoras();
+                    for ($y = 0; $y < count($horas); $y++) {
+                        $hora = $horas[$y];
+                        $grupo = $hora->getGrupo();                        
+                        for ($z = 0; $z < count($ids_agrups); $z++) {                                                        
+                            if(strcmp($ids_agrups[$z],$grupo->getId_Agrup())==0){                                                                                                
+                                $aulasSeleccionadas[] = $aula->getNombre();                                                                
+                                goto next;
+                            }
+                        }
+                    }                    
+                }
+            next:                
+        }
+        return $aulasSeleccionadas;
+    }
+    
 }
