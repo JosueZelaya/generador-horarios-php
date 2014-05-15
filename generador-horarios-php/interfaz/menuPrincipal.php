@@ -1,5 +1,5 @@
 <div class="navbar navbar-inverse navbar-static-top" role="navigation">
-    <div class="container">
+    <div class="container container-fluid">
         <div class="navbar-header">
             <button class="navbar-toggle navbar-brand" data-toggle="collapse" data-target="#enlacesBarra">
                 <span id="spanBP" class="glyphicon glyphicon-plus"></span>

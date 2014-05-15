@@ -2,17 +2,30 @@ $(function (){
     $(document).on("click","#generarHorario",function(){
         limpiarMain();
         addFiltro();
-        addContent();
-        $('#contenido').load("./interfaz/cargando.php",function(){
-            $.ajax({
-                type: "GET",
-                url: "./interfaz/generarHorario.php",
-                success: function(data){
-                    $('#contenido').html(data);
-                    $('#filtro').load("./interfaz/formularioFiltro.php");
+        addContent();        
+        $.ajax({            
+            type: "GET",
+            url: "./interfaz/hayHorarioGenerado.php",
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);
+                if(datos==="si"){
+                    var mensaje = "¡Ya hay un horario generado!<br/>\n\
+                                    ¿Realmente desea generar uno nuevo?";
+                    bootbox.confirm(mensaje,function(resultado){
+                        if(resultado===true){
+                            generarHorario();
+                        }else{
+                            $('#filtro').load("./interfaz/formularioFiltro.php");
+                        }
+                    });
+                }else{
+                    generarHorario();
                 }
-            });
-        });
+            },
+            error: function(datos){
+                bootbox.alert("error: "+datos,function(){});
+            }
+        });        
     });
    
     $(document).on("click","#mostrarHorario",function(){
@@ -36,7 +49,7 @@ $(function (){
                 });
             },
             error: function(data){
-                alert("error: "+data);
+                bootbox.alert("error: "+data,function(){});
             }
         });
     });
@@ -62,11 +75,11 @@ $(function (){
                     });
                 },
                 error: function(data){
-                    alert("error: "+data);
+                    bootbox.alert("error: "+data,function(){});
                 }
             });
         }else{
-            alert("¡Debe seleccionar un departamento para filtrar!");
+            bootbox.alert("¡Debe seleccionar un departamento para filtrar!",function(){});
         } 
     });
          
@@ -130,26 +143,49 @@ $(function (){
    
     $(document).on("click","#intercambioHorario",function(){
         limpiarMain();
-        addContent();
-        $.ajax({
+        addContent();         
+        $.ajax({            
             type: "GET",
-            url: "./interfaz/areaIntercambio.php",
-            success: function(data){
-                $('#contenido').html(data);
-                var aula = $("#aula-intercambio1").val();
-                var dataString = 'aula='+aula;
-                $('#frame-antes').attr("src","./interfaz/bodyIFrames.php?"+dataString);
-                $('#frame-despues').attr("src","./interfaz/bodyIFrames.php?"+dataString);
+            url: "./interfaz/hayHorarioGenerado.php",
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);            
+                if(datos==="si"){
+                    $.ajax({
+                        type: "GET",
+                        url: "./interfaz/areaIntercambio.php",
+                        success: function(data){
+                            $('#contenido').html(data);
+                            var aula = $("#aula-intercambio1").val();
+                            var dataString = 'aula='+aula;
+                            $('#frame-antes').attr("src","./interfaz/bodyIFrames.php?"+dataString);
+                            $('#frame-despues').attr("src","./interfaz/bodyIFrames.php?"+dataString);
+                        }
+                    });
+                }else{
+                    var mensaje = "¡Aun no ha generado o cargado ningun horario!";
+                    bootbox.alert(mensaje, function() {}); 
+                }
+            },
+            error: function(err){
+                bootbox.alert("Los datos no se pudieron enviar!",function(){});                
             }
-        });
+        });     
     });
     
     $(document).on("click","#guardarHorario",function(){
         $.ajax({
             type: "GET",
             url: "./reglas_negocio/save.php",
-            success: function(data){
-                alert("Horario guardado");
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);            
+                if(datos==="exito"){
+                    bootbox.alert("¡Horario guardado!",function(){});
+                }else{
+                    bootbox.alert("¡Error al guardar el horario!",function(){});
+                } 
+            },
+            error: function(datos){
+                bootbox.alert("error"+datos,function(){});
             }
         });
     });
@@ -159,8 +195,16 @@ $(function (){
         $.ajax({
             type: "GET",
             url: "./reglas_negocio/open.php",
-            success: function(data){
-                alert("Horario cargado");
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);            
+                if(datos==="exito"){
+                    bootbox.alert("¡Horario cargado!",function(){});
+                }else{
+                    bootbox.alert("¡Error al cargar el horario!",function(){});
+                }                
+            },
+            error: function(datos){
+                bootbox.alert("error"+datos,function(){});
             }
         });
     });
@@ -190,4 +234,17 @@ function addContent(){
     $('<div/>',{
             id: "contenido"
         }).appendTo('#main-content');
+}
+
+function generarHorario(){
+    $('#contenido').load("./interfaz/cargando.php",function(){
+        $.ajax({
+            type: "GET",
+            url: "./interfaz/generarHorario.php",
+            success: function(data){
+                $('#contenido').html(data);
+                $('#filtro').load("./interfaz/formularioFiltro.php");
+            }
+        });
+    });
 }
