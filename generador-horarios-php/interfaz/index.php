@@ -23,7 +23,7 @@
     <?php include './barraVertical.php';?>
  
     <div id="filtro" class="filtro col-sm-10">
-        <?php //include './formularioFiltro.php';?>
+        <?php // include './formularioFiltro.php';?>
     </div>
  
     <div id="contenido" class="contenido col-sm-10">

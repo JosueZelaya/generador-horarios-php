@@ -1,14 +1,24 @@
 <?php
 
     include_once '../reglas_negocio/ManejadorAgrupaciones.php';
+    include_once '../reglas_negocio/ManejadorCarreras.php';
+    include_once '../reglas_negocio/ManejadorMaterias.php';
     include_once '../reglas_negocio/Facultad.php';
 
     session_start();
     
-    function imprimir($aula){
+    function imprimir($aula,$departamento,$carrera){
         $facultad = $_SESSION['facultad'];
         $modelo = create_model($facultad);
-        $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
+        if($carrera!='todos'){                        
+            $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
+            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones,$modelo,$facultad);
+        }else if($departamento!='todos'){                        
+            $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
+        }else{
+            $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
+        }        
+        
         for($i=0;$i<count($tabla);$i++){         
             echo "<div class='col'>";
             for($j=0;$j<count($tabla[$i]);$j++){                

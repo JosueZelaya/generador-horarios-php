@@ -135,8 +135,7 @@ abstract class ManejadorAulas {
                     for ($y = 0; $y < count($horas); $y++) {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
-                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){
-                            //$propietario = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$materias);
+                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){                            
                             $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$materias);
                             $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $materias);
                             $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
@@ -178,21 +177,52 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return type = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Depar($aulas,$aula,$id_depar,$agrups,$materias,$tabla){
-        for ($i = 0; $i < count($aulas); $i++) {
-            if(strcmp($aulas[$i]->getNombre(), $aula)==0){
-                $dias = $aulas[$i]->getDias();
+    public static function getHorarioEnAula_Depar($aula,$id_depar,$tabla,$facultad){
+        for ($i = 0; $i < count($facultad->getAulas()); $i++) {
+            if(strcmp($facultad->getAulas()[$i]->getNombre(), $aula)==0){
+                $dias = $facultad->getAulas()[$i]->getDias();
                 for ($x = 0; $x < count($dias); $x++) {
                     $horas = $dias[$x]->getHoras();
                     for ($y = 0; $y < count($horas); $y++) {
-                        $hora = $horas[$y];
+                        $hora = $horas[$y];                        
                         $grupo = $hora->getGrupo();
-                        if(ManejadorDepartamentos::getIdDepartamento($grupo->getId_Agrup(),$agrups)==$id_depar){
-                            $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
-                            $tabla[$x][$y] = $texto;
+                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){                            
+                            if(ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(),$facultad->agrupaciones)==$id_depar){                                
+                                $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$facultad->getMaterias());
+                                $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $facultad->getMaterias());                                
+                                $departamento = ManejadorDepartamentos::getNombreDepartamento($id_depar, $facultad->departamentos);
+                                $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                                $array = [
+                                "texto" => $texto,
+                                "nombre" => $nombre,
+                                "codigo" => $cod_materia,                                
+                                "grupo" => $grupo->getId_grupo(),
+                                "departamento" => $departamento
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
+                            }else{
+                                 $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
+                            }
+                            
                         }else{
-                            $tabla[$x][$y] = "";
+                            $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                            ];
+                            $tabla[$x+1][$y+1] = $array;
                         }
+                        
+                        
                     }
                 }
                 break;
@@ -210,7 +240,7 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return string = una tabla que representa al horario de la semana
      */
-    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$materias,$tabla){
+    public static function getHorarioEnAula_Carrera($aulas,$aula,$ids_agrups,$tabla,$facultad){
         for ($i = 0; $i < count($aulas); $i++) {
             if(strcmp($aulas[$i]->getNombre(),$aula)==0){
                 $dias = $aulas[$i]->getDias();
@@ -219,12 +249,31 @@ abstract class ManejadorAulas {
                     for ($y = 0; $y < count($horas); $y++) {
                         $hora = $horas[$y];
                         $grupo = $hora->getGrupo();
-                        for ($z = 0; $z < count($ids_agrups); $z++) {
-                            if($ids_agrups[$z]==$grupo->getId_Agrup()){
-                                $texto = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(), $materias)." GT: ".$grupo->getId_grupo();
-                                $tabla[$x][$y] = $texto;
-                            }else{
-                                $tabla[$x][$y] = "";
+                        for ($z = 0; $z < count($ids_agrups); $z++) {                            
+                            if(strcmp($ids_agrups[$z],$grupo->getId_Agrup())==0){                                                                
+                                $cod_materia = ManejadorAgrupaciones::obtenerCodigoPropietario($grupo->getId_agrup(),$facultad->getMaterias());
+                                $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $facultad->getMaterias());
+                                $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
+                                $departamento = ManejadorDepartamentos::getNombreDepartamento($idDepartamento, $facultad->departamentos);
+                                $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                                $array = [
+                                    "texto" => $texto,
+                                    "nombre" => $nombre,
+                                    "codigo" => $cod_materia,                                
+                                    "grupo" => $grupo->getId_grupo(),
+                                    "departamento" => $departamento
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
+                                break;
+                            }else{                                
+                                 $array = [
+                                "texto" => "",
+                                "nombre" => "",
+                                "codigo" => "",                                
+                                "grupo" => "",
+                                "departamento" => ""
+                                ];
+                                $tabla[$x+1][$y+1] = $array;
                             }
                         }
                     }                    
@@ -233,5 +282,61 @@ abstract class ManejadorAulas {
             }            
         }
         return $tabla;
-    }   
+    }
+    
+    /**
+     * Devuelve las aulas en las cuales el departamento especificado tiene clases
+     * 
+     * @param type $idDepartamento = departamento
+     * @return string $aulas = array de aulas (solo el nombre del aula)
+     */
+    public static function getAulasDepartamento($id_depar,$facultad){
+        $aulas=array();
+        $numAulas = count($facultad->getAulas());
+        for ($i = 0; $i < $numAulas; $i++) {
+            $aula = $facultad->getAulas()[$i];            
+                $dias = $aula->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $horas = $dias[$x]->getHoras();                    
+                    for ($y = 0; $y < count($horas); $y++) {                        
+                        $hora = $horas[$y];                        
+                        $grupo = $hora->getGrupo();
+                        if(!$hora->estaDisponible() && $grupo->getId_Agrup() != 0){                            
+                            if(ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(),$facultad->agrupaciones)==$id_depar){                                
+                                $aulas[] = $aula->getNombre();                                
+                                goto next;
+                            }   
+                        }                      
+                    }
+                }
+            next:    
+        }
+        return $aulas;
+    }
+    
+    public static function getAulasCarrera($ids_agrups,$facultad){
+        $aulasSeleccionadas=array();
+        $aulas = $facultad->getAulas();
+        $numAulas = count($aulas);                
+        for ($i = 0; $i < $numAulas; $i++) {            
+            $aula = $aulas[$i];                        
+            $dias = $aula->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $horas = $dias[$x]->getHoras();
+                    for ($y = 0; $y < count($horas); $y++) {
+                        $hora = $horas[$y];
+                        $grupo = $hora->getGrupo();                        
+                        for ($z = 0; $z < count($ids_agrups); $z++) {                                                        
+                            if(strcmp($ids_agrups[$z],$grupo->getId_Agrup())==0){                                                                                                
+                                $aulasSeleccionadas[] = $aula->getNombre();                                                                
+                                goto next;
+                            }
+                        }
+                    }                    
+                }
+            next:                
+        }
+        return $aulasSeleccionadas;
+    }
+    
 }
