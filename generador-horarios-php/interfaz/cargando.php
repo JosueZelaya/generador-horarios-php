@@ -1,3 +1,6 @@
 <p align="center">
-    <i class="fa fa-spinner fa-spin fa-5x"></i>
+    Generando Horario ... ...
+    <br/>
+    <br/>
+    <img width="450px" height="225px" class="center" src="imagenes/loading (1).gif"/>    
 </p>

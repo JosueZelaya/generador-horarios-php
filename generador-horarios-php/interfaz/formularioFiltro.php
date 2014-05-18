@@ -43,6 +43,7 @@ if(isset($_GET['criterio'])){
         </ul>
         <br/>
         <form class='form-inline' role='form'>
+        <label for="departamento">Departamentos:</label>    
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
         <?php

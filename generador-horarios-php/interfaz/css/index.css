@@ -1,0 +1,16 @@
+.box{
+    width: 100%;
+    height: 40px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+.col{
+    width: 13%;
+    float: left;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+.col-header{
+    background-color: red;
+    color: white;
+}
