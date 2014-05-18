@@ -39,7 +39,8 @@ abstract class ManejadorCarreras {
     public static function getCodigoCarrera($nombreCarrera){
         $sql_consulta = "SELECT id_carrera FROM carreras WHERE nombre_carrera='".$nombreCarrera."'";
         $respuesta = conexion::consulta($sql_consulta);
-        return $respuesta['id_carrera'];
+        $array = pg_fetch_array($respuesta);
+        return $array['id_carrera'];
     }    
     
 }

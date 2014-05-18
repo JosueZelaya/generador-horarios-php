@@ -19,7 +19,7 @@ abstract class ManejadorDepartamentos {
     
     public static function getDepartamentos(){
         $depars = array();
-        $respuesta = Conexion::consulta("SELECT * FROM departamentos;");
+        $respuesta = Conexion::consulta("SELECT * FROM departamentos ORDER BY nombre_depar;");
         while ($fila = pg_fetch_array($respuesta)){
             $depar = new Departamento($fila[0], $fila[1]);
             $depars[] = $depar;

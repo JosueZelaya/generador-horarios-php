@@ -32,7 +32,7 @@ abstract class ManejadorAulas {
      */
     public static function getTodasAulas(){
         $aulas = array();
-        $sql_consulta = "SELECT * FROM aulas ORDER BY capacidad ASC";
+        $sql_consulta = "SELECT * FROM aulas ORDER BY cod_aula ASC";
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){            
             $aula = new Aula();

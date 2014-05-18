@@ -28,59 +28,32 @@ $(function (){
         });        
     });
    
-    $(document).on("click","#mostrarHorario",function(){
-        var dataString;
+    $(document).on("click","#mostrarHorario",function(){        
         var aula = $("#aula").val();
         var departamento = $('#departamento').val();       
         var carrera = $('#carrera').val();
-        dataString = 'aula='+aula+"&departamento="+departamento+"&carrera="+carrera;      
-
-        $.ajax({
-            type: "GET",
-            url: "./interfaz/dibujarHorario.php",
-            data: dataString,
-            success: function(data){                
-                $('#contenido').html(data);
-                $('.verInfoGrupo').popover({
-                    title : "Informacion del Grupo",
-                    animation : true,
-                    trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
-                    html : true
-                });
-            },
-            error: function(data){
-                bootbox.alert("error: "+data,function(){});
-            }
-        });
+        var dataString = 'aula='+aula+"&departamento="+departamento+"&carrera="+carrera;
+        dibujarHorario(dataString);
     });
     
     $(document).on("click","#mostrarHorarioDepartamento",function(){
         var aula = $("#aulaDepartamento").val();
         var departamento = $('#departamento').val();       
         var carrera = $('#carrera').val();       
+        var dataString = 'aula='+aula+"&departamento="+departamento+"&carrera="+carrera;
         if(departamento!=='todos'){
-            var dataString;       
-            dataString = 'aula='+aula+"&departamento="+departamento+"&carrera="+carrera;      
-            $.ajax({    
-                type: "GET",
-                url: "./interfaz/dibujarHorario.php",
-                data: dataString,
-                success: function(data){                
-                    $('#contenido').html(data);
-                    $('.verInfoGrupo').popover({
-                        title : "Informacion del Grupo",
-                        animation : true,
-                        trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
-                        html : true
-                    });
-                },
-                error: function(data){
-                    bootbox.alert("error: "+data,function(){});
-                }
-            });
+            dibujarHorario(dataString);
         }else{
             bootbox.alert("¡Debe seleccionar un departamento para filtrar!",function(){});
         } 
+    });
+    
+    $(document).on("click","#mostrarHorarioMateria",function(){        
+        var departamento = $('#departamento').val();       
+        var carrera = $('#carrera').val(); 
+        var materia = $('#materia').val();
+        var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia;     
+        dibujarHorario(dataString);        
     });
          
     $(document).on("change","#departamento",function(){
@@ -105,14 +78,38 @@ $(function (){
     
     $(document).on("change","#carrera",function(){
         var dataString = 'carrera='+$(this).val()+"&departamento="+$('#departamento').val();              
-        $.ajax({            
+        if($(this).attr('data-tipo')==='materia'){
+            $.ajax({            
+                type: "GET",
+                url: "./interfaz/materiasCarrera.php",
+                data: dataString,
+                success: function(data){                
+                    $('#materia').html(data);
+                }
+            });
+        }else{
+            $.ajax({            
+                type: "GET",
+                url: "./interfaz/aulasDepartamento.php",
+                data: dataString,
+                success: function(data){                
+                    $('#aulaDepartamento').html(data);
+                }
+            });            
+        }        
+    });
+    
+    $(document).on("click","#filtroMateria",function(){        
+       var dataString = 'criterio=materia';
+       $.ajax({            
             type: "GET",
-            url: "./interfaz/aulasDepartamento.php",
+            url: "./interfaz/formularioFiltro.php",            
             data: dataString,
-            success: function(data){                
-                $('#aulaDepartamento').html(data);
+            success: function(data){                                
+                $('#filtro').html(data);
+                $('#contenido').html("");
             }
-        });
+        }); 
     });
     
     $(document).on("click","#filtroDepartamento",function(){        
@@ -234,6 +231,26 @@ function addContent(){
     $('<div/>',{
             id: "contenido"
         }).appendTo('#main-content');
+}
+
+function dibujarHorario(dataString){         
+    $.ajax({
+        type: "GET",
+        url: "./interfaz/dibujarHorario.php",
+        data: dataString,
+        success: function(data){                
+            $('#contenido').html(data);
+            $('.verInfoGrupo').popover({
+                title : "Informacion del Grupo",
+                animation : true,
+                trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
+                html : true
+            });
+        },
+        error: function(data){
+            bootbox.alert("error: "+data,function(){});
+        }
+    });
 }
 
 function generarHorario(){
