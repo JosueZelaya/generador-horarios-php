@@ -20,7 +20,7 @@ class Hora {
     private $disponible;
 
     public function __construct() {
-        $this->id = 0;
+        $this->idHora = 0;
         $this->inicio = "";
         $this->fin = "";
         $this->grupo = new Grupo();
@@ -28,7 +28,7 @@ class Hora {
     }
     
     public function getIdHora() {
-        return $this->id;
+        return $this->idHora;
     }
 
     public function getInicio() {
@@ -40,7 +40,7 @@ class Hora {
     }
 
     public function setIdHora($id) {
-        $this->id = $id;
+        $this->idHora = $id;
     }
 
     public function setInicio($inicio) {

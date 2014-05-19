@@ -1,6 +1,7 @@
 <?php
-session_start();
+
 include_once 'Facultad.php';
+session_start();
 
 $u = file_get_contents("../horarios_guardados/facultad");
 if(!$u){
@@ -12,5 +13,3 @@ if(!$u){
     $respuesta = "exito";
     echo json_encode($respuesta);
 }
-
-

@@ -41,16 +41,12 @@
             </thead>
             <?php
             for ($index = 0; $index < count($horario); $index++) {
-                echo "<tr>";
-                if($index>0){
-                    if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
-                        echo "<td></td>";
-                    }else{
-                        echo "<td>".$horario[$index]['grupo']."</td>";
-                    }
+                echo "<tr>";                        
+                if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
+                    echo "<td></td>";
                 }else{
                     echo "<td>".$horario[$index]['grupo']."</td>";
-                }                               
+                }               
                 echo    "<td>".$horario[$index]['aula']."</td>
                         <td>".$horario[$index]['dia']."</td>
                         <td>".$horario[$index]['horaInicio']."</td>
@@ -83,17 +79,17 @@
     }
     
     function imprimir($tabla){
-        for($columna=0;$columna<count($tabla);$columna++){         
+        for($i=0;$i<count($tabla);$i++){         
             echo "<div class='col'>";
-            for($fila=0;$fila<count($tabla[$columna]);$fila++){                
-                if($fila==0){
-                    echo "<div class='col-header'>".$tabla[$columna][$fila]."</div>";
-                }else if($columna==0){                    
-                    echo "<div class='celda-hora'><div class='centrar'>".$tabla[$columna][$fila]."</div></div>";
+            for($j=0;$j<count($tabla[$i]);$j++){                
+                if($j==0){
+                    echo "<div class='col-header'>".$tabla[$i][$j]."</div>";
+                }else if($i==0){
+                    echo "<div class='celda-hora'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
                 }else{
-                    echo "<div class='celda-hora'>";                    
-                    $celda = $tabla[$columna][$fila];
-                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];                    
+                    echo "<div class='celda-hora'>";
+                    $celda = $tabla[$i][$j];
+                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                     echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                 }
             }

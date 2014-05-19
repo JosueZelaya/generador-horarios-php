@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorAulas
  *
@@ -23,8 +17,7 @@ include_once 'ManejadorDepartamentos.php';
 include_once 'ManejadorAgrupaciones.php';
 
 abstract class ManejadorAulas {
-
-    
+   
     /**
      * Devuelve todas las aulas de la facultad por capacidad ascendente
      * 
@@ -44,58 +37,13 @@ abstract class ManejadorAulas {
         return $aulas;
     }
     
-    /**
-     * Devuelve todas las aulas de la facultad ordenadas por un criterio específico
-     * 
-     * @param type $ordenarPor = criterio
-     * @return \Aula = array de aulas
-     */
-    public static function getTodasAulasOrdenadas($ordenarPor){
-        $aulas = array();
-        $sql_consulta = "SELECT * FROM aulas ORDER BY ".$ordenarPor." DESC";
-	$respuesta = Conexion::consulta($sql_consulta);
-        while ($fila = pg_fetch_array($respuesta)){            
-            $aula = new Aula();
-            $aula->setNombre($fila['nombre']);
-            $aula->setCapacidad($fila['capacidad']);
-            $aula->setDisponible($fila['disponible']);
-            $aulas[] = $aula;
-        }
-        return $aulas;
-    }
-    
-    /**
-     * Elige un aula diferente a las aulas ya usadas
-     * 
-     * @param type $aulas = las aulas de la facultad
-     * @param type $aulasUsadas = las aulas ya usadas
-     * @return null,$aulas = devuelve null si ya no hay más aulas, o devuelve el array con las aulas
-     */
-    public static function elegirAulaDiferente($aulas,$aulasUsadas){
-        //Si ya se usaron todas las aulas entonces no seguimos buscando y devolvemos null
-        if(count($aulas) ==  count($aulasUsadas)){
-            return null;
-        }
-        $aula = ManejadorAulas::elegirAula($aulas);
-        for ($index = 0; $index < count($aulasUsadas); $index++) {
-            if(strcmp($aula->getNombre(),$aulasUsadas[$index]->getNombre())==0){
-                $aula = ManejadorAulas::elegirAulaDiferente($aulas, $aulasUsadas);
+    public static function getAula($todas_aulas, $nombre_aula){
+        foreach ($todas_aulas as $aula){
+            if(strcmp($aula->getNombre(),$nombre_aula)==0){
+                return $aula;
             }
         }
-        return $aulas;
-    }
-    
-    /**
-     * Elige un aula de manera aleatoria
-     * 
-     * @param type $aulas = aulas entre las cuales elegir
-     * @return type = el aula elegida
-     */
-    public static function elegirAula($aulas){
-        $desde=0;
-        $hasta = count($aulas)-1;
-        $aula = Procesador::getNumeroAleatorio($desde, $hasta);
-        return $aulas[$aula];
+        return null;
     }
     
     /**
@@ -338,5 +286,4 @@ abstract class ManejadorAulas {
         }
         return $aulasSeleccionadas;
     }
-    
 }

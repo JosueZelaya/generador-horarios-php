@@ -37,7 +37,5 @@ if(isset($_GET['carrera']) && isset($_GET['departamento'])){
         for ($index = 0; $index < count($aulas); $index++) {
             echo "<option value='".$aulas[$index]."'>".$aulas[$index]."</option>";
         }       
-    }    
-    
+    }
 }
-
