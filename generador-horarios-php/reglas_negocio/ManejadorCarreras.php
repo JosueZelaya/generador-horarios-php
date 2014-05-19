@@ -1,17 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- * Description of ManejadorCarreras
- *
- * @author arch
- */
-
 require_once '../acceso_datos/Conexion.php';
 
 abstract class ManejadorCarreras {
@@ -42,5 +30,4 @@ abstract class ManejadorCarreras {
         $array = pg_fetch_array($respuesta);
         return $array['id_carrera'];
     }    
-    
 }

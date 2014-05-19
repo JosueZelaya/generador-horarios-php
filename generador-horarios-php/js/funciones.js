@@ -2,7 +2,7 @@ $(function (){
     $(document).on("click","#generarHorario",function(){
         limpiarMain();
         addFiltro();
-        addContent();        
+        addContent();
         $.ajax({            
             type: "GET",
             url: "./interfaz/hayHorarioGenerado.php",
@@ -13,12 +13,14 @@ $(function (){
                                     ¿Realmente desea generar uno nuevo?";
                     bootbox.confirm(mensaje,function(resultado){
                         if(resultado===true){
+                            $('#contenido').load("./interfaz/cargando.php");
                             generarHorario();
                         }else{
                             $('#filtro').load("./interfaz/formularioFiltro.php");
                         }
                     });
                 }else{
+                    $('#contenido').load("./interfaz/cargando.php");
                     generarHorario();
                 }
             },
@@ -217,6 +219,32 @@ $(function (){
         var dataString = 'aula='+aula;
         $('#frame-despues').attr("src","/interfaz/bodyIFrames.php?"+dataString);
     });
+    
+    $(document).on("click","#intercambiarHoras",function(){
+        var aula1 = $('#aula-intercambio1').val();
+        var aula2 = $('#aula-intercambio2').val();
+        var dia1 = $('#dia-intercambio1').val();
+        var dia2 = $('#dia-intercambio2').val();
+        var desde1 = $('#desde-intercambio1').val();
+        var desde2 = $('#desde-intercambio2').val();
+        var hasta1 = $('#hasta-intercambio1').val();
+        var hasta2 = $('#hasta-intercambio2').val();
+        var dataString = 'op=intercambio&aula1='+aula1+'&aula2='+aula2+'&dia1='+dia1+'&dia2='+dia2+'&desde1='+desde1+"&desde2="+desde2+'&hasta1='+hasta1+'&hasta2='+hasta2;
+        $.ajax({
+            type: "GET",
+            url: './interfaz/ManejadorInterfaz.php',
+            data: dataString,
+            success: function(data){
+                var retorno = data.toString();
+                if(retorno.search("continuar?") != -1){
+                    if(confirm(data)){
+                        intercambiarConfirm(aula1,dia1,desde1,aula2,dia2,desde2);
+                    }
+                } else if(retorno == 'confirmacion')
+                    alert("Exito");
+            }
+        });
+    });
 });
 
 function limpiarMain(){
@@ -233,10 +261,36 @@ function addContent(){
         }).appendTo('#main-content');
 }
 
+function generarHorario(){
+    setTimeout(function(){
+        $.ajax({
+            type: "GET",
+            url: "./interfaz/ManejadorInterfaz.php",
+            data: "op=generar",
+            success: function(data){
+                $('#contenido').html(data);
+                $('#filtro').load("./interfaz/formularioFiltro.php");
+            }
+        });
+    },1000);
+}
+
+function intercambiarConfirm(aula1,dia1,desde1,aula2,dia2,desde2){
+    var dataString = 'op=confirm&aula1='+aula1+'&aula2='+aula2+'&dia1='+dia1+'&dia2='+dia2+'&desde1='+desde1+"&desde2="+desde2;
+    $.ajax({
+            type: "GET",
+            url: './interfaz/ManejadorInterfaz.php',
+            data: dataString,
+            success: function(data){
+                alert(data);
+            }
+    });
+}
+
 function dibujarHorario(dataString){         
     $.ajax({
         type: "GET",
-        url: "./interfaz/dibujarHorario.php",
+        url: "./interfaz/mallaHorario.php",
         data: dataString,
         success: function(data){                
             $('#contenido').html(data);
@@ -250,18 +304,5 @@ function dibujarHorario(dataString){
         error: function(data){
             bootbox.alert("error: "+data,function(){});
         }
-    });
-}
-
-function generarHorario(){
-    $('#contenido').load("./interfaz/cargando.php",function(){
-        $.ajax({
-            type: "GET",
-            url: "./interfaz/generarHorario.php",
-            success: function(data){
-                $('#contenido').html(data);
-                $('#filtro').load("./interfaz/formularioFiltro.php");
-            }
-        });
     });
 }

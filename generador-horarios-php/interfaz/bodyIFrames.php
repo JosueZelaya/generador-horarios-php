@@ -4,7 +4,8 @@
         <link href="../bootstrap/css/bootstrap.min.css" rel="stylesheet">
     </head>
     <body>
-        <?php include_once 'dibujarHorario.php'; ?>
+        <?php include_once 'mallaHorario.php'; ?>
+
         <script type="text/javascript" src="../js/jquery-ui/jquery-1.10.2.js"></script>
         <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
         <script type="text/javascript">

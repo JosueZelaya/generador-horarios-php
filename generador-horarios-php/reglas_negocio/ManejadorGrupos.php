@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorGrupo
  *
@@ -18,7 +12,7 @@ include_once 'Hora.php';
 include_once 'ManejadorAgrupaciones.php';
 include_once 'Grupo.php';
 
-abstract class ManejadorGrupo {
+abstract class ManejadorGrupos {
     
     public static function getGrupo($aulas,$aulaElegida,$diaElegido,$idHora){
         if(isset($aulaElegida)){
@@ -62,4 +56,21 @@ abstract class ManejadorGrupo {
         return $tabla;
     }
     
+    public static function gruposIgualesEnBloque($grupos){
+        if($grupos[0]->getId_grupo() != 0){
+            $base = $grupos[0];
+        } else{
+            $base = $grupos[1];
+        }
+        for ($i=1;$i<count($grupos);$i++){
+            if($base->getId_agrup() != $grupos[$i]->getId_agrup() || $base->getId_grupo() != $grupos[$i]->getId_grupo()){
+                if ($i == count($grupos)-1 && $grupos[$i]->getId_agrup() == 0){
+                    break;
+                } else{
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 }
