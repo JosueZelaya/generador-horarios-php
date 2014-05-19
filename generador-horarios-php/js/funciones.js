@@ -52,14 +52,18 @@ $(function (){
     
     $(document).on("click","#mostrarHorarioMateria",function(){        
         var departamento = $('#departamento').val();       
-        var carrera = $('#carrera').val(); 
-        var materia = $('#materia').val();
-        var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia;     
-        dibujarHorario(dataString);        
+        if(departamento==='todos'){
+            bootbox.alert("¡Debe seleccionar un departamento para filtrar!",function(){});
+        }else{
+            var carrera = $('#carrera').val(); 
+            var materia = $('#materia').val();
+            var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia;     
+            dibujarHorario(dataString);        
+        }        
     });
          
     $(document).on("change","#departamento",function(){
-        var dataString = 'departamento='+$(this).val();      
+        var dataString = 'departamento='+$(this).val(); 
         $.ajax({            
             type: "GET",
             url: "./interfaz/carreras.php",
@@ -76,6 +80,15 @@ $(function (){
                 $('#aulaDepartamento').html(data);
             }
         });
+        dataString = dataString+"&carrera="+$('#carrera').val();
+        $.ajax({            
+            type: "GET",
+            url: "./interfaz/materias.php",
+            data: dataString,
+            success: function(data){                
+                $('#materia').html(data);
+            }
+        });
     });
     
     $(document).on("change","#carrera",function(){
@@ -83,7 +96,7 @@ $(function (){
         if($(this).attr('data-tipo')==='materia'){
             $.ajax({            
                 type: "GET",
-                url: "./interfaz/materiasCarrera.php",
+                url: "./interfaz/materias.php",
                 data: dataString,
                 success: function(data){                
                     $('#materia').html(data);
@@ -101,7 +114,7 @@ $(function (){
         }        
     });
     
-    $(document).on("click","#filtroMateria",function(){        
+    $(document).on("click","#filtroMateria",function(){          
        var dataString = 'criterio=materia';
        $.ajax({            
             type: "GET",
@@ -111,7 +124,7 @@ $(function (){
                 $('#filtro').html(data);
                 $('#contenido').html("");
             }
-        }); 
+        });         
     });
     
     $(document).on("click","#filtroDepartamento",function(){        
