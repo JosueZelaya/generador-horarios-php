@@ -69,8 +69,25 @@ abstract class ManejadorMaterias {
             if(strcmp($materia->getDepartamento(), $idDepar)==0){
                 $materiasDepar[] = $materia;
             }
+        }        
+        $materiasSinRepetir = ManejadorMaterias::quitarMateriasRepetidas($materiasDepar);
+        return $materiasSinRepetir;
+    }
+    
+    public static function quitarMateriasRepetidas($materias){
+        $resultado=array();
+        for ($index = 0; $index < count($materias); $index++) {
+            if($index>0){
+                if(strcmp($materias[$index-1]->getNombre(),$materias[$index]->getNombre())==0){
+                    
+                }else{
+                    $resultado[] = $materias[$index];
+                }
+            }else{
+                $resultado[] = $materias[$index];
+            }
         }
-        return $materiasDepar;
+        return $resultado;
     }
     
     public static function getMateriaDeGrupo($id_agrup, $todas_mats){

@@ -9,7 +9,9 @@ include_once '../reglas_negocio/ManejadorAgrupaciones.php';
 include_once '../reglas_negocio/ManejadorDepartamentos.php';
 include_once '../reglas_negocio/ManejadorAsignacionesDocs.php'; 
 include_once './ManejadorInterfaz.php';
-    
+session_start();    
+
+
     $cicloPar = FALSE;
     $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());
     $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar));    

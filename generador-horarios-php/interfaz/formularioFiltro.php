@@ -46,12 +46,12 @@ if(isset($_GET['criterio'])){
         <label for="departamento">Departamentos:</label>    
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
-        <?php
-        $departamentos = $facultad->departamentos;
-        for ($index = 0; $index < count($departamentos); $index++) {    
-            echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
-        }
-        ?>
+            <?php
+            $departamentos = $facultad->departamentos;
+            for ($index = 0; $index < count($departamentos); $index++) {    
+                echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
+            }
+            ?>
         </select>
         <label for="carrera">Carreras:</label>
         <select id='carrera' class='carrera form-control'  data-tipo='materia'>

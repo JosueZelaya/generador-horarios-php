@@ -10,18 +10,13 @@ $facultad = $_SESSION['facultad'];
 
 if(isset($_GET['carrera'])  && isset($_GET['departamento'])){
     $carrera = $_GET['carrera'];
-    
+    $departamento = $_GET['departamento'];
     if($carrera=='todos'){
-            echo "<option value='todos'></option>";
-//        $idDepartamento = $_GET['departamento'];    
-//        if($idDepartamento=='todos'){
-//            echo "<option value='todos'></option>";
-//        }else{
-//            $aulas = ManejadorAulas::getAulasDepartamento($idDepartamento,$facultad);                    
-//            for ($index = 0; $index < count($aulas); $index++) {
-//                echo "<option value='".$aulas[$index]."'>".$aulas[$index]."</option>";
-//            }       
-//        }
+        $idCarrera = ManejadorCarreras::getCodigoCarrera($carrera);
+        $materias = ManejadorMaterias::obtenerMateriasDeDepartamento($facultad->getMaterias(),$departamento );        
+        foreach ($materias as $materia) {
+            echo "<option value='".$materia->getCodigo()."'>".$materia->getNombre()."</option>";
+        }
     }else{
         $idCarrera = ManejadorCarreras::getCodigoCarrera($carrera);
         $materias = ManejadorMaterias::getMateriasDeCarrera($facultad->getMaterias(), $idCarrera);        
