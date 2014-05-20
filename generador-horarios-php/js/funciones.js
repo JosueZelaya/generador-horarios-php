@@ -224,13 +224,13 @@ $(function (){
     $(document).on("change","#aula-intercambio1",function(){
         var aula = $("#aula-intercambio1").val();
         var dataString = 'aula='+aula;
-        $('#frame-antes').attr("src","/interfaz/bodyIFrames.php?"+dataString);
+        $('#frame-antes').attr("src","./interfaz/bodyIFrames.php?"+dataString);
     });
     
     $(document).on("change","#aula-intercambio2",function(){
         var aula = $("#aula-intercambio2").val();
         var dataString = 'aula='+aula;
-        $('#frame-despues').attr("src","/interfaz/bodyIFrames.php?"+dataString);
+        $('#frame-despues').attr("src","./interfaz/bodyIFrames.php?"+dataString);
     });
     
     $(document).on("click","#intercambiarHoras",function(){

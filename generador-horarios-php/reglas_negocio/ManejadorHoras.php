@@ -49,7 +49,7 @@ class ManejadorHoras {
                                 $g = $grupo->getId_grupo();
                                 $a = $aula->getNombre();
                                 //error_log ("Esta materia $m choca con $p GT $g en hora: $h del dia $nombre_dia en aula: $a",0);
-                                echo "Esta materia $m choca con $p GT $g en hora: $h del dia $nombre_dia en aula: $a";
+                                //echo "Esta materia $m choca con $p GT $g en hora: $h del dia $nombre_dia en aula: $a";
                                 return true;
                             }
                         }

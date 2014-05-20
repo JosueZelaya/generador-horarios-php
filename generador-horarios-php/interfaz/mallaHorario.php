@@ -42,11 +42,15 @@
             <?php
             for ($index = 0; $index < count($horario); $index++) {
                 echo "<tr>";                        
-                if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
+                if($index>=0){
+                    if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
                     echo "<td></td>";
+                    }else{
+                        echo "<td>".$horario[$index]['grupo']."</td>";
+                    }
                 }else{
                     echo "<td>".$horario[$index]['grupo']."</td>";
-                }               
+                }                               
                 echo    "<td>".$horario[$index]['aula']."</td>
                         <td>".$horario[$index]['dia']."</td>
                         <td>".$horario[$index]['horaInicio']."</td>
