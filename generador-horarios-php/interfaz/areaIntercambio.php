@@ -13,35 +13,12 @@ $facultad = $_SESSION['facultad'];
             for ($index = 0; $index < count($aulas); $index++) {    
                 echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
             } ?>
-        </select>
-        <label for='dia-intercambio1'>Dias:</label>
-        <select id='dia-intercambio1' class='form-control'>
-            <?php
-            $dias = $aulas[0]->getDias();
-            for ($index = 0; $index < count($dias); $index++) {    
-                echo "<option value='".$dias[$index]->getNombre()."'>".$dias[$index]->getNombre()."</option>";    
-            } ?>
-        </select>
-        <label for='desde-intercambio1'>Desde:</label>
-        <select id='desde-intercambio1' class='form-control'>
-            <?php
-            $horas = $dias[0]->getHoras();
-            for ($index = 0; $index < count($horas); $index++) {
-                $inicio = $horas[$index]->getInicio();
-                $fin = $horas[$index]->getFin();
-                echo "<option value='".$horas[$index]->getIdHora()."'>"."$inicio - $fin"."</option>";    
-            } ?>
-        </select>
-        <label for='hasta-intercambio1'>Hasta:</label>
-        <select id='hasta-intercambio1' class='form-control'>
-            <?php
-            for ($index = 0; $index < count($horas); $index++) {
-                $inicio = $horas[$index]->getInicio();
-                $fin = $horas[$index]->getFin();
-                echo "<option value='".$horas[$index]->getIdHora()."'>"."$inicio - $fin"."</option>";    
-            } ?>
-        </select></form><br>
-        <iframe id="frame-antes" src="" frameborder="0" width="90%" height="300"></iframe>
+        </select>        
+        </form><br>
+        <!--<iframe id="frame-antes" src="" frameborder="0" width="90%" height="300"></iframe>-->
+        <div id="antes-intercambio" style="width:100%; height:300px; overflow: scroll;">
+            
+        </div>
     </div>
 </div>
 <br>
@@ -55,34 +32,12 @@ $facultad = $_SESSION['facultad'];
             for ($index = 0; $index < count($aulas); $index++) {    
                 echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
             } ?>
-        </select>
-        <label for='dia-intercambio2'>Dias:</label>
-        <select id='dia-intercambio2' class='form-control'>
-            <?php
-            for ($index = 0; $index < count($dias); $index++) {    
-                echo "<option value='".$dias[$index]->getNombre()."'>".$dias[$index]->getNombre()."</option>";    
-            } ?>
-        </select>
-        <label for='desde-intercambio2'>Desde:</label>
-        <select id='desde-intercambio2' class='form-control'>
-            <?php
-            for ($index = 0; $index < count($horas); $index++) {
-                $inicio = $horas[$index]->getInicio();
-                $fin = $horas[$index]->getFin();
-                echo "<option value='".$horas[$index]->getIdHora()."'>"."$inicio - $fin"."</option>";    
-            } ?>
-        </select>
-        <label for='hasta-intercambio2'>Hasta:</label>
-        <select id='hasta-intercambio2' class='form-control'>
-            <?php
-            for ($index = 0; $index < count($horas); $index++) {
-                $inicio = $horas[$index]->getInicio();
-                $fin = $horas[$index]->getFin();
-                echo "<option value='".$horas[$index]->getIdHora()."'>"."$inicio - $fin"."</option>";    
-            } ?>
-        </select>
+        </select>        
         </form><br>
-        <iframe id="frame-despues" src="" frameborder="0" width="90%" height="300"></iframe>
+        <!--<iframe id="frame-despues" src="" frameborder="0" width="90%" height="300"></iframe>-->
+        <div id="despues-intercambio" style="width:100%; height:300px; overflow: scroll;">
+            
+        </div>
     </div>
 </div>
 <br>

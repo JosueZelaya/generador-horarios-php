@@ -118,7 +118,8 @@ abstract class ManejadorAulas {
                                 "departamento" => $departamento,
                                 "inicioBloque" => $rango['inicio'],
                                 "finBloque" => $rango['fin'],
-                                "idHora" => $hora->getIdHora()
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre()
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }else{
@@ -130,7 +131,8 @@ abstract class ManejadorAulas {
                                 "departamento" => "",
                                 "inicioBloque" => "",
                                 "finBloque" => "",
-                                "idHora" => ""
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre()
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }
@@ -176,7 +178,8 @@ abstract class ManejadorAulas {
                                 "departamento" => $departamento,
                                 "inicioBloque" => $rango['inicio'],
                                 "finBloque" => $rango['fin'],
-                                "idHora" => $hora->getIdHora()    
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre()    
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                             }else{
@@ -188,7 +191,8 @@ abstract class ManejadorAulas {
                                 "departamento" => "",
                                 "inicioBloque" => "",
                                 "finBloque" => "",
-                                "idHora" => ""     
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre()     
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                             }
@@ -202,7 +206,8 @@ abstract class ManejadorAulas {
                                 "departamento" => "",
                                 "inicioBloque" => "",
                                 "finBloque" => "",
-                                "idHora" => ""
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre()
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }
@@ -250,7 +255,8 @@ abstract class ManejadorAulas {
                                     "departamento" => $departamento,
                                     "inicioBloque" => $rango['inicio'],
                                     "finBloque" => $rango['fin'],
-                                    "idHora" => $hora->getIdHora()
+                                    "idHora" => $hora->getIdHora(),
+                                    "dia" => $dias[$x]->getNombre()
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                                 break;
@@ -263,7 +269,8 @@ abstract class ManejadorAulas {
                                 "departamento" => "",
                                 "inicioBloque" => "",
                                 "finBloque" => "",
-                                "idHora" => ""     
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre()    
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                             }
