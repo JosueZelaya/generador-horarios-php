@@ -42,7 +42,7 @@
             <?php
             for ($index = 0; $index < count($horario); $index++) {
                 echo "<tr>";                        
-                if($index>=0){
+                if($index>0){
                     if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
                     echo "<td></td>";
                     }else{
@@ -91,8 +91,8 @@
                 }else if($i==0){
                     echo "<div class='celda-hora'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
                 }else{
-                    echo "<div class='celda-hora'>";
                     $celda = $tabla[$i][$j];
+                    echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-idhora='".$celda['idHora']."'>";                    
                     if($j<3){
                         $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';

@@ -64,6 +64,26 @@ abstract class ManejadorAulas {
         }
         return $aulasSeleccionadas;
     }
+    
+    public static function getRangoHoras($horas,$grupo){
+        $grupoAnterior="";
+        $rangoHoras=["inicio"=>"","fin"=>""];        
+        foreach ($horas as $hora) {
+            $grupoActual = $hora->getGrupo();
+            if($grupoActual===$grupo){
+                if($grupoAnterior===$grupo){                                    
+//                    $rangoHoras['fin'] = $hora->getFin();
+                      $rangoHoras['fin'] = $hora->getIdHora();   
+                }else{                    
+//                    $rangoHoras['inicio'] = $hora->getInicio();
+//                    $rangoHoras['fin'] = $hora->getFin();
+                      $rangoHoras['inicio'] = $hora->getIdHora(); 
+                    $grupoAnterior = $grupo;
+                }
+            }            
+        }
+        return $rangoHoras;
+    }
 
     /**
      * Devuelve el horario de la semana para un aula específica
@@ -89,12 +109,16 @@ abstract class ManejadorAulas {
                             $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
                             $departamento = ManejadorDepartamentos::getNombreDepartamento($idDepartamento, $facultad->departamentos);
                             $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                            $rango = ManejadorAulas::getRangoHoras($horas, $grupo);
                             $array = [
                                 "texto" => $texto,
                                 "nombre" => $nombre,
                                 "codigo" => $cod_materia,                                
                                 "grupo" => $grupo->getId_grupo(),
-                                "departamento" => $departamento
+                                "departamento" => $departamento,
+                                "inicioBloque" => $rango['inicio'],
+                                "finBloque" => $rango['fin'],
+                                "idHora" => $hora->getIdHora()
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }else{
@@ -103,7 +127,10 @@ abstract class ManejadorAulas {
                                 "nombre" => "",
                                 "codigo" => "",                                
                                 "grupo" => "",
-                                "departamento" => ""
+                                "departamento" => "",
+                                "inicioBloque" => "",
+                                "finBloque" => "",
+                                "idHora" => ""
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }
@@ -140,12 +167,16 @@ abstract class ManejadorAulas {
                                 $nombre = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_agrup(), $facultad->getMaterias());                                
                                 $departamento = ManejadorDepartamentos::getNombreDepartamento($id_depar, $facultad->departamentos);
                                 $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                                $rango = ManejadorAulas::getRangoHoras($horas, $grupo);
                                 $array = [
                                 "texto" => $texto,
                                 "nombre" => $nombre,
                                 "codigo" => $cod_materia,                                
                                 "grupo" => $grupo->getId_grupo(),
-                                "departamento" => $departamento
+                                "departamento" => $departamento,
+                                "inicioBloque" => $rango['inicio'],
+                                "finBloque" => $rango['fin'],
+                                "idHora" => $hora->getIdHora()    
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                             }else{
@@ -154,7 +185,10 @@ abstract class ManejadorAulas {
                                 "nombre" => "",
                                 "codigo" => "",                                
                                 "grupo" => "",
-                                "departamento" => ""
+                                "departamento" => "",
+                                "inicioBloque" => "",
+                                "finBloque" => "",
+                                "idHora" => ""     
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                             }
@@ -165,7 +199,10 @@ abstract class ManejadorAulas {
                                 "nombre" => "",
                                 "codigo" => "",                                
                                 "grupo" => "",
-                                "departamento" => ""
+                                "departamento" => "",
+                                "inicioBloque" => "",
+                                "finBloque" => "",
+                                "idHora" => ""
                             ];
                             $tabla[$x+1][$y+1] = $array;
                         }
@@ -204,12 +241,16 @@ abstract class ManejadorAulas {
                                 $idDepartamento = ManejadorAgrupaciones::obtenerIdDepartamento($grupo->getId_agrup(), $facultad->agrupaciones);
                                 $departamento = ManejadorDepartamentos::getNombreDepartamento($idDepartamento, $facultad->departamentos);
                                 $texto = $cod_materia."<br/> GT: ".$grupo->getId_grupo();
+                                $rango = ManejadorAulas::getRangoHoras($horas, $grupo);
                                 $array = [
                                     "texto" => $texto,
                                     "nombre" => $nombre,
                                     "codigo" => $cod_materia,                                
                                     "grupo" => $grupo->getId_grupo(),
-                                    "departamento" => $departamento
+                                    "departamento" => $departamento,
+                                    "inicioBloque" => $rango['inicio'],
+                                    "finBloque" => $rango['fin'],
+                                    "idHora" => $hora->getIdHora()
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                                 break;
@@ -219,7 +260,10 @@ abstract class ManejadorAulas {
                                 "nombre" => "",
                                 "codigo" => "",                                
                                 "grupo" => "",
-                                "departamento" => ""
+                                "departamento" => "",
+                                "inicioBloque" => "",
+                                "finBloque" => "",
+                                "idHora" => ""     
                                 ];
                                 $tabla[$x+1][$y+1] = $array;
                             }

@@ -8,6 +8,7 @@
 
         <script type="text/javascript" src="../js/jquery-ui/jquery-1.10.2.js"></script>
         <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="../js/funciones.js"></script>        
         <script type="text/javascript">
             $('.verInfoGrupo').popover({
                 title : "Informacion del Grupo",
@@ -17,4 +18,5 @@
             });
         </script>
     </body>
+    
 </html>

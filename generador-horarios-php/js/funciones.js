@@ -258,6 +258,26 @@ $(function (){
             }
         });
     });
+    
+    $(document).on("click",".grupo",function(){  
+        $(".grupoSeleccionado").removeClass("grupoSeleccionado").addClass("grupo");
+        $(".grupo").css("background","");                
+        $(".grupoSeleccionado").css("background","");                
+        var grupo = $(this).attr("data-grupo");
+        $('.'+grupo).css("background","#9CEEE6");
+        var inicio = $(this).attr("data-iniciobloque");
+        var fin = $(this).attr("data-finbloque");
+        $('.'+grupo).removeClass("grupo").addClass("grupoSeleccionado");
+        alert("hora inicio: "+inicio+" hora fin: "+fin);
+    });
+    
+    $(document).on("click",".grupoSeleccionado",function(){        
+        $(".grupoSeleccionado").css("background","");
+        $(".grupoSeleccionado").removeClass("grupoSeleccionado").addClass("grupo");
+        $(this).css("background","#9CEEE6");
+        alert("Se seleccionó a: "+$(this).attr("data-idhora"));
+    });             
+    
 });
 
 function limpiarMain(){
