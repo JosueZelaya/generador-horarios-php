@@ -1,9 +1,9 @@
-var diaAntes;
-var inicioAntes;
-var finAntes;
-var diaDespues;
-var inicioDespues;
-var finDespues;
+var diaAntes="";
+var inicioAntes="";
+var finAntes="";
+var diaDespues="";
+var inicioDespues="";
+var finDespues="";
 
 $(function (){
     $(document).on("click","#generarHorario",function(){
@@ -176,7 +176,8 @@ $(function (){
                             $('#contenido').html(data);
                             var aula = $("#aula-intercambio1").val();
                             mostrarAreaIntercambio1(aula);
-                            mostrarAreaIntercambio2(aula);                               
+                            mostrarAreaIntercambio2(aula);
+                            resetearDiasHoras();
                         }
                     });
                 }else{
@@ -264,6 +265,7 @@ $(function (){
                     bootbox.alert("Exito",function(){
                         mostrarAreaIntercambio1(aula1);
                         mostrarAreaIntercambio2(aula2);
+                        resetearDiasHoras();
                     });                                    
                 }
             }
@@ -274,6 +276,7 @@ $(function (){
         $(".grupoSeleccionado").removeClass("grupoSeleccionado").addClass("grupo");
         $(".grupo").css("background","");                
         $(".grupoSeleccionado").css("background","");                
+        $(".grupoVacio").css("background","");
         var grupo = $(this).attr("data-grupo");
         $('.'+grupo).css("background","#9CEEE6");        
         $('.'+grupo).removeClass("grupo").addClass("grupoSeleccionado");        
@@ -282,14 +285,99 @@ $(function (){
     $(document).on("click",".grupoSeleccionado",function(){        
         $(".grupoSeleccionado").css("background","");
         $(".grupoSeleccionado").removeClass("grupoSeleccionado").addClass("grupo");
-        $(this).css("background","#9CEEE6");
-        
+        $(this).css("background","#9CEEE6");        
     });
+    
+    $(document).on("click",".grupoVacio",function(){
+        $(".grupo").css("background","");
+        $(".grupoSeleccionado").css("background","");
+    });
+
+    $(document).on("click",".grupoVacioIntercambio1",function(){
+        $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
+        $(".grupoIntercambio1").css("background","");                
+        $(".grupoSeleccionadoIntercambio1").css("background","");        
+        if(diaAntes===""){  //Si aun no se ha elegido ningún día            
+            $(this).css("background","#9CEEE6");
+            diaAntes = $(this).attr("data-dia");
+            inicioAntes = $(this).attr("data-idhora");
+            finAntes = $(this).attr("data-idhora");
+        }else{  //Si ya se había elegido alguna celda en algún día
+            if(diaAntes===$(this).attr("data-dia")){ //Si la celda elegida corresponde al mismo día anterior
+                inicioAntes = parseInt(inicioAntes);                
+                var inicioActual = parseInt($(this).attr("data-idhora"));
+                var sizeBloque = inicioActual-inicioAntes;                
+                if(sizeBloque===2){                    
+                    $(this).css("background","#9CEEE6");                  
+                    finAntes = $(this).attr("data-idhora");                    
+                    finAntes = parseInt(finAntes);
+                    intermedio = finAntes-1;
+                    $(".intercambio1"+diaAntes+intermedio).css("background","#9CEEE6");                  
+                }else if(sizeBloque===1){
+                    $(this).css("background","#9CEEE6");                  
+                    finAntes = $(this).attr("data-idhora");                    
+                }else{
+                    $(".grupoVacioIntercambio1").css("background","");
+                    $(this).css("background","#9CEEE6");                    
+                    inicioAntes = $(this).attr("data-idhora");
+                    finAntes = $(this).attr("data-idhora");
+                }                
+            }else{  //Si se ha elegido una celda en un día distinto al anterior                                
+                inicioAntes = $(this).attr("data-idhora");
+                finAntes = $(this).attr("data-idhora");
+                $(".grupoVacioIntercambio1").css("background","");
+                $(this).css("background","#9CEEE6");
+                diaAntes = $(this).attr("data-dia");
+            }
+        }
+        //alert("inicio: "+inicioAntes+" fin: "+finAntes);
+    });    
+    
+    $(document).on("click",".grupoVacioIntercambio2",function(){
+        $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
+        $(".grupoIntercambio2").css("background","");                
+        $(".grupoSeleccionadoIntercambio2").css("background","");        
+        if(diaDespues===""){  //Si aun no se ha elegido ningún día            
+            $(this).css("background","#9CEEE6");
+            diaDespues = $(this).attr("data-dia");
+            inicioDespues = $(this).attr("data-idhora");
+            finDespues = $(this).attr("data-idhora");
+        }else{  //Si ya se había elegido alguna celda en algún día
+            if(diaDespues===$(this).attr("data-dia")){ //Si la celda elegida corresponde al mismo día anterior
+                inicioDespues = parseInt(inicioDespues);                
+                var inicioActual = parseInt($(this).attr("data-idhora"));
+                var sizeBloque = inicioActual-inicioDespues;                
+                if(sizeBloque===2){                    
+                    $(this).css("background","#9CEEE6");                  
+                    finDespues = $(this).attr("data-idhora");                    
+                    finDespues = parseInt(finDespues);
+                    intermedio = finDespues-1;
+                    $(".intercambio2"+diaDespues+intermedio).css("background","#9CEEE6");                  
+                }else if(sizeBloque===1){
+                    $(this).css("background","#9CEEE6");                  
+                    finDespues = $(this).attr("data-idhora");                    
+                }else{
+                    $(".grupoVacioIntercambio2").css("background","");
+                    $(this).css("background","#9CEEE6");                    
+                    inicioDespues = $(this).attr("data-idhora");
+                    finDespues = $(this).attr("data-idhora");
+                }                
+            }else{  //Si se ha elegido una celda en un día distinto al anterior                                
+                inicioDespues = $(this).attr("data-idhora");
+                finDespues = $(this).attr("data-idhora");
+                $(".grupoVacioIntercambio2").css("background","");
+                $(this).css("background","#9CEEE6");
+                diaDespues = $(this).attr("data-dia");
+            }
+        }
+        //alert("inicio: "+inicioDespues+" fin: "+finDespues);
+    });    
     
      $(document).on("click",".grupoIntercambio1",function(){  
         $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
         $(".grupoIntercambio1").css("background","");                
         $(".grupoSeleccionadoIntercambio1").css("background","");                
+        $(".grupoVacioIntercambio1").css("background","");
         var grupo = $(this).attr("data-grupo");
         $('.intercambio1'+grupo).css("background","#9CEEE6");
         diaAntes = $(this).attr("data-dia");
@@ -301,14 +389,18 @@ $(function (){
     $(document).on("click",".grupoSeleccionadoIntercambio1",function(){        
         $(".grupoSeleccionadoIntercambio1").css("background","");
         $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
-        $(this).css("background","#9CEEE6");
-        alert("Se seleccionó a: "+$(this).attr("data-idhora")+" en dia: "+$(this).attr("data-dia"));
+        $(".grupoVacioIntercambio1").css("background","");
+        $(this).css("background","#9CEEE6");        
+        diaAntes = $(this).attr("data-dia");
+        inicioAntes = $(this).attr("data-idhora");
+        finAntes = $(this).attr("data-idhora");
     });
     
     $(document).on("click",".grupoIntercambio2",function(){  
         $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
         $(".grupoIntercambio2").css("background","");                
         $(".grupoSeleccionadoIntercambio2").css("background","");                
+        $(".grupoVacioIntercambio2").css("background","");
         var grupo = $(this).attr("data-grupo");
         $('.intercambio2'+grupo).css("background","#9CEEE6");
         diaDespues = $(this).attr("data-dia");
@@ -320,7 +412,11 @@ $(function (){
     $(document).on("click",".grupoSeleccionadoIntercambio2",function(){        
         $(".grupoSeleccionadoIntercambio2").css("background","");
         $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
-        $(this).css("background","#9CEEE6");        
+        $(".grupoVacioIntercambio2").css("background","");
+        $(this).css("background","#9CEEE6");
+        diaDespues = $(this).attr("data-dia");
+        inicioDespues = $(this).attr("data-idhora");
+        finDespues = $(this).attr("data-idhora");
     });
     
 });
@@ -363,6 +459,7 @@ function intercambiarConfirm(aula1,dia1,desde1,aula2,dia2,desde2){
                 bootbox.alert(data,function(){
                     mostrarAreaIntercambio1(aula1);
                     mostrarAreaIntercambio2(aula2); 
+                    resetearDiasHoras();
                 });
             }
     });
@@ -412,5 +509,14 @@ function mostrarAreaIntercambio2(aula){
             $('#despues-intercambio').html(data);
         }
     });    
+}
+
+function resetearDiasHoras(){
+    diaAntes="";
+    inicioAntes="";
+    finAntes="";
+    diaDespues="";
+    inicioDespues="";
+    finDespues="";    
 }
 

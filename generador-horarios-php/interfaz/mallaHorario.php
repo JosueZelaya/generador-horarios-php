@@ -102,7 +102,7 @@
                             echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                         }
                     }else{
-                        echo "<div class='celda-hora grupoVacio' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
+                        echo "<div class='celda-hora grupoVacio ".$celda['dia'].$celda['idHora']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
                         $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                         
