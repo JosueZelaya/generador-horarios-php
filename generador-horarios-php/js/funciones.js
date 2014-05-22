@@ -4,6 +4,9 @@ var finAntes="";
 var diaDespues="";
 var inicioDespues="";
 var finDespues="";
+var diaSeleccionado="";
+var horaInicioSeleccionada="";
+var horaFinSeleccionada="";
 
 $(function (){
     $(document).on("click","#generarHorario",function(){
@@ -293,96 +296,35 @@ $(function (){
         $(".grupoSeleccionado").css("background","");
     });
 
-    $(document).on("click",".grupoVacioIntercambio1",function(){
-        $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
-        $(".grupoIntercambio1").css("background","");                
-        $(".grupoSeleccionadoIntercambio1").css("background","");        
-        if(diaAntes===""){  //Si aun no se ha elegido ningún día            
-            $(this).css("background","#9CEEE6");
-            diaAntes = $(this).attr("data-dia");
-            inicioAntes = $(this).attr("data-idhora");
-            finAntes = $(this).attr("data-idhora");
-        }else{  //Si ya se había elegido alguna celda en algún día
-            if(diaAntes===$(this).attr("data-dia")){ //Si la celda elegida corresponde al mismo día anterior
-                inicioAntes = parseInt(inicioAntes);                
-                var inicioActual = parseInt($(this).attr("data-idhora"));
-                var sizeBloque = inicioActual-inicioAntes;                
-                if(sizeBloque===2){                    
-                    $(this).css("background","#9CEEE6");                  
-                    finAntes = $(this).attr("data-idhora");                    
-                    finAntes = parseInt(finAntes);
-                    intermedio = finAntes-1;
-                    $(".intercambio1"+diaAntes+intermedio).css("background","#9CEEE6");                  
-                }else if(sizeBloque===1){
-                    $(this).css("background","#9CEEE6");                  
-                    finAntes = $(this).attr("data-idhora");                    
-                }else{
-                    $(".grupoVacioIntercambio1").css("background","");
-                    $(this).css("background","#9CEEE6");                    
-                    inicioAntes = $(this).attr("data-idhora");
-                    finAntes = $(this).attr("data-idhora");
-                }                
-            }else{  //Si se ha elegido una celda en un día distinto al anterior                                
-                inicioAntes = $(this).attr("data-idhora");
-                finAntes = $(this).attr("data-idhora");
-                $(".grupoVacioIntercambio1").css("background","");
-                $(this).css("background","#9CEEE6");
-                diaAntes = $(this).attr("data-dia");
-            }
-        }
-        //alert("inicio: "+inicioAntes+" fin: "+finAntes);
+    $(document).on("click",".grupoVacioIntercambio1",function(){                            
+        $(".intercambio1").css("background","");        
+        seleccionarCeldas("Intercambio1",$(this));
+        diaAntes = diaSeleccionado;
+        inicioAntes = horaInicioSeleccionada;
+        finAntes = horaFinSeleccionada;        
+        iluminarCeldas(diaAntes,inicioAntes,finAntes,"intercambio1");        
     });    
     
     $(document).on("click",".grupoVacioIntercambio2",function(){
-        $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
-        $(".grupoIntercambio2").css("background","");                
-        $(".grupoSeleccionadoIntercambio2").css("background","");        
-        if(diaDespues===""){  //Si aun no se ha elegido ningún día            
-            $(this).css("background","#9CEEE6");
-            diaDespues = $(this).attr("data-dia");
-            inicioDespues = $(this).attr("data-idhora");
-            finDespues = $(this).attr("data-idhora");
-        }else{  //Si ya se había elegido alguna celda en algún día
-            if(diaDespues===$(this).attr("data-dia")){ //Si la celda elegida corresponde al mismo día anterior
-                inicioDespues = parseInt(inicioDespues);                
-                var inicioActual = parseInt($(this).attr("data-idhora"));
-                var sizeBloque = inicioActual-inicioDespues;                
-                if(sizeBloque===2){                    
-                    $(this).css("background","#9CEEE6");                  
-                    finDespues = $(this).attr("data-idhora");                    
-                    finDespues = parseInt(finDespues);
-                    intermedio = finDespues-1;
-                    $(".intercambio2"+diaDespues+intermedio).css("background","#9CEEE6");                  
-                }else if(sizeBloque===1){
-                    $(this).css("background","#9CEEE6");                  
-                    finDespues = $(this).attr("data-idhora");                    
-                }else{
-                    $(".grupoVacioIntercambio2").css("background","");
-                    $(this).css("background","#9CEEE6");                    
-                    inicioDespues = $(this).attr("data-idhora");
-                    finDespues = $(this).attr("data-idhora");
-                }                
-            }else{  //Si se ha elegido una celda en un día distinto al anterior                                
-                inicioDespues = $(this).attr("data-idhora");
-                finDespues = $(this).attr("data-idhora");
-                $(".grupoVacioIntercambio2").css("background","");
-                $(this).css("background","#9CEEE6");
-                diaDespues = $(this).attr("data-dia");
-            }
-        }
-        //alert("inicio: "+inicioDespues+" fin: "+finDespues);
-    });    
+        $(".intercambio2").css("background","");        
+        seleccionarCeldas("Intercambio2",$(this));
+        diaDespues = diaSeleccionado;
+        inicioDespues = horaInicioSeleccionada;
+        finDespues = horaFinSeleccionada;
+        iluminarCeldas(diaDespues,inicioDespues,finDespues,"intercambio2");        
+    });
     
-     $(document).on("click",".grupoIntercambio1",function(){  
+    $(document).on("click",".grupoIntercambio1",function(){  
         $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
         $(".grupoIntercambio1").css("background","");                
         $(".grupoSeleccionadoIntercambio1").css("background","");                
         $(".grupoVacioIntercambio1").css("background","");
         var grupo = $(this).attr("data-grupo");
-        $('.intercambio1'+grupo).css("background","#9CEEE6");
+        $('.intercambio1'+grupo).css("background","#9CEEE6");        
         diaAntes = $(this).attr("data-dia");
         inicioAntes = $(this).attr("data-iniciobloque");
         finAntes = $(this).attr("data-finbloque");
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
         $('.intercambio1'+grupo).removeClass("grupoIntercambio1").addClass("grupoSeleccionadoIntercambio1");        
     });
     
@@ -394,6 +336,7 @@ $(function (){
         diaAntes = $(this).attr("data-dia");
         inicioAntes = $(this).attr("data-idhora");
         finAntes = $(this).attr("data-idhora");
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
     });
     
     $(document).on("click",".grupoIntercambio2",function(){  
@@ -406,6 +349,7 @@ $(function (){
         diaDespues = $(this).attr("data-dia");
         inicioDespues = $(this).attr("data-iniciobloque");
         finDespues = $(this).attr("data-finbloque");
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
         $('.intercambio2'+grupo).removeClass("grupoIntercambio2").addClass("grupoSeleccionadoIntercambio2");        
     });
     
@@ -417,6 +361,7 @@ $(function (){
         diaDespues = $(this).attr("data-dia");
         inicioDespues = $(this).attr("data-idhora");
         finDespues = $(this).attr("data-idhora");
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
     });
     
 });
@@ -511,6 +456,42 @@ function mostrarAreaIntercambio2(aula){
     });    
 }
 
+function seleccionarCeldas(area,celda){    
+    if(diaSeleccionado===""){ //Si aun no se ha elegido ningún día
+        celda.css("background","#9CEEE6");
+        asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-idhora"),celda.attr("data-idhora"));        
+    }else{ //Si ya se había elegido alguna celda en algún día
+        if(diaSeleccionado===celda.attr("data-dia")){ //Si se desa elegir una celda del mismo día anterior
+            asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,horaFinSeleccionada);
+            horaActual = celda.attr("data-idhora");
+            if(esUnaCeldaSeleccionada(horaActual,horaInicioSeleccionada,horaFinSeleccionada)){ //Si se selecciona una celda que ya había sido seleccionada                
+                asignarDiasHoras("","","");                    
+            }else if(horaFinSeleccionada > horaActual){ //Cuando se selecciona de abajo hacia arriba                                    
+                if(horaFinSeleccionada-horaActual<=2){ //Si se seleccionó en una o dos celda anterior
+                    horaInicioSeleccionada = celda.attr("data-idhora");
+                }else{ //Si se seleccionó en 3 o más celdas anteriores  
+                    asignarDiasHoras(diaSeleccionado,celda.attr("data-idhora"),celda.attr("data-idhora"));                        
+                    $(".grupoSeleccionado"+area).css("background","");
+                    $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
+                }
+            }else if(horaFinSeleccionada < horaActual){ //Cuando se selecciona de arriba hacia abajo                
+                if(horaActual-horaInicioSeleccionada<=2){ //Si se seleccionó en una o dos celdas posteriores
+                    horaFinSeleccionada = celda.attr("data-idhora");
+                }else{ //Si se seleccionó en 3 o más celdas posteriores
+                    asignarDiasHoras(diaSeleccionado,celda.attr("data-idhora"),celda.attr("data-idhora"));                                                
+                    $(".grupoSeleccionado"+area).css("background","");
+                    $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
+                }
+            } 
+        }else{ //Si se elige una celda en un día distinto al anterior                          
+           asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-idhora"),celda.attr("data-idhora"));
+           celda.css("background","#9CEEE6");               
+           $(".grupoSeleccionado"+area).css("background","");
+           $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area); 
+        }
+    }    
+}
+
 function resetearDiasHoras(){
     diaAntes="";
     inicioAntes="";
@@ -520,3 +501,34 @@ function resetearDiasHoras(){
     finDespues="";    
 }
 
+function asignarDiasHoras(dia,horaInicio,horaFin){    
+    diaSeleccionado=dia;
+    horaInicioSeleccionada=horaInicio;
+    horaFinSeleccionada=horaFin;    
+}
+
+function esUnaCeldaSeleccionada(horaActual,horaInicio,horaFin){    
+    horaActual = parseInt(horaActual);
+    horaInicio = parseInt(horaInicio);  
+    horaFin = parseInt(horaFin);
+    if(horaInicio < horaActual && horaActual < horaFin){
+        return true;
+    }else if(horaFin === horaActual || horaInicio === horaActual){
+        return true;
+    }
+    return false;
+}
+
+function iluminarCeldas(dia,horaInicio,horaFin,div){    
+    if(horaInicio !== "" && horaFin !==""){
+        if(horaInicio < horaFin){
+        horaInicio = parseInt(horaInicio);
+        intermedio = horaInicio+1;
+        }else{
+            intermedio = horaInicio;
+        }    
+        $("."+div+dia+horaInicio).css("background","#9CEEE6"); 
+        $("."+div+dia+intermedio).css("background","#9CEEE6"); 
+        $("."+div+dia+horaFin).css("background","#9CEEE6"); 
+    }    
+}

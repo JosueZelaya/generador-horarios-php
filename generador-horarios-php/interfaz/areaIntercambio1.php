@@ -33,7 +33,7 @@ function imprimir($tabla){
             }else{
                 $celda = $tabla[$i][$j];
                 if(!strcmp($celda['grupo'],"")==0){
-                    echo "<div class='celda-hora grupoIntercambio1 intercambio1".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
+                    echo "<div class='celda-hora intercambio1 grupoIntercambio1 intercambio1".$celda['codigo'].$celda['grupo'].$i."  intercambio1".$celda['dia'].$celda['idHora']."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
                     if($j<3){
                         $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
@@ -42,7 +42,7 @@ function imprimir($tabla){
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                     }
                 }else{
-                    echo "<div class='celda-hora grupoVacioIntercambio1 intercambio1".$celda['dia'].$celda['idHora']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
+                    echo "<div class='celda-hora intercambio1 grupoVacioIntercambio1 intercambio1".$celda['dia'].$celda['idHora']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
                     $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                     echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                 }                                    
