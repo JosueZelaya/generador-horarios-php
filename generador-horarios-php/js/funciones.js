@@ -296,13 +296,13 @@ $(function (){
         $(".grupoSeleccionado").css("background","");
     });
 
-    $(document).on("click",".grupoVacioIntercambio1",function(){                            
+    $(document).on("click",".grupoVacioIntercambio1",function(){                                    
         $(".intercambio1").css("background","");        
         seleccionarCeldas("Intercambio1",$(this));
         diaAntes = diaSeleccionado;
         inicioAntes = horaInicioSeleccionada;
         finAntes = horaFinSeleccionada;        
-        iluminarCeldas(diaAntes,inicioAntes,finAntes,"intercambio1");        
+        iluminarCeldas(diaAntes,inicioAntes,finAntes,"intercambio1");          
     });    
     
     $(document).on("click",".grupoVacioIntercambio2",function(){
@@ -461,12 +461,12 @@ function seleccionarCeldas(area,celda){
         celda.css("background","#9CEEE6");
         asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-idhora"),celda.attr("data-idhora"));        
     }else{ //Si ya se había elegido alguna celda en algún día
-        if(diaSeleccionado===celda.attr("data-dia")){ //Si se desa elegir una celda del mismo día anterior
+        if(diaSeleccionado===celda.attr("data-dia")){ //Si se desa elegir una celda del mismo día anterior            
             asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,horaFinSeleccionada);
             horaActual = celda.attr("data-idhora");
             if(esUnaCeldaSeleccionada(horaActual,horaInicioSeleccionada,horaFinSeleccionada)){ //Si se selecciona una celda que ya había sido seleccionada                
                 asignarDiasHoras("","","");                    
-            }else if(horaFinSeleccionada > horaActual){ //Cuando se selecciona de abajo hacia arriba                                    
+            }else if(horaFinSeleccionada > horaActual){ //Cuando se selecciona de abajo hacia arriba                
                 if(horaFinSeleccionada-horaActual<=2){ //Si se seleccionó en una o dos celda anterior
                     horaInicioSeleccionada = celda.attr("data-idhora");
                 }else{ //Si se seleccionó en 3 o más celdas anteriores  
@@ -474,9 +474,10 @@ function seleccionarCeldas(area,celda){
                     $(".grupoSeleccionado"+area).css("background","");
                     $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
                 }
-            }else if(horaFinSeleccionada < horaActual){ //Cuando se selecciona de arriba hacia abajo                
-                if(horaActual-horaInicioSeleccionada<=2){ //Si se seleccionó en una o dos celdas posteriores
-                    horaFinSeleccionada = celda.attr("data-idhora");
+            }else if(horaFinSeleccionada < horaActual){ //Cuando se selecciona de arriba hacia abajo    
+                if(horaActual-horaInicioSeleccionada<=2){ //Si se seleccionó en una o dos celdas posteriores                    
+                    //horaFinSeleccionada = celda.attr("data-idhora");
+                    asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,celda.attr("data-idhora"));                                                
                 }else{ //Si se seleccionó en 3 o más celdas posteriores
                     asignarDiasHoras(diaSeleccionado,celda.attr("data-idhora"),celda.attr("data-idhora"));                                                
                     $(".grupoSeleccionado"+area).css("background","");
@@ -503,8 +504,8 @@ function resetearDiasHoras(){
 
 function asignarDiasHoras(dia,horaInicio,horaFin){    
     diaSeleccionado=dia;
-    horaInicioSeleccionada=horaInicio;
-    horaFinSeleccionada=horaFin;    
+    horaInicioSeleccionada=parseInt(horaInicio);
+    horaFinSeleccionada=parseInt(horaFin);    
 }
 
 function esUnaCeldaSeleccionada(horaActual,horaInicio,horaFin){    
