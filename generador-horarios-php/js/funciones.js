@@ -336,7 +336,7 @@ $(function (){
         diaAntes = $(this).attr("data-dia");
         inicioAntes = $(this).attr("data-idhora");
         finAntes = $(this).attr("data-idhora");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-idhora"),$(this).attr("data-idhora"));
     });
     
     $(document).on("click",".grupoIntercambio2",function(){  
@@ -361,7 +361,7 @@ $(function (){
         diaDespues = $(this).attr("data-dia");
         inicioDespues = $(this).attr("data-idhora");
         finDespues = $(this).attr("data-idhora");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-idhora"),$(this).attr("data-idhora"));
     });
     
 });
