@@ -242,15 +242,14 @@ $(function (){
     });
     
     $(document).on("click","#intercambiarHoras",function(){
-          var aula1 = $('#aula-intercambio1').val();
-          var aula2 = $('#aula-intercambio2').val();
-          var dia1 = diaAntes;
-          var dia2 = diaDespues;
-          var desde1 = inicioAntes;
-          var desde2 = inicioDespues;
-          var hasta1 = finAntes;
-          var hasta2 = finDespues;  
-            
+        var aula1 = $('#aula-intercambio1').val();
+        var aula2 = $('#aula-intercambio2').val();
+        var dia1 = diaAntes;
+        var dia2 = diaDespues;
+        var desde1 = inicioAntes;
+        var desde2 = inicioDespues;
+        var hasta1 = finAntes;
+        var hasta2 = finDespues;
         var dataString = 'op=intercambio&aula1='+aula1+'&aula2='+aula2+'&dia1='+dia1+'&dia2='+dia2+'&desde1='+desde1+"&desde2="+desde2+'&hasta1='+hasta1+'&hasta2='+hasta2;
         $.ajax({
             type: "GET",
@@ -258,14 +257,14 @@ $(function (){
             data: dataString,
             success: function(data){
                 var retorno = data.toString();
-                if(retorno.search("continuar?") != -1){
+                if(retorno.search("choca") != -1){
                     bootbox.confirm(data,function(resultado){
                         if(resultado===true){
                             intercambiarConfirm(aula1,dia1,desde1,aula2,dia2,desde2);                            
                         }
                     });
-                } else if(retorno == 'confirmacion'){
-                    bootbox.alert("Exito",function(){
+                } else{
+                    bootbox.alert(data,function(){
                         mostrarAreaIntercambio1(aula1);
                         mostrarAreaIntercambio2(aula2);
                         resetearDiasHoras();
@@ -369,11 +368,13 @@ $(function (){
 function limpiarMain(){
     $('#main-content').html('');
 }
+
 function addFiltro(){
     $('<div/>',{
             id: "filtro"
         }).appendTo('#main-content');
 }
+
 function addContent(){
     $('<div/>',{
             id: "contenido"
@@ -428,9 +429,7 @@ function dibujarHorario(dataString){
             bootbox.alert("error: "+data,function(){});
         }
     });
-
-}    
-    
+}   
     
 function mostrarAreaIntercambio1(aula){    
     var dataString = 'aula='+aula;

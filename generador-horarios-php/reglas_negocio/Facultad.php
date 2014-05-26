@@ -12,11 +12,13 @@ require_once 'ManejadorDias.php';
 class Facultad {
     private $aulas;
     public $agrupaciones;
-    public $asignaciones_docs;
+    private $asignaciones_docs;
     public $departamentos;
     private $materias;
+    private $docentes;
+    private $cargos;
     
-    public function __construct($agrupaciones,$departamentos,$asignaciones_docs) {
+    public function __construct($agrupaciones,$departamentos,$materias,$cargos) {
         $this->aulas = ManejadorAulas::getTodasAulas();
         for ($i = 0; $i < count($this->aulas); $i++) {
             $dias = ManejadorDias::getDias();
@@ -28,7 +30,8 @@ class Facultad {
         }
         $this->agrupaciones = $agrupaciones;
         $this->departamentos = $departamentos;
-        $this->asignaciones_docs = $asignaciones_docs;
+        $this->materias = $materias;
+        $this->cargos = $cargos;
     }
        
     public function getAulas() {
@@ -46,5 +49,28 @@ class Facultad {
     public function setMaterias($materias) {
         $this->materias = $materias;
     }
+    
+    public function getDocentes() {
+        return $this->docentes;
+    }
 
+    public function setDocentes($docentes) {
+        $this->docentes = $docentes;
+    }
+
+    public function getAsignaciones_docs() {
+        return $this->asignaciones_docs;
+    }
+
+    public function setAsignaciones_docs($asignaciones_docs) {
+        $this->asignaciones_docs = $asignaciones_docs;
+    }
+    
+    public function getCargos() {
+        return $this->cargos;
+    }
+
+    public function setCargos($cargos) {
+        $this->cargos = $cargos;
+    }
 }

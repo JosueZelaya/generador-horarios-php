@@ -15,7 +15,7 @@ class Grupo {
     
     private $id_agrup;
     private $id_grupo;
-    private $id_docente;
+    private $docente;
     private $horasAsignadas;
     private $incompleto;
     
@@ -23,7 +23,7 @@ class Grupo {
         $this->incompleto=false;
         $this->id_agrup = 0;
         $this->id_grupo = 0;
-        $this->id_docente = 0;
+        $this->docente = null;
         $this->horasAsignadas = 0;
     }
     
@@ -33,10 +33,6 @@ class Grupo {
 
     public function getId_grupo() {
         return $this->id_grupo;
-    }
-
-    public function getId_docente() {
-        return $this->id_docente;
     }
 
     public function getHorasAsignadas() {
@@ -55,10 +51,6 @@ class Grupo {
         $this->id_grupo = $id_grupo;
     }
 
-    public function setId_docente($id_docente) {
-        $this->id_docente = $id_docente;
-    }
-
     public function setHorasAsignadas($horasAsignadas) {
         $this->horasAsignadas = $horasAsignadas;
     }
@@ -67,4 +59,11 @@ class Grupo {
         $this->incompleto = $incompleto;
     }
 
+    public function getDocente() {
+        return $this->docente;
+    }
+
+    public function setDocente($docente) {
+        $this->docente = $docente;
+    }
 }

@@ -15,6 +15,8 @@ include_once '../reglas_negocio/ManejadorDepartamentos.php';
 include_once '../reglas_negocio/ManejadorAsignacionesDocs.php';
 include_once '../reglas_negocio/ManejadorAulas.php';
 include_once '../reglas_negocio/ManejadorHoras.php';
+include_once '../reglas_negocio/ManejadorDocentes.php';
+include_once '../reglas_negocio/ManejadorCargos.php';
 session_start();
 
 if(isset($_SESSION['facultad'])){
@@ -48,8 +50,9 @@ if(isset($_GET['op'])){
 }
 
 function generarHorario($cicloPar){
-    $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs());
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar));    
+    $facultad = new Facultad(ManejadorAgrupaciones::getAgrupaciones(),  ManejadorDepartamentos::getDepartamentos(),  ManejadorMaterias::getTodasMaterias($cicloPar), ManejadorCargos::obtenerTodosCargos());
+    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos()));
+    $facultad->setAsignaciones_docs(ManejadorAsignacionesDocs::obtenerTodasAsignacionesDocs($facultad->getDocentes()));
     ManejadorReservaciones::asignarRerservaciones($facultad);
     $materias = $facultad->getMaterias();
     $procesador = new Procesador();
@@ -59,12 +62,12 @@ function generarHorario($cicloPar){
         if($agrup->getNum_grupos()==$agrup->getNumGruposAsignados()){
             continue;
         }
-        $asignaciones = ManejadorAsignacionesDocs::obtenerAsignacionesDeAgrup($agrup->getId(), $facultad->asignaciones_docs);
+        $asignaciones = ManejadorAsignacionesDocs::obtenerAsignacionesDeAgrup($agrup->getId(), $facultad->getAsignaciones_docs());
         for ($j = 0; $j < count($asignaciones); $j++) {
             $asignacion = $asignaciones[$j];
             for ($k = 0; $k < $asignacion->getNum_grupos(); $k++) {
                 try {
-                    $procesador->procesarMateria($materias[$i], $asignacion->getId_docente(), $agrup);
+                    $procesador->procesarMateria($materias[$i], $asignacion->getDocente(), $agrup);
                 } catch (Exception $exc) {
                     error_log($exc->getMessage(),0); //                    Se produce cuando ya no hay aulas disponibles
                 }
@@ -83,9 +86,12 @@ function inicioIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$ha
     for($i=$desde2;$i<=$hasta2;$i++){
         $grupos2[] = ManejadorGrupos::getGrupo($facultad->getAulas(), $aula2, $dia2, $i);
     }
-    if(count($grupos1) == 1 || count($grupos2) == 1 || count($grupos1) > 3 || count($grupos2) > 3 || count($grupos1) != count($grupos2)){
-        echo "Eliga bloques iguales de 2 o 3 horas";
-    } 
+    if(count($grupos1) > 3 || count($grupos2) > 3 || count($grupos1) != count($grupos2)){
+        echo "Eliga bloques iguales de 1, 2 o 3 horas";
+    }
+    elseif((count($grupos1) == 1 && ManejadorHoras::grupoHuerfano(ManejadorAulas::getAula($facultad->getAulas(), $aula2)->getDia($dia2)->getHoras(), $desde2, $grupos1[0], $desde1)) || (count($grupos2) == 1 && ManejadorHoras::grupoHuerfano(ManejadorAulas::getAula($facultad->getAulas(), $aula1)->getDia($dia1)->getHoras(), $desde1, $grupos2[0], $desde2))){
+        echo 'Se permiten 2 horas minimo y 3 maximo al dia de un grupo/materia (horas continuas)';
+    }
     elseif (!bloqueFuncional($grupos1) || !bloqueFuncional($grupos2)) {
         echo "No pueden haber 2 horas sin grupo asignado";
     }
@@ -100,15 +106,15 @@ function inicioIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$ha
             echo ". Desea continuar?";
         }
     } else {
-        echo "Bloques incorrectos";
+        echo "Bloques incorrectos: Eliga un intervalo de horas asignadas a un mismo grupo/materia; se permiten 2 horas minimo y 3 maximo al dia de un grupo/materia (horas continuas)";
     }
 }
 
-function testIntercambio($materia,$dia,$desde,$aulas,$hasta,$materias,$idDocente){
-    if($materia == null && $idDocente == null){
+function testIntercambio($materia,$dia,$desde,$aulas,$hasta,$materias,$docente){
+    if($materia == null && $docente == null){
         return true;
     }
-    else if(!ManejadorHoras::chocaMateria($dia, $desde, $aulas, $materia, ($hasta+1)-$desde, $materias) && !ManejadorHoras::chocaGrupoDocente($idDocente, $desde, $hasta, $aulas, $dia)){
+    else if(!ManejadorHoras::chocaMateria($dia, $desde, $aulas, $materia, ($hasta+1)-$desde, $materias) && !ManejadorHoras::chocaGrupoDocente($docente, $desde, $hasta, $aulas, $dia)){
         return true;
     } else{
         return false;
@@ -118,25 +124,9 @@ function testIntercambio($materia,$dia,$desde,$aulas,$hasta,$materias,$idDocente
 function realizarIntercambio($aula1,$dia1,$desde1,$aula2,$dia2,$desde2){
     $grupos = $_SESSION['grupos'];
     global $facultad;
-    for ($i = 0; $i < count($grupos[0]); $i++){
-        ManejadorAulas::getAula($facultad->getAulas(), $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setGrupo($grupos[0][$i]);
-        if(ManejadorGrupos::getGrupo($facultad->getAulas(), $aula2, $dia2, $desde2)->getId_grupo() == 0){
-            ManejadorAulas::getAula($facultad->getAulas(), $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setDisponible(true);
-        } else{
-            ManejadorAulas::getAula($facultad->getAulas(), $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setDisponible(false);
-        }
-        $desde2++;
-    }
-    for($i=0; $i < count($grupos[1]); $i++){
-        ManejadorAulas::getAula($facultad->getAulas(), $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setGrupo($grupos[1][$i]);
-        if(ManejadorGrupos::getGrupo($facultad->getAulas(), $aula1, $dia1, $desde1)->getId_grupo() == 0){
-            ManejadorAulas::getAula($facultad->getAulas(), $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setDisponible(true);
-        } else {
-            ManejadorAulas::getAula($facultad->getAulas(), $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setDisponible(false);
-        }
-        $desde1++;
-    }
-    echo 'confirmacion';
+    ManejadorHoras::intercambiar($aula1, $dia1, $desde1, $aula2, $dia2, $desde2, $grupos, $facultad->getAulas());
+    unset($_SESSION['grupos']);
+    echo 'Exito';
 }
 
 function bloqueFuncional($grupos){
@@ -161,24 +151,24 @@ function infoDeBloque($grupo1,$grupo2){
     
     if($grupo1->getId_grupo() == 0){
         $materia1 = null;
-        $idDocente1 = null;
+        $docente1 = null;
     } else{
         $materia1 = ManejadorMaterias::getMateriaDeGrupo($grupo1->getId_agrup(), $facultad->getMaterias())[0];
-        $idDocente1 = $grupo1->getId_docente();
+        $docente1 = $grupo1->getDocente();
     }
     
     if($grupo2->getId_grupo() == 0){
         $materia2 = null;
-        $idDocente2 = null;
+        $docente2 = null;
     } else{
         $materia2 = ManejadorMaterias::getMateriaDeGrupo($grupo2->getId_agrup(), $facultad->getMaterias())[0];
-        $idDocente2 = $grupo2->getId_docente();
+        $docente2 = $grupo2->getDocente();
     }
     
     $info[0]['materia'] = $materia1;
-    $info[0]['docente'] = $idDocente1;
+    $info[0]['docente'] = $docente1;
     $info[1]['materia'] = $materia2;
-    $info[1]['docente'] = $idDocente2;
+    $info[1]['docente'] = $docente2;
     
     return $info;
 }

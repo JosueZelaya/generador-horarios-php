@@ -20,6 +20,7 @@ class Materia {
     private $codigoCarrera;
     private $planEstudio;
     private $idAgrupacion;
+    private $horasRequeridas;
     private $incompleta;
     
     function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $departamento, $codigoCarrera, $planEstudio, $idAgrupacion, $incompleta) {
@@ -32,6 +33,7 @@ class Materia {
         $this->planEstudio = $planEstudio;
         $this->idAgrupacion = $idAgrupacion;
         $this->incompleta = $incompleta;
+        $this->horasRequeridas = null;
     }
 
     public function getCodigo() {
@@ -106,8 +108,16 @@ class Materia {
         $this->incompleta = $incompleta;
     }
     
+    public function setHorasRequeridas($horasRequeridas) {
+        $this->horasRequeridas = $horasRequeridas;
+    }
+    
     public function getTotalHorasRequeridas(){
-        $total = round(($this->unidadesValorativas*20)/16,0,PHP_ROUND_HALF_DOWN);
-        return $total;
+        if($this->horasRequeridas == null){
+            $total = round(($this->unidadesValorativas*20)/16,0,PHP_ROUND_HALF_DOWN);
+            return $total;
+        } else{
+            return $this->horasRequeridas;
+        }
     }
 }

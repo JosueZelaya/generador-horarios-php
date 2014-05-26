@@ -8,7 +8,6 @@
     font: 14px/100% Arial,Helvetica,sans-serif;
     text-align: center;
 }
-
 .grupo-seleccionado{
     height: 50px;
     width: 100%;
@@ -20,7 +19,6 @@
     text-align: center;
     background: #3D81F6;
 }
-
 .col{
     width: 13%;
     float: left;

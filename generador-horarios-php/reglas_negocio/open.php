@@ -1,5 +1,4 @@
 <?php
-
 include_once 'Facultad.php';
 session_start();
 

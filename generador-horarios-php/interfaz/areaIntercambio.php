@@ -16,9 +16,7 @@ $facultad = $_SESSION['facultad'];
         </select>        
         </form><br>
         <!--<iframe id="frame-antes" src="" frameborder="0" width="90%" height="300"></iframe>-->
-        <div id="antes-intercambio" style="width:100%; height:300px; overflow: scroll;">
-            
-        </div>
+        <div id="antes-intercambio" style="width:100%; height:300px; overflow: scroll;"></div>
     </div>
 </div>
 <br>
@@ -35,9 +33,7 @@ $facultad = $_SESSION['facultad'];
         </select>        
         </form><br>
         <!--<iframe id="frame-despues" src="" frameborder="0" width="90%" height="300"></iframe>-->
-        <div id="despues-intercambio" style="width:100%; height:300px; overflow: scroll;">
-            
-        </div>
+        <div id="despues-intercambio" style="width:100%; height:300px; overflow: scroll;"></div>
     </div>
 </div>
 <br>

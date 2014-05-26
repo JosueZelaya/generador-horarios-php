@@ -12,8 +12,6 @@ if(isset($_GET['departamento'])){
             echo "<option value='todos'>TODAS</option>";
         for ($index = 0; $index < count($carreras); $index++) {
             echo "<option value='".$carreras[$index]."'>".$carreras[$index]."</option>";
-        }       
-    }    
-    
+        }
+    }
 }
-

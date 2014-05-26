@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorMaterias
  *
@@ -32,6 +25,9 @@ abstract class ManejadorMaterias {
         }
         while($fila = pg_fetch_array($respuesta)){
             $materia = new Materia($fila[0],$fila[1],$fila[3],$fila[2],$fila[7],$fila[4],$fila[5],$fila[6],true);
+            if(preg_match('/^Practica Docente/', $materia->getNombre()) == 1){
+                $materia->setHorasRequeridas(5);
+            }
             $materias[] = $materia;
         }
         return $materias;
