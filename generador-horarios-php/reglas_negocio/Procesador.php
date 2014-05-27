@@ -157,7 +157,7 @@ class Procesador {
         }
         $this->aulasConCapacidad = ManejadorAulas::obtenerAulasPorCapacidad($this->aulas,  $this->agrupacion->getNum_alumnos()+$this->holguraAula);
         self::localizarBloqueOptimo();  //Debe asignar la materia a un aula de la facultdad
-    }
+    }    
     
      /** Asignar dias considerando choques de horario en ellos
      *      
