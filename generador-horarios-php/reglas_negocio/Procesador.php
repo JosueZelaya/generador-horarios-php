@@ -15,6 +15,7 @@ include_once 'Dia.php';
 include_once 'Docente.php';
 include_once 'ManejadorDias.php';
 include_once 'ManejadorHoras.php';
+include_once 'ManejadorGrupos.php';
 
 class Procesador {
     
@@ -45,7 +46,7 @@ class Procesador {
         $this->facultad = $facultad;
         $this->aulas = $facultad->getAulas();        //Se obtienen las aulas de la facultad en las cuales se podría asignar materias
         $this->materias = $facultad->getMaterias();  //Se obtienen todas las materias de la facultad
-        $this->agrupaciones = $facultad->agrupaciones;  //Se obtienen todas las agrupaciones de materias que existen
+        $this->agrupaciones = $facultad->getAgrupaciones();  //Se obtienen todas las agrupaciones de materias que existen
     }
     
     /** Realiza el procesamiento necesario para generar el horario de una materia.
@@ -60,7 +61,7 @@ class Procesador {
             $this->materia = $materia;             //La materia que se debe procesar
             $this->agrupacion = $agrupacion; //Se busca dentro de todas las agrupaciones, cuál es la que pertenece a la materia que se quiere asignar
             $this->grupo = new Grupo();   //El grupo con la información de la agrupación, este grupo es el que será asignado en un aula
-            $this->grupo->setId_agrup($agrupacion->getId());
+            $this->grupo->setAgrup($agrupacion);
             $this->grupo->setId_grupo($agrupacion->getNumGruposAsignados()+1);
             $this->grupo->setDocente($docente); //Se le asigna al grupo a cual docente pertenecera para comprobaciones de choques
             $this->aulasConCapacidad = ManejadorAulas::obtenerAulasPorCapacidad($this->aulas,  $this->agrupacion->getNum_alumnos()+$this->holguraAula);
@@ -153,7 +154,7 @@ class Procesador {
         $this->holguraAula -= 5;
         if($this->agrupacion->getNum_alumnos()+$this->holguraAula < $this->agrupacion->getNum_alumnos()){
             $this->grupo->setIncompleto(TRUE);
-            throw new Exception("¡Ya no hay aulas disponibles para el grupo ".$this->grupo->getId_grupo()." Materia: ".ManejadorAgrupaciones::obtenerNombrePropietario($this->grupo->getId_Agrup(),$this->materias)." Departamento: ".ManejadorAgrupaciones::obtenerIdDepartamento($this->grupo->getId_Agrup(),  $this->agrupaciones)."!");
+            throw new Exception("¡Ya no hay aulas disponibles para el grupo ".$this->grupo->getId_grupo()." Materia: ".ManejadorGrupos::obtenerNombrePropietario($this->grupo->getAgrup()->getMaterias())." Departamento: ".ManejadorGrupos::obtenerIdDepartamento($this->grupo->getAgrup()->getMaterias())." !");
         }
         $this->aulasConCapacidad = ManejadorAulas::obtenerAulasPorCapacidad($this->aulas,  $this->agrupacion->getNum_alumnos()+$this->holguraAula);
         self::localizarBloqueOptimo();  //Debe asignar la materia a un aula de la facultdad
@@ -173,7 +174,7 @@ class Procesador {
             if($diaElegido != NULL){
                 $n = $diaElegido->getNombre();
                 error_log ("Se probara sin choques en dia $n",0);
-                if($this->grupo->getDocente()->getCargo() != null && strcmp($this->grupo->getDocente()->getCargo()->getDia_exento(), $diaElegido->getNombre()) == 0){
+                if($this->grupo->getDocente()->getCargo() != null && $this->grupo->getDocente()->getCargo()->getId_dia_exento() == $diaElegido->getId()){
                     error_log ("Docente ".$this->grupo->getDocente()->getIdDocente()." no esta habilitado en dia $n");
                     goto fin;
                 }
@@ -196,7 +197,7 @@ class Procesador {
             if($diaElegido != NULL){
                 $n = $diaElegido->getNombre();
                 error_log ("Se probara con choques en dia $n",0);
-                if($this->grupo->getDocente()->getCargo() != null && strcmp($this->grupo->getDocente()->getCargo()->getDia_exento(), $diaElegido->getNombre()) == 0){
+                if($this->grupo->getDocente()->getCargo() != null && $this->grupo->getDocente()->getCargo()->getId_dia_exento() == $diaElegido->getId()){
                     error_log ("Docente ".$this->grupo->getDocente()->getIdDocente()." no esta habilitado en dia $n");
                     goto fin;
                 }
@@ -220,17 +221,17 @@ class Procesador {
         }
         $horasDisponibles = NULL;
         $numHorasContinuas = self::calcularHorasContinuasRequeridas($this->materia,  $this->grupo); //Calculamos el numero de horas continuas para la clase
-        $horasNivel = ManejadorHoras::getUltimasHoraDeNivel($this->grupo, $this->materia, $this->materias, $this->agrupaciones, $this->aulasConCapacidad, $nombreDia);
+        $horasNivel = ManejadorHoras::getUltimasHoraDeNivel($this->grupo, $this->materia, $this->aulasConCapacidad, $nombreDia);
         foreach ($horasNivel as $hora) {
             if($hora+$numHorasContinuas < $this->hasta){
-                $horasDisponibles = ManejadorHoras::buscarHoras($this->grupo->getDocente(), $numHorasContinuas, $hora+1, $hora+1+$numHorasContinuas, $nombreDia, $this->materia, $this->aulasConCapacidad, $this->aulas, $this->materias, $this->grupo);
+                $horasDisponibles = ManejadorHoras::buscarHoras($this->grupo->getDocente(), $numHorasContinuas, $hora+1, $hora+1+$numHorasContinuas, $nombreDia, $this->materia, $this->aulasConCapacidad, $this->aulas);
                 if($horasDisponibles != NULL && count($horasDisponibles)!=0){
                     break;
                 }
             }
         }
         if($horasDisponibles == NULL){
-            $horasDisponibles = ManejadorHoras::buscarHorasUltimoRecurso($this->grupo->getDocente(),$numHorasContinuas, $this->desde,$this->hasta,$nombreDia,$this->materia,$this->aulasConCapacidad,$this->aulas,$this->materias); //elige las primeras horas disponibles que encuentre ese día
+            $horasDisponibles = ManejadorHoras::buscarHorasUltimoRecurso($this->grupo->getDocente(),$numHorasContinuas, $this->desde,$this->hasta,$nombreDia,$this->materia,$this->aulasConCapacidad,$this->aulas); //elige las primeras horas disponibles que encuentre ese día
         }
         if($horasDisponibles != NULL){
             self::asignar($this->grupo,$horasDisponibles);

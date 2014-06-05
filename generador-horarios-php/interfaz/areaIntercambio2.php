@@ -8,14 +8,14 @@ $modelo = create_model($facultad);
 
 if (isset($_GET['aula'])) {
     $aula = $_GET['aula'];
-    $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(), $modelo, $facultad);
+    $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
     echo imprimir($tabla);
     ?>
     <script type="text/javascript">
         $('.verInfoGrupo').popover({
             title : "Informacion del Grupo",
             animation : true,
-            trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
+            trigger : 'click',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
             html : true
         });
     </script>
@@ -32,18 +32,19 @@ function imprimir($tabla) {
                 echo "<div class='celda-hora'><div class='centrar'>" . $tabla[$i][$j] . "</div></div>";
             } else {
                 $celda = $tabla[$i][$j];
+                $contenido = "Materia: " . $celda['nombre'] . "<br/>" . "Grupo: " . $celda['grupo'] . "<br/> Departamento: " . $celda['departamento'];
+                if($celda['more']){
+                    $contenido .= '<br><a id="moreInfo" href="#">Mas</a>';
+                }
                 if(!strcmp($celda['grupo'],"")==0){
-                    echo "<div class='celda-hora grupoIntercambio2 intercambio2". $celda['codigo'].$celda['grupo'].$i." intercambio2".$celda['dia'].$celda['idHora']."' data-grupo='" . $celda['codigo'] . $celda['grupo'] . $i . "' data-iniciobloque='" . $celda['inicioBloque'] . "' data-finbloque='" . $celda['finBloque'] . "' data-idhora='" . $celda['idHora'] . "' data-dia='".$celda['dia']."'>";
+                    echo "<div class='celda-hora intercambio2 grupoIntercambio2 intercambio2". $celda['codigo'].$celda['grupo'].$i." intercambio2".$celda['dia'].$celda['idHora']."' data-grupo='" . $celda['codigo'] . $celda['grupo'] . $i . "' data-iniciobloque='" . $celda['inicioBloque'] . "' data-finbloque='" . $celda['finBloque'] . "' data-hora='" . $celda['idHora'] . "' data-dia='".$celda['dia']."'>";
                     if ($j < 3) {
-                        $contenido = "Materia: " . $celda['nombre'] . "<br/>" . "Grupo: " . $celda['grupo'] . "<br/> Departamento: " . $celda['departamento'];
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='" . $contenido . "'>" . $celda['texto'] . '</div></div>';
                     } else {
-                        $contenido = "Materia: " . $celda['nombre'] . "<br/>" . "Grupo: " . $celda['grupo'] . "<br/> Departamento: " . $celda['departamento'];
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='" . $contenido . "'>" . $celda['texto'] . '</div></div>';
                     }    
                 }else{
-                    echo "<div class='celda-hora grupoVacioIntercambio2 intercambio2".$celda['dia'].$celda['idHora']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
-                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
+                    echo "<div class='celda-hora intercambio2 grupoVacioIntercambio2 intercambio2".$celda['dia'].$celda['idHora']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
                     echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                 }
             }

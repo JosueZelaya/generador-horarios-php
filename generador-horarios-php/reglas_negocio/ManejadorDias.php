@@ -18,13 +18,12 @@ abstract class ManejadorDias {
      * Todos los días de la base de datos
      * @return \Dia = array que contiene todos los días en la base de datos.
      */
-    public static function getDias(){
+    public static function getDias($año,$ciclo){
         $dias = array();
-        $sql_consulta = "SELECT * FROM dias";
+        $sql_consulta = 'SELECT DISTINCT historial.id_dia, dias.nombre_dia FROM dia_hora_historial AS historial JOIN dias ON historial.id_dia = dias.id WHERE "año"='.$año.' and ciclo='.$ciclo;
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){            
-            $dia = new Dia();
-            $dia->setNombre($fila['nombre_dia']);
+            $dia = new Dia($fila['id_dia'],$fila['nombre_dia']);
             $dias[] = $dia;            
         }
         return $dias;
@@ -93,29 +92,10 @@ abstract class ManejadorDias {
             return false;
         }
     }
-
-    /**
-     * Devuelve las horas pertenecientes a determinado dia
-     * 
-     * @param type $nombre_dia = el nombre del dia en que se quieren obtener las horas
-     * @return \Hora = array con las horas
-     */
-    public static function obtenerHorasDia($nombre_dia){
-        $horas = array();
-        $sql_consulta = "SELECT * FROM horas WHERE id_hora IN (SELECT id_hora FROM dia_horas WHERE nombre_dia='".$nombre_dia."') ORDER BY id_hora";
-	$respuesta = Conexion::consulta($sql_consulta);
-        while ($fila = pg_fetch_array($respuesta)){            
-            $hora = new Hora($fila['id_hora']);
-            $hora->setInicio($fila['inicio']);
-            $hora->setFin($fila['fin']);
-            $horas[] = $hora;
-        }
-        return $horas;
-    }
     
-    public static function getHorasDia($dia){
+    public static function getHorasDia($dia,$año,$ciclo){
         $horas = array();
-        $respuesta = Conexion::consulta("select * from horas where id_hora in (select id_hora from dia_horas where nombre_dia='$dia') order by id_hora asc");
+        $respuesta = Conexion::consulta('select * from horas where id_hora in (select id_hora from dia_hora_historial where id_dia='.$dia.' and "año"='.$año.' and ciclo='.$ciclo.') order by id_hora asc');
         while($fila = pg_fetch_array($respuesta)){
             $hora = new Hora();
             $hora->setIdHora($fila[0]);

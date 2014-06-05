@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Materia
  *
@@ -16,22 +9,18 @@ class Materia {
     private $nombre;
     private $ciclo;
     private $unidadesValorativas;
-    private $departamento;
-    private $codigoCarrera;
-    private $planEstudio;
-    private $idAgrupacion;
+    private $carrera;
+    private $agrupacion;
     private $horasRequeridas;
     private $incompleta;
     
-    function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $departamento, $codigoCarrera, $planEstudio, $idAgrupacion, $incompleta) {
+    function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $carrera, $agrupacion, $incompleta) {
         $this->codigo = $codigo;
         $this->nombre = $nombre;
         $this->ciclo = $ciclo;
         $this->unidadesValorativas = $unidadesValorativas;
-        $this->departamento = $departamento;
-        $this->codigoCarrera = $codigoCarrera;
-        $this->planEstudio = $planEstudio;
-        $this->idAgrupacion = $idAgrupacion;
+        $this->carrera = $carrera;
+        $this->agrupacion = $agrupacion;
         $this->incompleta = $incompleta;
         $this->horasRequeridas = null;
     }
@@ -50,22 +39,6 @@ class Materia {
 
     public function getUnidadesValorativas() {
         return $this->unidadesValorativas;
-    }
-
-    public function getDepartamento() {
-        return $this->departamento;
-    }
-
-    public function getCodigoCarrera() {
-        return $this->codigoCarrera;
-    }
-
-    public function getPlanEstudio() {
-        return $this->planEstudio;
-    }
-
-    public function getIdAgrupacion() {
-        return $this->idAgrupacion;
     }
 
     public function getIncompleta() {
@@ -88,30 +61,14 @@ class Materia {
         $this->unidadesValorativas = $unidadesValorativas;
     }
 
-    public function setDepartamento($departamento) {
-        $this->departamento = $departamento;
-    }
-
-    public function setCodigoCarrera($codigoCarrera) {
-        $this->codigoCarrera = $codigoCarrera;
-    }
-
-    public function setPlanEstudio($planEstudio) {
-        $this->planEstudio = $planEstudio;
-    }
-
-    public function setIdAgrupacion($idAgrupacion) {
-        $this->idAgrupacion = $idAgrupacion;
-    }
-
     public function setIncompleta($incompleta) {
         $this->incompleta = $incompleta;
     }
-    
+
     public function setHorasRequeridas($horasRequeridas) {
         $this->horasRequeridas = $horasRequeridas;
     }
-    
+
     public function getTotalHorasRequeridas(){
         if($this->horasRequeridas == null){
             $total = round(($this->unidadesValorativas*20)/16,0,PHP_ROUND_HALF_DOWN);
@@ -119,5 +76,21 @@ class Materia {
         } else{
             return $this->horasRequeridas;
         }
+    }
+
+    public function getAgrupacion() {
+        return $this->agrupacion;
+    }
+
+    public function setAgrupacion($agrupacion) {
+        $this->agrupacion = $agrupacion;
+    }
+    
+    public function getCarrera() {
+        return $this->carrera;
+    }
+
+    public function setCarrera($carrera) {
+        $this->carrera = $carrera;
     }
 }

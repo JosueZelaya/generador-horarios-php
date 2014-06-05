@@ -13,33 +13,31 @@
  */
 abstract class ManejadorReservaciones {
     
-    public static function getTodasReservaciones(){
+    public static function getTodasReservaciones($año,$ciclo){
         $reservas=array();
-        $sql_consulta = "select nombre_dia,(select inicio from horas as h where h.id_hora = res.id_hora),(select fin from horas as h where h.id_hora = res.id_hora), cod_aula from reservaciones as res;";
+        $sql_consulta = 'select id_dia, id_hora, cod_aula from reservaciones WHERE "año"='.$año.' and ciclo='.$ciclo;
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){            
-            $reserva = new Reservacion($fila['nombre_dia'], $fila['inicio'], $fila['fin'], $fila['cod_aula']);
+            $reserva = new Reservacion($fila['id_dia'], $fila['id_hora'], $fila['cod_aula']);
             $reservas[] = $reserva;
         }
         return $reservas;
     }
     
-    public static function nuevaReserva($dia,$id_hora,$cod_aula){
-        $sql_consulta = "INSERT INTO reservaciones values('".$dia."',".$id_hora.",'".$cod_aula."')";
+    public static function nuevaReserva($id_dia,$id_hora,$cod_aula,$año,$ciclo){
+        $sql_consulta = "INSERT INTO reservaciones as Res (Res.id_dia,Res.id_hora,Res.cod_aula,Res.año,Res.ciclo) values(".$id_dia.",".$id_hora.",'".$cod_aula."',$año,$ciclo)";
 	Conexion::consulta($sql_consulta);
     }
-
-    public static function eliminarReservacion($nombre_dia,$hora_inicio,$cod_aula,$aulas){
-        $sql_consulta = "DELETE FROM reservaciones WHERE nombre_dia='".$nombre_dia."' AND id_hora=(select id_hora from horas where inicio='".$hora_inicio."') AND cod_aula='".$cod_aula."'";
+    
+    public static function eliminarReservacion($nombre_dia,$hora_inicio,$cod_aula,$aulas,$año,$ciclo){
+        $sql_consulta = "DELETE FROM reservaciones as Res WHERE Res.nombre_dia='".$nombre_dia."' AND Res.id_hora=(select id_hora from horas where inicio='".$hora_inicio."') AND Res.cod_aula='".$cod_aula."' AND Res.año=$año AND Res.ciclo=$ciclo";
 	Conexion::consulta($sql_consulta);
-        for ($index = 0; $index < count($aulas); $index++) {
-            $aula = $aulas[$index];
+        foreach ($aulas as $aula){
             $hecho = FALSE;
             if(strcmp($aula->getNombre(),$cod_aula)==0){
                 $dia = $aula->getDia($nombre_dia);
                 $horas = $dia->getHoras();
-                for ($i = 0; $i < count($horas); $i++) {
-                    $hora = $horas[$i];
+                foreach ($horas as $hora){
                     if(strcmp($hora->getInicio(),$hora_inicio)==0){
                         $hora->setDisponible(TRUE);
                         $hecho = TRUE;
@@ -53,26 +51,18 @@ abstract class ManejadorReservaciones {
         }
     }    
     
-    public static function asignarRerservaciones($facultad){
-        $aulas = $facultad->getAulas();
-        $sql_consulta = "SELECT * FROM reservaciones;";
-	$respuesta = Conexion::consulta($sql_consulta);
-        while ($fila = pg_fetch_array($respuesta)){            
+    public static function asignarRerservaciones($reservaciones,$aulas){
+        foreach ($reservaciones as $reservacion){            
             $hecha = FALSE;
-            $aulas = $facultad->getAulas();
-            for ($i = 0; $i < count($aulas); $i++) {
-                $aula = $aulas[$i];
-                if(strcmp($aula->getNombre(), $fila['cod_aula'])){
-                    $dia = $aula->getDia($fila['nombre_dia']);
-                    if($dia != NULL){
-                        $horas = $dia->getHoras();
-                        for ($x = 0; $x < count($horas); $x++) {
-                            $hora = $horas[$x];
-                            if(strcmp($hora->getIdHora(),$fila['id_hora'])){
-                                $hora->setDisponible(FALSE);
-                                $hecha = TRUE;
-                                break;
-                            }
+            foreach ($aulas as $aula){
+                if(strcmp($aula->getNombre(), $reservacion->getCod_aula())==0){
+                    $dia = $aula->getDias()[$reservacion->getId_dia()-1];
+                    $horas = $dia->getHoras();
+                    foreach ($horas as $hora){
+                        if(strcmp($hora->getIdHora(),$reservacion->getId_hora()) == 0){
+                            $hora->setDisponible(FALSE);
+                            $hecha = TRUE;
+                            break;
                         }
                     }
                 }

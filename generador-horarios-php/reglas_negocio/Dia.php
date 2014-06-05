@@ -13,14 +13,24 @@
  */
 class Dia {
     
+    private $id;
     private $nombre;
     private $horas;
     
-    public function __construct(){
-        $this->nombre = "";
-        $this->horas=array();
+    function __construct($id, $nombre) {
+        $this->id = $id;
+        $this->nombre = $nombre;
+        $this->horas = null;
     }
     
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
+    }
+
     public function getNombre() {
         return $this->nombre;
     }

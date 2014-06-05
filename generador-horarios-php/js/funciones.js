@@ -49,7 +49,7 @@ $(function (){
     });
     
     $(document).on("click","#mostrarHorarioDepartamento",function(){
-        var aula = $("#aulaDepartamento").val();
+        var aula = $("#aula").val();
         var departamento = $('#departamento').val();       
         var carrera = $('#carrera').val();       
         var dataString = 'aula='+aula+"&departamento="+departamento+"&carrera="+carrera;
@@ -87,7 +87,7 @@ $(function (){
             url: "./interfaz/aulasDepartamento.php",
             data: dataString,
             success: function(data){                
-                $('#aulaDepartamento').html(data);
+                $('#aula').html(data);
             }
         });
         dataString = dataString+"&carrera="+$('#carrera').val();
@@ -118,7 +118,7 @@ $(function (){
                 url: "./interfaz/aulasDepartamento.php",
                 data: dataString,
                 success: function(data){                
-                    $('#aulaDepartamento').html(data);
+                    $('#aula').html(data);
                 }
             });            
         }        
@@ -333,9 +333,9 @@ $(function (){
         $(".grupoVacioIntercambio1").css("background","");
         $(this).css("background","#9CEEE6");        
         diaAntes = $(this).attr("data-dia");
-        inicioAntes = $(this).attr("data-idhora");
-        finAntes = $(this).attr("data-idhora");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-idhora"),$(this).attr("data-idhora"));
+        inicioAntes = $(this).attr("data-hora");
+        finAntes = $(this).attr("data-hora");
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-hora"),$(this).attr("data-hora"));
     });
     
     $(document).on("click",".grupoIntercambio2",function(){  
@@ -352,15 +352,40 @@ $(function (){
         $('.intercambio2'+grupo).removeClass("grupoIntercambio2").addClass("grupoSeleccionadoIntercambio2");        
     });
     
-    $(document).on("click",".grupoSeleccionadoIntercambio2",function(){        
+    $(document).on("click",".grupoSeleccionadoIntercambio2",function(){
         $(".grupoSeleccionadoIntercambio2").css("background","");
         $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
         $(".grupoVacioIntercambio2").css("background","");
         $(this).css("background","#9CEEE6");
         diaDespues = $(this).attr("data-dia");
-        inicioDespues = $(this).attr("data-idhora");
-        finDespues = $(this).attr("data-idhora");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-idhora"),$(this).attr("data-idhora"));
+        inicioDespues = $(this).attr("data-hora");
+        finDespues = $(this).attr("data-hora");
+        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-hora"),$(this).attr("data-hora"));
+    });
+    
+    $(document).on("click","#moreInfo",function(){
+        var div = $(this).parent().parent().parent();
+        if($("#aula").length != 0)
+            var aula = $("#aula").val();
+        else if(div.hasClass('intercambio1'))
+            var aula = $("#aula-intercambio1").val();
+        else if(div.hasClass('intercambio2'))
+            var aula = $("#aula-intercambio2").val();
+        else{
+            div = $(this).parent();
+            var aula = div.attr('data-aula');
+        }
+        var dia = div.attr("data-dia");
+        var hora = div.attr("data-hora");
+        var dataString = 'op=moreInfo&aula='+aula+'&dia='+dia+'&hora='+hora;
+        $.ajax({
+            type: "GET",
+            url: './interfaz/ManejadorInterfaz.php',
+            data: dataString,
+            success: function(data){
+                bootbox.alert(data);
+            }
+        });
     });
     
 });
@@ -421,7 +446,7 @@ function dibujarHorario(dataString){
             $('.verInfoGrupo').popover({
                 title : "Informacion del Grupo",
                 animation : true,
-                trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
+//                trigger : 'hover',  //Se muestra el popover al pasar el puntero sobre la celda. valores que acepta: hover,manual,click,focus                    
                 html : true
             });
         },
@@ -458,33 +483,33 @@ function mostrarAreaIntercambio2(aula){
 function seleccionarCeldas(area,celda){    
     if(diaSeleccionado===""){ //Si aun no se ha elegido ningún día
         celda.css("background","#9CEEE6");
-        asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-idhora"),celda.attr("data-idhora"));        
+        asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-hora"),celda.attr("data-hora"));        
     }else{ //Si ya se había elegido alguna celda en algún día
         if(diaSeleccionado===celda.attr("data-dia")){ //Si se desa elegir una celda del mismo día anterior            
             asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,horaFinSeleccionada);
-            horaActual = celda.attr("data-idhora");
+            horaActual = celda.attr("data-hora");
             if(esUnaCeldaSeleccionada(horaActual,horaInicioSeleccionada,horaFinSeleccionada)){ //Si se selecciona una celda que ya había sido seleccionada                
                 asignarDiasHoras("","","");                    
             }else if(horaFinSeleccionada > horaActual){ //Cuando se selecciona de abajo hacia arriba                
                 if(horaFinSeleccionada-horaActual<=2){ //Si se seleccionó en una o dos celda anterior
-                    horaInicioSeleccionada = celda.attr("data-idhora");
+                    horaInicioSeleccionada = celda.attr("data-hora");
                 }else{ //Si se seleccionó en 3 o más celdas anteriores  
-                    asignarDiasHoras(diaSeleccionado,celda.attr("data-idhora"),celda.attr("data-idhora"));                        
+                    asignarDiasHoras(diaSeleccionado,celda.attr("data-hora"),celda.attr("data-hora"));                        
                     $(".grupoSeleccionado"+area).css("background","");
                     $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
                 }
             }else if(horaFinSeleccionada < horaActual){ //Cuando se selecciona de arriba hacia abajo    
                 if(horaActual-horaInicioSeleccionada<=2){ //Si se seleccionó en una o dos celdas posteriores                    
-                    //horaFinSeleccionada = celda.attr("data-idhora");
-                    asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,celda.attr("data-idhora"));                                                
+                    //horaFinSeleccionada = celda.attr("data-hora");
+                    asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,celda.attr("data-hora"));                                                
                 }else{ //Si se seleccionó en 3 o más celdas posteriores
-                    asignarDiasHoras(diaSeleccionado,celda.attr("data-idhora"),celda.attr("data-idhora"));                                                
+                    asignarDiasHoras(diaSeleccionado,celda.attr("data-hora"),celda.attr("data-hora"));                                                
                     $(".grupoSeleccionado"+area).css("background","");
                     $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
                 }
             } 
         }else{ //Si se elige una celda en un día distinto al anterior                          
-           asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-idhora"),celda.attr("data-idhora"));
+           asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-hora"),celda.attr("data-hora"));
            celda.css("background","#9CEEE6");               
            $(".grupoSeleccionado"+area).css("background","");
            $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area); 

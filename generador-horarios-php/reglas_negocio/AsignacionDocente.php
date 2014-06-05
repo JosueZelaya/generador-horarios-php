@@ -14,12 +14,10 @@
 class AsignacionDocente {
     
     private $docente;
-    private $id_agrupacion;
     private $num_grupos;
     
-    function __construct($docente, $id_agrupacion, $num_grupos) {
+    function __construct($docente, $num_grupos) {
         $this->docente = $docente;
-        $this->id_agrupacion = $id_agrupacion;
         $this->num_grupos = $num_grupos;
     }
     
@@ -31,16 +29,8 @@ class AsignacionDocente {
         $this->docente = $docente;
     }
 
-    public function getId_agrupacion() {
-        return $this->id_agrupacion;
-    }
-
     public function getNum_grupos() {
         return $this->num_grupos;
-    }
-
-    public function setId_agrupacion($id_agrupacion) {
-        $this->id_agrupacion = $id_agrupacion;
     }
 
     public function setNum_grupos($num_grupos) {

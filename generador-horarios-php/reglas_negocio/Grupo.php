@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Grupo
  *
@@ -13,7 +6,7 @@
  */
 class Grupo {
     
-    private $id_agrup;
+    private $agrup;
     private $id_grupo;
     private $docente;
     private $horasAsignadas;
@@ -21,16 +14,12 @@ class Grupo {
     
     function __construct() {
         $this->incompleto=false;
-        $this->id_agrup = 0;
+        $this->agrup = null;
         $this->id_grupo = 0;
         $this->docente = null;
         $this->horasAsignadas = 0;
     }
     
-    public function getId_agrup() {
-        return $this->id_agrup;
-    }
-
     public function getId_grupo() {
         return $this->id_grupo;
     }
@@ -41,10 +30,6 @@ class Grupo {
 
     public function isIncompleto() {
         return $this->incompleto;
-    }
-
-    public function setId_agrup($id_agrup) {
-        $this->id_agrup = $id_agrup;
     }
 
     public function setId_grupo($id_grupo) {
@@ -65,5 +50,13 @@ class Grupo {
 
     public function setDocente($docente) {
         $this->docente = $docente;
+    }
+    
+    public function getAgrup() {
+        return $this->agrup;
+    }
+
+    public function setAgrup($agrup) {
+        $this->agrup = $agrup;
     }
 }

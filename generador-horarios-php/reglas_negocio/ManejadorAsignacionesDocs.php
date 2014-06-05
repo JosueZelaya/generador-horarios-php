@@ -12,11 +12,11 @@ include_once 'Docente.php';
 
 class ManejadorAsignacionesDocs {
     
-    public static function obtenerTodasAsignacionesDocs($todos_docentes){
+    public static function obtenerAsignacionesDeAgrupNueva($todos_docentes,$año,$ciclo,$id_agrup){
         $asignaciones = array();
-        $respuesta = Conexion::consulta("SELECT * FROM docentes_agrupaciones");
+        $respuesta = Conexion::consulta('SELECT id_docente,num_grupos FROM docentes_agrupaciones WHERE "año"='.$año.' and ciclo='.$ciclo.' and id_agrupacion='.$id_agrup);
         while ($fila = pg_fetch_array($respuesta)){
-            $asignacion = new AsignacionDocente(ManejadorDocentes::obtenerDocente($fila[0], $todos_docentes),$fila[1],$fila[2]);
+            $asignacion = new AsignacionDocente(ManejadorDocentes::obtenerDocente($fila[0], $todos_docentes),$fila[1]);
             $asignaciones[] = $asignacion;
         }
         return $asignaciones;

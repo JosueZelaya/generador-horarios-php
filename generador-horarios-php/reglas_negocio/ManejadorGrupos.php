@@ -11,6 +11,8 @@ include_once 'Dia.php';
 include_once 'Hora.php';
 include_once 'ManejadorAgrupaciones.php';
 include_once 'Grupo.php';
+include_once 'Departamento.php';
+include_once 'Carrera.php';
 
 abstract class ManejadorGrupos {
     
@@ -35,27 +37,6 @@ abstract class ManejadorGrupos {
         return null;
     }
     
-    public static function obtenerHorarioDeGrupo($materias,$aulas,$cod_materia,$id_depar,$id_grupo,$tabla){
-        foreach ($aulas as $aula){
-            $dias = $aula->getDias();
-            $cuentaDias = count($dias);
-            for ($x=0;$x<$cuentaDias;$x++){
-                $horas = $dias[$x]->getHoras();
-                $cuentaHoras = count($horas);
-                for ($y=0;$y<$cuentaHoras;$y++){
-                    $grupo = $horas[$y]->getGrupo();
-                    if(ManejadorAgrupaciones::obtenerIdAgrupacion($cod_materia, $id_depar, $materias) == $grupo->getId_Agrup() && $grupo->getId_grupo() == $id_grupo){
-                        $texto = ManejadorAgrupaciones::obtenerNombrePropietario($id_agrup, $materias)+" GT: "+$grupo->getId_grupo();
-                        $tabla[$y][$x] = $texto;
-                    } else{
-                        $tabla[$y][$x] = '';
-                    }
-                }
-            }
-        }
-        return $tabla;
-    }
-    
     public static function gruposIgualesEnBloque($grupos){
         if($grupos[0]->getId_grupo() != 0){
             $base = $grupos[0];
@@ -63,8 +44,8 @@ abstract class ManejadorGrupos {
             $base = $grupos[1];
         }
         for ($i=1;$i<count($grupos);$i++){
-            if($base->getId_agrup() != $grupos[$i]->getId_agrup() || $base->getId_grupo() != $grupos[$i]->getId_grupo()){
-                if ($i == count($grupos)-1 && $grupos[$i]->getId_agrup() == 0){
+            if($base->getAgrup()->getId() != $grupos[$i]->getAgrup()->getId() || $base->getId_grupo() != $grupos[$i]->getId_grupo()){
+                if ($i == count($grupos)-1 && $grupos[$i]->getAgrup() == NULL){
                     break;
                 } else{
                     return false;
@@ -72,5 +53,63 @@ abstract class ManejadorGrupos {
             }
         }
         return true;
+    }
+    
+    public static function mismoDepartamento($agrup,$id_depar){
+        $materias = $agrup->getMaterias();
+        foreach ($materias as $materia){
+            if($materia->getCarrera()->getDepartamento()->getId() == $id_depar){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Devuelve el nombre del propietario un grupo
+     * 
+     * @param type $materias = la agrupación
+     * @return string = El nombre de la materia que es propietaria de la agrupacion
+     */
+    public static function obtenerNombrePropietario($materias){
+        foreach ($materias as $materia){
+            $propietario[] = $materia->getNombre();
+        }
+        return $propietario;
+    }
+    
+    public static function obtenerCodigoPropietario($materias){
+        foreach ($materias as $materia){
+            $propietario[] = $materia->getCodigo();
+        }
+        return $propietario;
+    }
+    
+    /**
+     * Sirve para conocer el dia del departamento al que pertenece un grupo
+     * 
+     * @param type $materias = materias para ver su departamento
+     * @return array = id del departamento
+     */
+    public static function obtenerIdDepartamento($materias){
+        $departamento = "";
+        foreach ($materias as $materia) {
+            $departamento += $materia->getCarrera()->getDepartamento()->getId()+" ";
+        }
+        return substr($departamento,0,-1);
+    }
+    
+    public static function getNombreDepartamento($materias){
+        foreach ($materias as $materia){
+            $nombreDepar[] = $materia->getCarrera()->getDepartamento()->getNombre();
+        }
+        return $nombreDepar;
+    }
+    
+    public static function obtenerCarreraPropietario($materias){
+        foreach ($materias as $materia){
+            $carreras[] = $materia->getCarrera()->getNombre();
+        }
+        return $carreras;
     }
 }

@@ -7,15 +7,11 @@ include_once 'ManejadorCargos.php';
 abstract class ManejadorDocentes{
     
     public static function obtenerTodosDocentes($todos_cargos){
-        $sql_consulta = "SELECT * FROM docentes";
+        $sql_consulta = "SELECT id_docente FROM docentes";
         $respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
-            if($fila[3] != NULL){
-                $cargo = ManejadorCargos::obtenerCargo($fila[3], $todos_cargos);
-            } else{
-                $cargo = null;
-            }
-            $docente = new Docente($fila[0],$cargo);
+            $cargo = ManejadorCargos::obtenerCargo($fila['id_docente'], $todos_cargos);
+            $docente = new Docente($fila['id_docente'],$cargo);
             $docentes[] = $docente;
         }
         return $docentes;

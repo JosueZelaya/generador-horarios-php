@@ -11,27 +11,27 @@ require_once 'ManejadorDias.php';
 
 class Facultad {
     private $aulas;
-    public $agrupaciones;
-    private $asignaciones_docs;
-    public $departamentos;
+    private $agrupaciones;
+    private $departamentos;
     private $materias;
     private $docentes;
     private $cargos;
+    private $reservaciones;
+    private $carreras;
     
-    public function __construct($agrupaciones,$departamentos,$materias,$cargos) {
+    public function __construct($departamentos,$cargos,$reservaciones,$año,$ciclo) {
         $this->aulas = ManejadorAulas::getTodasAulas();
         for ($i = 0; $i < count($this->aulas); $i++) {
-            $dias = ManejadorDias::getDias();
+            $dias = ManejadorDias::getDias($año,$ciclo);
             for ($x = 0; $x < count($dias); $x++) {
-                $horas = ManejadorDias::getHorasDia($dias[$x]->getNombre());
+                $horas = ManejadorDias::getHorasDia($dias[$x]->getId(),$año,$ciclo);
                 $dias[$x]->setHoras($horas);
             }
             $this->aulas[$i]->setDias($dias);
         }
-        $this->agrupaciones = $agrupaciones;
         $this->departamentos = $departamentos;
-        $this->materias = $materias;
         $this->cargos = $cargos;
+        $this->reservaciones = $reservaciones;
     }
        
     public function getAulas() {
@@ -57,13 +57,13 @@ class Facultad {
     public function setDocentes($docentes) {
         $this->docentes = $docentes;
     }
-
-    public function getAsignaciones_docs() {
-        return $this->asignaciones_docs;
+    
+    public function getAgrupaciones() {
+        return $this->agrupaciones;
     }
 
-    public function setAsignaciones_docs($asignaciones_docs) {
-        $this->asignaciones_docs = $asignaciones_docs;
+    public function setAgrupaciones($agrupaciones) {
+        $this->agrupaciones = $agrupaciones;
     }
     
     public function getCargos() {
@@ -72,5 +72,29 @@ class Facultad {
 
     public function setCargos($cargos) {
         $this->cargos = $cargos;
+    }
+    
+    public function getReservaciones() {
+        return $this->reservaciones;
+    }
+
+    public function setReservaciones($reservaciones) {
+        $this->reservaciones = $reservaciones;
+    }
+    
+    public function getDepartamentos() {
+        return $this->departamentos;
+    }
+
+    public function setDepartamentos($departamentos) {
+        $this->departamentos = $departamentos;
+    }
+    
+    public function getCarreras() {
+        return $this->carreras;
+    }
+
+    public function setCarreras($carreras) {
+        $this->carreras = $carreras;
     }
 }

@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorDepartamentos
  *
@@ -27,26 +21,6 @@ abstract class ManejadorDepartamentos {
         return $depars;
     }
     
-    public static function getNombreDepartamentos(){
-        $nombre_departamentos = array();
-        $respuesta = Conexion::consulta("SELECT nombre_depar FROM departamentos ORDER BY nombre_depar");
-        while ($fila = pg_fetch_array($respuesta)){
-            $nombre_departamentos[] = $fila[0];
-        }
-        return $nombre_departamentos;
-    }
-    
-    public static function getNombreDepartamento($idDepartamento,$depars){
-        $nombreDepar="";
-        foreach ($depars as $depar){
-            if($depar->getId() == $idDepartamento){
-                $nombreDepar = $depar->getNombre();
-                break;
-            }
-        }
-        return $nombreDepar;
-    }
-    
     public static function getIdDepar($nombre, $depars){
         $id = 0;
         foreach ($depars as $depar){
@@ -58,15 +32,12 @@ abstract class ManejadorDepartamentos {
         return $id;
     }
     
-    public static function getIdDepartamento($nombreDepartamento){
-        $idDepartamento=0;
-        $respuesta = Conexion::consulta("SELECT id_depar FROM departamentos WHERE nombre_depar='$nombreDepartamento'");
-        while ($fila = pg_fetch_array($respuesta)){
-            $idDepartamento = $fila[0];
+    public static function obtenerDepartamento($id_depar,$depars){
+        foreach ($depars as $depar){
+            if($depar->getId() == $id_depar){
+                return $depar;
+            }
         }
-        return $idDepartamento;
+        return null;
     }
-    
-    
-    
 }

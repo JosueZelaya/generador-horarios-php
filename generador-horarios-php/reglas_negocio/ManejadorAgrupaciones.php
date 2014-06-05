@@ -1,11 +1,5 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorAgrupaciones
  *
@@ -14,21 +8,22 @@
 
 include_once '../acceso_datos/Conexion.php';
 require_once 'Agrupacion.php';
-
+include_once 'ManejadorAsignacionesDocs.php';
 
 abstract class ManejadorAgrupaciones {
-    //put your code here
  
     /**
-     * Este método devuelve todas las agrupaciones existentes en la base de datos.
+     * Este método devuelve todas las agrupaciones existentes en la base de datos que corresponden al año y al ciclo al cual se generara un horario.
      * @return \Agrupacion = array de tipo agrupacion
      */
-    public static function getAgrupaciones(){
+    public static function getAgrupaciones($todos_docentes,$año,$ciclo){
         $agrupaciones = array();
-        $sql_consulta = "SELECT * FROM agrupacion";
+        $sql_consulta = 'SELECT * FROM agrupacion WHERE id_agrupacion IN (SELECT id_agrupacion FROM agrupacion_historial WHERE "año"='.$año.' and ciclo='.$ciclo.')';
 	$respuesta = Conexion::consulta($sql_consulta);
-        while ($fila = pg_fetch_array($respuesta)){            
-            $agrupacion = new Agrupacion($fila['id_agrupacion'],$fila['id_depar'],$fila['num_grupos'],$fila['num_alumnos']);            
+        while ($fila = pg_fetch_array($respuesta)){
+            $num_alumnos = $fila['alumnos_nuevos'] + $fila['otros_alumnos'];
+            $agrupacion = new Agrupacion($fila['id_agrupacion'],$fila['num_grupos'],$num_alumnos);
+            $agrupacion->setAsignaciones(ManejadorAsignacionesDocs::obtenerAsignacionesDeAgrupNueva($todos_docentes, $año, $ciclo, $agrupacion->getId()));
             $agrupaciones[] = $agrupacion;
         }
         return $agrupaciones;
@@ -38,69 +33,17 @@ abstract class ManejadorAgrupaciones {
      * 
      * Devuelve la agrupación que cumpla con el criterio a evaluar.
      * 
-     * @param type $criterio = Es el criterio mediante el cual se filtraran las agrupaciones.
+     * @param type $id_agrup = id de la agrupacion buscada
      * @param type $agrupaciones = Todas las agrupaciones en las cuales buscar.
      * @return null,agrupacion = Devuelve la agrupacion que coincida con el criterio, si ninguna coincide devuelve null
      */
-    public static function getAgrupacion($criterio,$agrupaciones){      
-        if(is_a($criterio,"Materia")){
-            for ($index = 0; $index < count($agrupaciones); $index++) {
-                if($agrupaciones[$index]->getId()==$criterio->getIdAgrupacion()){
-                    return $agrupaciones[$index];
-                }
-            }    
-        }else{
-            for ($index = 0; $index < count($agrupaciones); $index++) {
-                if($agrupaciones[$index]->getId()==$criterio){
-                    return $agrupaciones[$index];
-                }
-            }    
-        }        
+    public static function getAgrupacion($id_agrup,$agrupaciones){
+        for ($index = 0; $index < count($agrupaciones); $index++) {
+            if($agrupaciones[$index]->getId()==$id_agrup){
+                return $agrupaciones[$index];
+            }
+        }      
         return null;
-    }
-    
-    /**
-     * Devuelve el nombre del propietario de la materia
-     * ¿QUÉ PASA CUANDO ESTA AGRUPACION TIENE VARIOS PROPIETARIOS?
-     * 
-     * @param type $id_agrup = el identificador de la agrupación
-     * @param type $materias = las materias en las que buscaremos al propietario
-     * @return string = El nombre de la materia que es propietaria de la agrupacion
-     */
-    public static function obtenerNombrePropietario($id_agrup,$materias){
-        $propietario="";
-        foreach ($materias as $materia) {
-            if($materia->getIdAgrupacion()==$id_agrup){
-                return $materia->getNombre();
-            }
-        }
-        return $propietario;
-    }
-    
-    public static function obtenerCodigoPropietario($id_agrup,$materias){
-        $propietario="";
-        foreach ($materias as $materia) {
-            if($materia->getIdAgrupacion()==$id_agrup){
-                return $materia->getCodigo();
-            }
-        }
-        return $propietario;
-    }
-    
-    /**
-     * Sirve para conocer a qué departamento pertenece una agrupación
-     * 
-     * @param type $id_agrup = el id de la agrupación del que se necesita saber su departamento.
-     * @param type $agrupaciones = las agrupaciones en las cuales se buscará la que coincida con ese id de agrupación.
-     * @return int = el id del departamento
-     */
-    public static function obtenerIdDepartamento($id_agrup,$agrupaciones){
-        foreach ($agrupaciones as $agrupacion) {
-            if($agrupacion->getId()==$id_agrup){
-                return $agrupacion->getDepartamento();
-            }
-        }
-        return 0;
     }
     
     /**
@@ -111,30 +54,12 @@ abstract class ManejadorAgrupaciones {
      */
     public static function obtenerAgrupacionesDeCarrera($carrera){
         $ids=array();
-        $sql_consulta = "SELECT cm.id_agrupacion FROM carreras_materias as cm JOIN carreras as c ON cm.carreras_id_carrera = c.id_carrera WHERE c.nombre_carrera = '".$carrera."'";
+        $sql_consulta = "select ma.id_agrupacion from materia_agrupacion as ma join materias as m on ma.cod_materia = m.cod_materia join carreras as c on c.id_carrera = m.id_carrera where c.nombre_carrera='".$carrera."'";
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){                        
             $ids[] = $fila['id_agrupacion'];
         }
         return $ids;
-    }
-    
-    /**
-     * Sirve para conocer el id de la agrupación de una materia determinada que pertenesca al departamento determinado.
-     * 
-     * @param type $cod_mat = el código de la materia
-     * @param type $id_depar = el identificador del departamento
-     * @param type $materias = el aray de materias.
-     * @return int = el id de la agrupación.
-     */
-    public static function obtenerIdAgrupacion($cod_mat,$id_depar,$materias){
-        $id_agrup=0;
-        for ($index = 0; $index < count($materias); $index++) {
-            if($materias[$index]->getCodigo()==$cod_mat && $materias[$index]->getDepartamento()==$id_depar){
-                return $materias[$index]->getIdAgrupacion();
-            }
-        }
-        return $id_agrup;
     }
 
 }

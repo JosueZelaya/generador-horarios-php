@@ -15,57 +15,24 @@
         $carrera = $_GET['carrera'];
         if($carrera!='todos'){                        
             $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
-            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones,$modelo,$facultad);
+            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(), $aula,$ids_agrupaciones,$modelo);
         }else if($departamento!='todos'){                        
             $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
         }else{
-            $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
+            $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
         }
-        echo imprimir($tabla);
+        echo imprimirMalla($tabla);
     } elseif(isset($_GET['departamento']) && isset($_GET['carrera']) && isset($_GET['materia'])){
         $aulas = $facultad->getAulas();
         $cod_materia = $_GET['materia'];
         $id_depar = $_GET['departamento'];
-        $todas_mats = $facultad->getMaterias();
-        $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar, $todas_mats);
-        $horario = ordenarHorario($horario);
-        ?>
-        
-        <table class="table table-striped table-hover">
-            <thead>                
-                <th>Grupo</th>
-                <th>Aula</th>
-                <th>Dia</th>
-                <th>Inicio</th>
-                <th>Fin</th>
-            </thead>
-            <?php
-            for ($index = 0; $index < count($horario); $index++) {
-                echo "<tr>";                        
-                if($index>0){
-                    if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
-                    echo "<td></td>";
-                    }else{
-                        echo "<td>".$horario[$index]['grupo']."</td>";
-                    }
-                }else{
-                    echo "<td>".$horario[$index]['grupo']."</td>";
-                }                               
-                echo    "<td>".$horario[$index]['aula']."</td>
-                        <td>".$horario[$index]['dia']."</td>
-                        <td>".$horario[$index]['horaInicio']."</td>
-                        <td>".$horario[$index]['horaFin']."</td>
-                    </tr>";
-            }
-            ?>
-            
-        </table>
-
-    <?php    
+        $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar);
+        $horario = ordenarHorario($horario);  
+        imprimirMallaMateria($horario);
     }elseif (isset($_GET['aula'])) {
         $aula = $_GET['aula'];
-        $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $facultad->getMaterias(),$modelo,$facultad);
-        echo imprimir($tabla);
+        $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
+        echo imprimirMalla($tabla);
     }
     
     //Se ordena por id de grupo en orden ascendente
@@ -82,8 +49,8 @@
         return $horario;
     }
     
-    function imprimir($tabla){
-        for($i=0;$i<count($tabla);$i++){         
+    function imprimirMalla($tabla){
+        for($i=0;$i<count($tabla);$i++){
             echo "<div class='col'>";
             for($j=0;$j<count($tabla[$i]);$j++){                
                 if($j==0){
@@ -92,20 +59,20 @@
                     echo "<div class='celda-hora'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
                 }else{
                     $celda = $tabla[$i][$j];
+                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
+                    if($celda['more']){
+                        $contenido .= '<br><a id="moreInfo" href="#">Mas</a>';
+                    }
                     if(!strcmp($celda['grupo'],"")==0){
-                        echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
+                        echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
                         if($j<3){
-                            $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                             echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                         }else{
-                            $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                             echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                         }
                     }else{
-                        echo "<div class='celda-hora grupoVacio ".$celda['dia'].$celda['idHora']."' data-idhora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";                    
-                        $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
+                        echo "<div class='celda-hora grupoVacio ".$celda['dia'].$celda['idHora']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
                         echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
-                        
                     }                                        
                 }
             }
@@ -140,4 +107,48 @@
             }
         }
         return $modelo;
+    }
+    
+    function imprimirMallaMateria($horario){
+        echo '<table class="table table-striped table-hover">'.
+            '<thead>'.
+                '<th>Grupo</th>'.
+                '<th>Aula</th>'.
+                '<th>Dia</th>'.
+                '<th>Inicio</th>'.
+                '<th>Fin</th>'.
+            '</thead>';
+        for ($index = 0; $index < count($horario); $index++) {
+            if($horario[$index]['more']){
+                $more = true;
+            } elseif ($horario[$index]['cloned']){
+                $cloned = true;
+            }
+            echo "<tr>";                        
+            if($index>0){
+                if(strcmp($horario[$index-1]['grupo'],$horario[$index]['grupo'])==0){
+                echo "<td></td>";
+                }else{
+                    echo "<td>".$horario[$index]['grupo']."</td>";
+                }
+            }else{
+                echo "<td>".$horario[$index]['grupo']."</td>";
+            }                               
+            echo "<td>".$horario[$index]['aula']."</td>
+                <td>".$horario[$index]['dia']."</td>
+                <td>".$horario[$index]['horaInicio']."</td>
+                <td>".$horario[$index]['horaFin']."</td>
+                </tr>";
+        }
+        echo '</table>';
+        if(isset($more) && $more){
+            echo '<div class="alert alert-info" data-aula='.$horario[0]['aula'].' data-dia='.$horario[0]['dia'].' data-hora='.$horario[0]['horaInicio'].'>
+                    Existen mas materias agrupadas.&nbsp;
+                    <a href="#" class="alert-link" id="moreInfo">Ver aqui.</a>
+                </div>';
+        } elseif (isset ($cloned) && $cloned) {
+            echo '<div class="alert alert-info">
+                    Materia Clonada.
+                </div>';
+        }
     }

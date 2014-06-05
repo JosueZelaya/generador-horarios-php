@@ -1,11 +1,4 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Agrupacion
  *
@@ -14,17 +7,19 @@
 class Agrupacion {
     
     private $id;
-    private $departamento;
     private $num_grupos;
     private $num_alumnos;
     private $numGruposAsignados;
+    private $asignaciones;
+    private $materias;
     
-    public function __construct($id,$departamento,$num_grupos,$num_alumnos){
+    public function __construct($id,$num_grupos,$num_alumnos){
         $this->id=$id;
-        $this->departamento=$departamento;
         $this->num_grupos=$num_grupos;
         $this->num_alumnos=$num_alumnos;
         $this->numGruposAsignados=0;
+        $this->asignaciones = null;
+        $this->materias = array();
     }
     
     public function getId() {
@@ -33,14 +28,6 @@ class Agrupacion {
 
     public function setId($id) {
         $this->id = $id;
-    }
-
-    public function getDepartamento() {
-        return $this->departamento;
-    }
-
-    public function setDepartamento($departamento) {
-        $this->departamento = $departamento;
     }
 
     public function getNum_grupos() {
@@ -67,4 +54,23 @@ class Agrupacion {
         $this->numGruposAsignados = $numGruposAsignados;
     }
     
+    public function getAsignaciones() {
+        return $this->asignaciones;
+    }
+
+    public function setAsignaciones($asignaciones) {
+        $this->asignaciones = $asignaciones;
+    }
+    
+    public function getMaterias() {
+        return $this->materias;
+    }
+
+    public function setMaterias($materias) {
+        $this->materias = $materias;
+    }
+    
+    public function setMateria($materia) {
+        $this->materias[] = $materia;
+    }
 }
