@@ -80,11 +80,11 @@ function generarHorario($año,$cicloPar){
     } else{
         $ciclo = 2;
     }
-    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos($año,$ciclo), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),ManejadorAgrupaciones::getAgrupaciones($año, $ciclo),$año,$ciclo);
+    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos(), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),ManejadorAgrupaciones::getAgrupaciones($año, $ciclo),$año,$ciclo);
     $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos()));
     $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
     $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras()));
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
     ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
     $procesador = new Procesador($facultad->getAulas());
     $docentes = ManejadorDocentes::clasificarDocentes($facultad->getDocentes());

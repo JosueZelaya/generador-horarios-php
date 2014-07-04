@@ -32,7 +32,7 @@
         $cod_materia = $_GET['materia'];
         $id_depar = $_GET['departamento'];
         $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar);
-        $horario = ordenarHorario($horario);  
+        $horario = ordenarHorarioMateria($horario);
         imprimirMallaMateria($horario);
     }elseif (isset($_GET['aula'])) {
         $aula = $_GET['aula'];
