@@ -1,28 +1,23 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of Aula
  *
  * @author alexander
  */
 class Aula {
-    //put your code here
+
     private $nombre;
     private $capacidad;
     private $disponible;
     private $dias;
+    private $exclusiva;
     
     public function __construct() {
         $this->nombre = "";
         $this->capacidad = 0;
         $this->disponible = true;
         $this->dias = array();
+        $this->exclusiva = false;
     }
     
     public function getNombre() {
@@ -63,13 +58,24 @@ class Aula {
      * Si no lo encuentra devuelve null
      */
     public function getDia($nombre_dia){
-        for ($i = 0; $i < count($this->dias); $i++) {
-            $dia = $this->dias[$i];
+        foreach ($this->dias as $dia){
             if(strcmp($dia->getNombre(),$nombre_dia)==0){
                 return $dia;            
             }                
         }
         return null;
+    }
+    
+    public function isExclusiva() {
+        if($this->exclusiva=='t'){
+            return true;
+        } else{
+            return false;
+        }
+    }
+
+    public function setExclusiva($exclusiva) {
+        $this->exclusiva = $exclusiva;
     }
     
 }

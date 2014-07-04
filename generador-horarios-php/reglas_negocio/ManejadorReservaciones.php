@@ -1,16 +1,15 @@
 <?php
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
  * Description of ManejadorReservaciones
  *
  * @author alexander
  */
+
+chdir(dirname(__FILE__));
+require_once '../acceso_datos/Conexion.php';
+chdir(dirname(__FILE__));
+require_once 'Reservacion.php';
+
 abstract class ManejadorReservaciones {
     
     public static function getTodasReservaciones($año,$ciclo){
@@ -24,9 +23,36 @@ abstract class ManejadorReservaciones {
         return $reservas;
     }
     
-    public static function nuevaReserva($id_dia,$id_hora,$cod_aula,$año,$ciclo){
-        $sql_consulta = "INSERT INTO reservaciones as Res (Res.id_dia,Res.id_hora,Res.cod_aula,Res.año,Res.ciclo) values(".$id_dia.",".$id_hora.",'".$cod_aula."',$año,$ciclo)";
-	Conexion::consulta($sql_consulta);
+    public static function nuevaReserva($reservaciones,$año,$ciclo){        
+        $dia = $reservaciones[0]->getId_dia();
+        $desde = $reservaciones[0]->getId_hora();
+        $hasta = $reservaciones[count($reservaciones)-1]->getId_hora();
+        $aula = $reservaciones[0]->getCod_aula();
+        if(self::estaLibreParaReservar($dia, $desde, $hasta, $aula, $año, $ciclo)){
+            $consulta = "INSERT INTO reservaciones (id_dia,id_hora,cod_aula,año,ciclo) VALUES ";
+            $cont=1;
+            foreach ($reservaciones as $reservacion) {            
+                if($cont==count($reservaciones)){
+                    $consulta = $consulta."(".$reservacion->getId_dia().",".$reservacion->getId_hora().",'".$reservacion->getCod_aula()."',$año,$ciclo)";
+                }else{
+                    $consulta = $consulta."(".$reservacion->getId_dia().",".$reservacion->getId_hora().",'".$reservacion->getCod_aula()."',$año,$ciclo),";
+                }
+                $cont++;
+            }
+            Conexion::consulta($consulta);            
+        }else{
+            throw new Exception("No se puede realizar la reservación. Asegúrese de que no querer reservar sobre espacio reservado");
+        }
+    }
+    
+    public static function estaLibreParaReservar($dia,$desde,$hasta,$aula,$año,$ciclo){
+        $consulta = "SELECT count(*) FROM reservaciones WHERE id_hora>='$desde' AND id_hora<='$hasta' AND id_dia='$dia' AND cod_aula='$aula' AND año='$año' AND ciclo='$ciclo';";
+        $respuesta = Conexion::consulta2($consulta);
+        if($respuesta['count']!=0){
+            return FALSE;
+        }else{
+            return TRUE;
+        }
     }
     
     public static function eliminarReservacion($nombre_dia,$hora_inicio,$cod_aula,$aulas,$año,$ciclo){

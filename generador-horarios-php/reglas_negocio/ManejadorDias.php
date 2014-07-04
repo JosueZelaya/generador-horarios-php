@@ -5,7 +5,7 @@
  *
  * @author arch
  */
-
+chdir(dirname(__FILE__));
 include_once '../acceso_datos/Conexion.php';
 include_once 'Dia.php';
 include_once 'Procesador.php';
@@ -20,7 +20,7 @@ abstract class ManejadorDias {
      */
     public static function getDias($año,$ciclo){
         $dias = array();
-        $sql_consulta = 'SELECT DISTINCT historial.id_dia, dias.nombre_dia FROM dia_hora_historial AS historial JOIN dias ON historial.id_dia = dias.id WHERE "año"='.$año.' and ciclo='.$ciclo;
+        $sql_consulta = 'SELECT DISTINCT historial.id_dia, dias.nombre_dia FROM dia_hora_historial AS historial JOIN dias ON historial.id_dia = dias.id WHERE "año"='.$año.' and ciclo='.$ciclo.' ORDER BY id_dia ASC';
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){            
             $dia = new Dia($fila['id_dia'],$fila['nombre_dia']);

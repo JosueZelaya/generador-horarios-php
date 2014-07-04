@@ -6,6 +6,7 @@
  * @author arch
  */
 
+chdir(dirname(__FILE__));
 require_once 'ManejadorAulas.php';
 require_once 'ManejadorDias.php';
 
@@ -18,8 +19,9 @@ class Facultad {
     private $cargos;
     private $reservaciones;
     private $carreras;
-    
-    public function __construct($departamentos,$cargos,$reservaciones,$año,$ciclo) {
+    private $grupos;
+
+    public function __construct($departamentos,$cargos,$reservaciones,$agrupaciones,$año,$ciclo) {
         $this->aulas = ManejadorAulas::getTodasAulas();
         for ($i = 0; $i < count($this->aulas); $i++) {
             $dias = ManejadorDias::getDias($año,$ciclo);
@@ -32,8 +34,9 @@ class Facultad {
         $this->departamentos = $departamentos;
         $this->cargos = $cargos;
         $this->reservaciones = $reservaciones;
+        $this->agrupaciones = $agrupaciones;
     }
-       
+    
     public function getAulas() {
         return $this->aulas;
     }
@@ -96,5 +99,13 @@ class Facultad {
 
     public function setCarreras($carreras) {
         $this->carreras = $carreras;
+    }
+    
+    public function getGrupos() {
+        return $this->grupos;
+    }
+
+    public function setGrupos($grupos) {
+        $this->grupos = $grupos;
     }
 }

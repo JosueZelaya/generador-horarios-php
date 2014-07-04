@@ -7,19 +7,17 @@
 class Agrupacion {
     
     private $id;
-    private $num_grupos;
+    private $grupos;
     private $num_alumnos;
     private $numGruposAsignados;
-    private $asignaciones;
     private $materias;
     
-    public function __construct($id,$num_grupos,$num_alumnos){
+    public function __construct($id,$num_alumnos){
         $this->id=$id;
-        $this->num_grupos=$num_grupos;
         $this->num_alumnos=$num_alumnos;
         $this->numGruposAsignados=0;
-        $this->asignaciones = null;
         $this->materias = array();
+        $this->grupos = array();
     }
     
     public function getId() {
@@ -29,13 +27,15 @@ class Agrupacion {
     public function setId($id) {
         $this->id = $id;
     }
-
-    public function getNum_grupos() {
-        return $this->num_grupos;
-    }
-
-    public function setNum_grupos($num_grupos) {
-        $this->num_grupos = $num_grupos;
+    
+    public function getNumGrupos($tipo) {
+        $cuenta = 0;
+        foreach ($this->grupos as $grupo){
+            if($grupo->getTipo()==$tipo){
+                $cuenta++;
+            }
+        }
+        return $cuenta;
     }
 
     public function getNum_alumnos() {
@@ -54,14 +54,6 @@ class Agrupacion {
         $this->numGruposAsignados = $numGruposAsignados;
     }
     
-    public function getAsignaciones() {
-        return $this->asignaciones;
-    }
-
-    public function setAsignaciones($asignaciones) {
-        $this->asignaciones = $asignaciones;
-    }
-    
     public function getMaterias() {
         return $this->materias;
     }
@@ -72,5 +64,17 @@ class Agrupacion {
     
     public function setMateria($materia) {
         $this->materias[] = $materia;
+    }
+    
+    public function getGrupos() {
+        return $this->grupos;
+    }
+
+    public function setGrupos($grupos) {
+        $this->grupos = $grupos;
+    }
+    
+    public function addGrupo($grupo){
+        $this->grupos[] = $grupo;
     }
 }

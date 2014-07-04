@@ -5,7 +5,7 @@
  *
  * @author abs
  */
-
+chdir(dirname(__FILE__));
 include_once '../acceso_datos/Conexion.php';
 include_once 'Hora.php';
 include_once 'Dia.php';
@@ -31,7 +31,7 @@ class ManejadorHoras {
                     if($materia->getAgrupacion() === $grupo->getAgrup()){
                         echo "Agrupacion ".$materia->getAgrupacion()->getId()." en conflicto en hora $h del dia ".$dia->getNombre()." en aula ".$aula->getNombre();
                             return true;
-                    }
+                        }
                     $materiasHora = $grupo->getAgrup()->getMaterias();
                     foreach ($materiasAsignacion as $materiaDeAgrup) {
                         foreach ($materiasHora as $materiaDeAgrupHora) {
@@ -49,17 +49,19 @@ class ManejadorHoras {
         return false;
     }
 
-    public static function chocaGrupoDocente($docente, $desde, $hasta, $aulas, $nombre_dia){
+    public static function chocaGrupoDocente($docentes, $desde, $hasta, $aulas, $nombre_dia){
         foreach ($aulas as $aula) {
             $dia = $aula->getDia($nombre_dia);
             for($h=$desde; $h<$hasta; $h++){
                 $hora = $dia->getHoras()[$h-1];
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
-                    if($docente==$grupoHora->getDocente()){
-                        //error_log ("El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora(),0);
-                        echo "El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora();
-                        return true;
+                    foreach ($docentes as $docente){
+                        if(in_array($docente, $grupoHora->getDocentes())){
+                            //error_log ("El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora(),0);
+                            echo "El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora();
+                            return true;
+                        }
                     }
                 }
             }
@@ -74,7 +76,7 @@ class ManejadorHoras {
                 $hora = $dia->getHoras()[$h-1];
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
-                    if($grupoHora->getAgrup() === $grupo->getAgrup() && $grupoHora->getId_grupo() == $grupo->getId_grupo()){
+                    if($grupoHora === $grupo){
                         error_log ("Este grupo: ".$grupo->getId_grupo()." de la Agrupacion ".$grupo->getAgrup()->getId()." choca en hora: $h del dia $nombre_dia",0);
                         return true;
                     }
@@ -84,21 +86,20 @@ class ManejadorHoras {
         return false;
     }
     
-    /**Devuelve las primeras horas disponibles consecutivas que encuentre
+    /** Devuelve las primeras horas disponibles consecutivas que encuentre
      * 
-     * @param docente
-     * @param horas = horas del dia en que va a tratar de asignar
-     * @param cantidadHoras = cuantas horas a asignar
-     * @param desde = desde cual hora tratar de asignar
-     * @param hasta = hasta cual hora tratar de asginar
-     * @param nombre_dia = nombre del dia en el que se quiere asignar, se usa para comprobar choques
-     * @param materia = objeto materia que se esta tratando de asignar
-     * @param aulas = todas las aulas de campus, se usan para verificar choques
-     * @param todas_mats = array de todas las materias que posee campus
-     * @param ultimoRecurso
-     * @return las horas disponibles sin choque en las que se puede asignar el grupoHora; null si no hay ninguna
+     * @param Docente $docentes
+     * @param Hora $horas = horas del dia en que va a tratar de asignar
+     * @param Integer $cantidadHoras = cuantas horas a asignar
+     * @param Integer $desde = desde cual hora tratar de asignar
+     * @param Integer $hasta = hasta cual hora tratar de asginar
+     * @param String $nombre_dia = nombre del dia en el que se quiere asignar, se usa para comprobar choques
+     * @param Materia $materia = objeto materia que se esta tratando de asignar
+     * @param Aula[] $aulas = todas las aulas de campus, se usan para verificar choques
+     * @param boolean $ultimoRecurso
+     * @return Hora[] las horas disponibles sin choque en las que se puede asignar el grupoHora; null si no hay ninguna
      */
-    public static function buscarHorasDisponibles($docente,$horas,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,$ultimoRecurso){
+    public static function buscarHorasDisponibles($docentes,$horas,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,$ultimoRecurso){
         $horasDisponibles = array();
         $resultado = null;
         for($i=$desde;$i<$hasta;$i++){
@@ -119,7 +120,7 @@ class ManejadorHoras {
             }
             if($hayBloquesDisponibles){
                 $chocaMateria = self::chocaMateria($nombre_dia, $horas[$i]->getIdHora(), $aulas, $materia, $cantidadHoras);
-                $chocaDocente = self::chocaGrupoDocente($docente, $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulas, $nombre_dia);
+                $chocaDocente = self::chocaGrupoDocente($docentes, $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulas, $nombre_dia);
                 if(!$chocaMateria && !$chocaDocente){
                     for ($j = $i; $j < $i+$cantidadHoras; $j++) {
                         $horasDisponibles[] = $horas[$j];
@@ -140,13 +141,13 @@ class ManejadorHoras {
     
     /**
      * 
-     * @param horas = horas del dia en que va a tratar de asignar
-     * @param cantidadHoras = cuantas horas a asignar
-     * @param desde = desde cual hora tratar de asignar
-     * @param hasta = hasta cual hora tratar de asginar
-     * @param nombre_dia
-     * @param aulasConCapa
-     * @param grupo
+     * @param Hora[] $horas = horas del dia en que va a tratar de asignar
+     * @param Integer $cantidadHoras = cuantas horas a asignar
+     * @param Integer $desde = desde cual hora tratar de asignar
+     * @param Integer $hasta = hasta cual hora tratar de asginar
+     * @param String $nombre_dia
+     * @param Aula[] $aulasConCapa
+     * @param Grupo $grupo
      * @return horas disponibles en las que se puede asignar el grupoHora aunque hayan choques
      */
     public static function buscarHorasDisponiblesParaChoque($horas,$cantidadHoras,$desde,$hasta,$nombre_dia,$aulasConCapa,$grupo){
@@ -169,7 +170,7 @@ class ManejadorHoras {
             }
             if($hayBloquesDisponibles){
                 $grupoChocaConElMismo = self::chocaGrupo($nombre_dia, $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulasConCapa, $grupo);
-                $chocaDocente = self::chocaGrupoDocente($grupo->getDocente(), $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulasConCapa, $nombre_dia);
+                $chocaDocente = self::chocaGrupoDocente($grupo->getDocentes(), $horas[$i]->getIdHora(), $horas[$i]->getIdHora()+$cantidadHoras, $aulasConCapa, $nombre_dia);
                 if(!$grupoChocaConElMismo && !$chocaDocente){
                     for ($j = $i; $j < $i+$cantidadHoras; $j++) {
                         $horasDisponibles[] = $horas[$j];
@@ -183,27 +184,26 @@ class ManejadorHoras {
     
     /** Metodo para buscar horas en un dia elegido debajo de una materia del mismo nivel
      * 
-     * @param idDocente = para verificar si el docente no tiene asignado un grupo a la misma hora
-     * @param cantidadHoras = numero de horas que se quieren asignar
-     * @param desde = desde cual hora se quiere hacer la asignacion
-     * @param hasta = hasta cual hora tratar de hacer la asignacion
-     * @param nombre_dia = nombre del dia en que se quiere hacer la asignacion
-     * @param materia = objeto materia de la cual se quiere asignar un grupoHora
-     * @param aulasConCapa = array de aulas que tienen capacidad para asignar al grupoHora de la materia
-     * @param aulas = array de todas las aulas que tiene el campus, se usa para verificar si hay choques
-     * @param todas_mats = array de todas las materias del campus, se usa para comprobar choques
+     * @param Integer $idDocente = para verificar si el docente no tiene asignado un grupo a la misma hora
+     * @param Integer $cantidadHoras = numero de horas que se quieren asignar
+     * @param Integer $desde = desde cual hora se quiere hacer la asignacion
+     * @param Integer $hasta = hasta cual hora tratar de hacer la asignacion
+     * @param String $nombre_dia = nombre del dia en que se quiere hacer la asignacion
+     * @param Materia $materia = objeto materia de la cual se quiere asignar un grupoHora
+     * @param Aula[] $aulasConCapa = array de aulas que tienen capacidad para asignar al grupoHora de la materia
+     * @param Aula[] $aulas = array de todas las aulas que tiene el campus, se usa para verificar si hay choques
+     * @param Materia[] $todas_mats = array de todas las materias del campus, se usa para comprobar choques
      * @return horas disponibles en las que se puede asignar el grupoHora
      */
-    public static function buscarHoras($docente,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas){
+    public static function buscarHoras($docentes,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
-            $a = $aulasConCapa[$x]->getNombre();
-            error_log ("A probar en aula $a",0);
+            error_log ("A probar en aula ".$aulasConCapa[$x]->getNombre(),0);
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
-            $resul = self::buscarHorasDisponibles($docente,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,false);
+            $resul = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,false);
             if($resul != null && $resul == "Choque"){
                 break;
-            } else if($resul != null && count($resul)!=0){
+            } else if($resul != null && is_array($resul)){
                 $horasDisponibles = $resul;
                 break;
             }
@@ -211,13 +211,13 @@ class ManejadorHoras {
         return $horasDisponibles;
     }
     
-    public static function buscarHorasUltimoRecurso($docente,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas){
+    public static function buscarHorasUltimoRecurso($docentes,$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulasConCapa,$aulas){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
             $a = $aulasConCapa[$x]->getNombre();
             error_log ("A probar en aula $a Desde: $desde Hasta: $hasta",0);
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
-            $resul = self::buscarHorasDisponibles($docente,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,true);
+            $resul = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$materia,$aulas,true);
             if($resul != null && $resul != "Choque"){
                 $horasDisponibles = $resul;
                 break;
@@ -259,7 +259,7 @@ class ManejadorHoras {
                 $hora = $dia->getHoras()[$i];
                 if(!$hora->estaDisponible()){
                     $grupoHora = $hora->getGrupo();
-                    if($grupoHora->getAgrup() === $grupo->getAgrup() && $grupoHora->getId_grupo() == $grupo->getId_grupo()){
+                    if($grupoHora === $grupo){
                         return true;
                     }
                 }
@@ -271,38 +271,33 @@ class ManejadorHoras {
     /** Meotodo para relizar busquedas de una materia que pertenece al mismo nivel en el dia elegido
      *
      * @param grupo = grupo que se quiere asignar en dia elegido
-     * @param materia = materia a la que pertenece el grupo que se quiere asignar
-     * @param todas_mats = array con todas las materias de la facultad
-     * @param todas_agrups = todas las agrupaciones en sistema
+     * @param agrupacion
      * @param aulas
      * @param nombreDia
      * @return ultima hora en la que hay una materia del mismo nivel
      */
-    public static function getUltimasHoraDeNivel($grupo,$materia,$aulas,$nombreDia){
+    public static function getUltimasHoraDeNivel($agrupacion,$aulas,$nombreDia){
         $horasNivel = array();
-        foreach ($aulas as $aula) {
-            $hora = -1;
-            $horas = $aula->getDia($nombreDia)->getHoras();
-            for($x=0; $x<count($horas); $x++){
-                if(!$horas[$x]->estaDisponible() && self::mismoDepartamentoAgrupacionMateria($horas[$x]->getGrupo()->getAgrup(), $materia)){
-                    $grupoHora = $horas[$x]->getGrupo();
-                    $materias = $grupoHora->getAgrup()->getMaterias();
-                    foreach ($materias as $materiaHora) {
-                        if(strcmp($materiaHora->getCarrera()->getCodigo(),$materia->getCarrera()->getCodigo())==0 && $materiaHora->getCiclo() == $materia->getCiclo()){
-                            if(strcmp($materiaHora->getCodigo(),$materia->getCodigo())==0 && $grupoHora->getId_grupo() != $grupo->getId_grupo()){
-                                $hora = $x;
-                                break;
-                            }
-                            else if(strcmp($materiaHora->getCodigo(),$materia->getCodigo())!=0){
+        $materiasAgrupacion = $agrupacion->getMaterias();
+        foreach ($materiasAgrupacion as $materia) {
+            foreach ($aulas as $aula) {
+                $hora = -1;
+                $horas = $aula->getDia($nombreDia)->getHoras();
+                for($x=0; $x<count($horas); $x++){
+                    if(!$horas[$x]->estaDisponible() && self::mismoDepartamentoAgrupacionMateria($horas[$x]->getGrupo()->getAgrup(), $materia)){
+                        $grupoHora = $horas[$x]->getGrupo();
+                        $materias = $grupoHora->getAgrup()->getMaterias();
+                        foreach ($materias as $materiaHora) {
+                            if(strcmp($materiaHora->getCarrera()->getCodigo(),$materia->getCarrera()->getCodigo())==0 && $materiaHora->getCiclo() == $materia->getCiclo()){
                                 $hora = $x;
                                 break;
                             }
                         }
                     }
                 }
-            }
-            if($hora != -1){
-                $horasNivel[] = $hora;
+                if($hora != -1){
+                    $horasNivel[$materia->getCodigo()][] = $hora;
+                }
             }
         }
         return $horasNivel;
@@ -348,16 +343,12 @@ class ManejadorHoras {
             return false;
         }
         if($horas[$desde-1]->getGrupo() == $grupo){
-            echo "Grupo origen es igual a grupo destino";
+            echo "Grupos iguales en horas origen y destino del intercambio";
             exit(0);
         }
         $contador = 0;
         $i = ($desde-1);
-        if($i == 0){
-            goto evalDown;
-        } elseif($i != 0 && $i != 14){
-            goto evalDown;
-        } elseif($i == 14){
+        if($i == 14){
             goto evalUp;
         }
         evalDown:{
@@ -408,7 +399,7 @@ class ManejadorHoras {
     public static function intercambiar($aula1,$dia1,$desde1,$aula2,$dia2,$desde2,$grupos,$aulas){
         for ($i = 0; $i < count($grupos[0]); $i++){
             ManejadorAulas::getAula($aulas, $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setGrupo($grupos[0][$i]);
-            if(ManejadorGrupos::getGrupo($aulas, $aula2, $dia2, $desde2)->getId_grupo() == 0){
+            if(ManejadorGrupos::getGrupoEnHora($aulas, $aula2, $dia2, $desde2)->getId_grupo() == 0){
                 ManejadorAulas::getAula($aulas, $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setDisponible(true);
             } else{
                 ManejadorAulas::getAula($aulas, $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setDisponible(false);
@@ -417,7 +408,7 @@ class ManejadorHoras {
         }
         for($i=0; $i < count($grupos[1]); $i++){
             ManejadorAulas::getAula($aulas, $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setGrupo($grupos[1][$i]);
-            if(ManejadorGrupos::getGrupo($aulas, $aula1, $dia1, $desde1)->getId_grupo() == 0){
+            if(ManejadorGrupos::getGrupoEnHora($aulas, $aula1, $dia1, $desde1)->getId_grupo() == 0){
                 ManejadorAulas::getAula($aulas, $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setDisponible(true);
             } else {
                 ManejadorAulas::getAula($aulas, $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setDisponible(false);
@@ -459,7 +450,7 @@ class ManejadorHoras {
                 }
             }
         } catch (Exception $ex) {
-            echo "Error en generarHoras(): "+$ex->getMessage();
+            echo "Error en generarHoras()";
         }
         return $horas;
     }
@@ -468,9 +459,9 @@ class ManejadorHoras {
      * 
      * @param horas = horas generadas con generarHoras()
      */
-    public static function agregarHoras($horas){
+    public static function actualizarHoras($horas){
         foreach ($horas as $hora) {
-            $resultado = Conexion::consulta("INSERT INTO horas VALUES('$hora->getIdHora()','$h->getInicio()');");
+            $resultado = Conexion::consulta("UPDATE horas_test SET inicio='$hora->getIdHora()',final='$h->getInicio()' WHERE id_hora='$h->getFin()'");
         }
     }
     
@@ -479,7 +470,7 @@ class ManejadorHoras {
         foreach ($materiasAgrup as $materiaAgrup){
             if($materiaAgrup->getCarrera()->getDepartamento() == $materia->getCarrera()->getDepartamento()){
                 return true;
-            }
+}
         }
         return false;
     }

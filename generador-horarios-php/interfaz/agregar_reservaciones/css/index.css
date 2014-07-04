@@ -1,0 +1,51 @@
+.celda-hora{
+    height: 50px;
+    width: 100%;
+    display: table;
+    border-radius: 0.5em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font: 14px/100% Arial,Helvetica,sans-serif;
+    text-align: center;
+}
+.grupo-seleccionado{
+    height: 50px;
+    width: 100%;
+    display: table;
+    border-radius: 0.5em;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    font: 14px/100% Arial,Helvetica,sans-serif;
+    text-align: center;
+    background: #3D81F6;
+}
+.col{
+    width: 13%;
+    float: left;
+    margin-right: 2px;
+    margin-left: 2px;
+}
+.col-header{
+    display: table;
+    height: 9.09%;
+    width: 100%;	
+    background-color: #282828;
+    color: white;
+    font-family: Arial,Helvetica,sans-serif;
+    font-size: 15px; 
+    font-weight: bold; 
+    border-left: 1px solid white; 
+    text-align: center;
+}
+.centrar{
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.hora-reservada{
+    background-color: #E6E6FA;
+}
+
+#barraVertical{
+    padding-left: 10px;
+}

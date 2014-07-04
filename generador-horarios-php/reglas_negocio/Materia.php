@@ -12,17 +12,27 @@ class Materia {
     private $carrera;
     private $agrupacion;
     private $horasRequeridas;
+    private $horasLab;
+    private $horasDiscu;
+    private $lab_dis_alter;
+    private $aulas_gtd;
+    private $aulas_gl;
     private $incompleta;
     
-    function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $carrera, $agrupacion, $incompleta) {
+    function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $carrera, $agrupacion, $horasReq, $horasLab, $horasDis, $lab_dis, $aulas_gtd, $aulas_gl,$incompleta) {
         $this->codigo = $codigo;
         $this->nombre = $nombre;
         $this->ciclo = $ciclo;
         $this->unidadesValorativas = $unidadesValorativas;
         $this->carrera = $carrera;
         $this->agrupacion = $agrupacion;
+        $this->horasRequeridas = $horasReq;
+        $this->horasLab = $horasLab;
+        $this->horasDiscu = $horasDis;
+        $this->lab_dis_alter = $lab_dis;
+        $this->aulas_gtd = $aulas_gtd;
+        $this->aulas_gl = $aulas_gl;
         $this->incompleta = $incompleta;
-        $this->horasRequeridas = null;
     }
 
     public function getCodigo() {
@@ -92,5 +102,49 @@ class Materia {
 
     public function setCarrera($carrera) {
         $this->carrera = $carrera;
+    }
+    
+    public function getHorasLab() {
+        return $this->horasLab;
+    }
+
+    public function getHorasDiscu() {
+        return $this->horasDiscu;
+    }
+
+    public function isLab_dis_alter() {
+        if($this->lab_dis_alter=='f'){
+            return false;
+        } else{
+            return true;
+        }
+    }
+
+    public function setHorasLab($horasLab) {
+        $this->horasLab = $horasLab;
+    }
+
+    public function setHorasDiscu($horasDiscu) {
+        $this->horasDiscu = $horasDiscu;
+    }
+
+    public function setLab_dis_alter($lab_dis_alter) {
+        $this->lab_dis_alter = $lab_dis_alter;
+    }
+    
+    public function getAulas_gtd() {
+        return $this->aulas_gtd;
+    }
+
+    public function getAulas_gl() {
+        return $this->aulas_gl;
+    }
+
+    public function setAulas_gtd($aulas_gtd) {
+        $this->aulas_gtd = $aulas_gtd;
+    }
+
+    public function setAulas_gl($aulas_gl) {
+        $this->aulas_gl = $aulas_gl;
     }
 }

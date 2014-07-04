@@ -1,5 +1,6 @@
 <?php
 
+chdir(dirname(__FILE__));
 require_once '../acceso_datos/Conexion.php';
 include_once 'ManejadorDepartamentos.php';
 include_once 'Carrera.php';

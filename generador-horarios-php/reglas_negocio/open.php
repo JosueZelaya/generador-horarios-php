@@ -1,4 +1,6 @@
 <?php
+
+chdir(dirname(__FILE__));
 include_once 'Facultad.php';
 session_start();
 

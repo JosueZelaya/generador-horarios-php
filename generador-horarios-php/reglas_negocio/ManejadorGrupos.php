@@ -5,18 +5,49 @@
  *
  * @author abs
  */
-
+chdir(dirname(__FILE__));
 include_once '../acceso_datos/Conexion.php';
 include_once 'Dia.php';
 include_once 'Hora.php';
 include_once 'ManejadorAgrupaciones.php';
+include_once 'ManejadorDocentes.php';
 include_once 'Grupo.php';
 include_once 'Departamento.php';
 include_once 'Carrera.php';
 
 abstract class ManejadorGrupos {
     
-    public static function getGrupo($aulas,$aulaElegida,$diaElegido,$idHora){
+    public static function obtenerGrupos($año,$ciclo,$agrupaciones,$docentes){
+        $grupos = array();
+        $consulta = "select id_grupo,id_agrupacion,id_docente,tipo from docente_grupo dg join tipos_grupos on tipo_grupo=id where dg.año=$año and dg.ciclo=$ciclo order by id_agrupacion,id_grupo asc";
+        $respuesta = Conexion::consulta($consulta);
+        $id_grupo = 0;
+        $id_agrup = 0;
+        $tipo_grupo = '';
+        while ($fila = pg_fetch_array($respuesta)){
+            $docente = ManejadorDocentes::obtenerDocente($fila['id_docente'], $docentes);
+            if($id_grupo == $fila['id_grupo'] && $id_agrup == $fila['id_agrupacion'] && $tipo_grupo == $fila['tipo']){
+                $grupos[count($grupos)-1]->addDocente($docente);
+                $docente->addGrupo($grupos[count($grupos)-1]);
+            } else{
+                $agrupacion = ManejadorAgrupaciones::getAgrupacion($fila['id_agrupacion'], $agrupaciones);
+                $grupo = new Grupo();
+                $grupo->setId_grupo($fila['id_grupo']);
+                $grupo->setAgrup($agrupacion);
+                $grupo->addDocente($docente);
+                $grupo->setTipo($fila['tipo']);
+                $agrupacion->addGrupo($grupo);
+                $grupos[] = $grupo;
+                $docente->addGrupo($grupo);
+                $id_grupo = $fila['id_grupo'];
+                $id_agrup = $fila['id_agrupacion'];
+                $tipo_grupo = $fila['tipo'];
+            }
+        }
+        return $grupos;
+    }
+
+    public static function getGrupoEnHora($aulas,$aulaElegida,$diaElegido,$idHora){
         if(isset($aulaElegida)){
             foreach ($aulas as $aula){
                 if(strcmp($aula->getNombre(),$aulaElegida)==0){
@@ -92,11 +123,10 @@ abstract class ManejadorGrupos {
      * @return array = id del departamento
      */
     public static function obtenerIdDepartamento($materias){
-        $departamento = "";
         foreach ($materias as $materia) {
-            $departamento += $materia->getCarrera()->getDepartamento()->getId()+" ";
+            $idDepars[] = $materia->getCarrera()->getDepartamento()->getId();
         }
-        return substr($departamento,0,-1);
+        return $idDepars;
     }
     
     public static function getNombreDepartamento($materias){
@@ -112,4 +142,34 @@ abstract class ManejadorGrupos {
         }
         return $carreras;
     }
+    
+    public static function actualizarGrupos($grupos,$año,$ciclo){
+        $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$grupos[0]->getAgrup()."'";
+        conexion::consulta($consulta);
+        $consulta = "INSERT INTO docente_grupo(id_grupo,id_agrupacion,año,ciclo,tipo_grupo,id_docente) VALUES ";
+        $contGrupos=1;
+        foreach ($grupos as $grupo) {            
+            $contDocentes=1;
+            foreach ($grupo->getDocentes() as $docente) {
+                $tipo;
+                if($grupo->getTipo()=="teorico"){
+                    $tipo=1;
+                }else if($grupo->getTipo()=="laboratorio"){
+                    $tipo=2;
+                }else if($grupo->getTipo()=="discusion"){
+                    $tipo=3;
+                }
+                
+                if($contGrupos==count($grupos) && $contDocentes==count($grupo->getDocentes())){
+                    $consulta = $consulta."('".$grupo->getId_grupo()."',".$grupo->getAgrup().",$año,$ciclo,".$tipo.",$docente)";
+                }else{
+                    $consulta = $consulta."('".$grupo->getId_grupo()."',".$grupo->getAgrup().",$año,$ciclo,".$tipo.",$docente),";
+                }
+                $contDocentes++;
+            }            
+            $contGrupos++;
+        }
+        conexion::consulta($consulta);
+    }
+    
 }

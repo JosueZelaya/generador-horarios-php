@@ -7,11 +7,15 @@
 class Docente {
     
     private $idDocente;
+    private $contratacion;
     private $cargo;
-    
-    function __construct($idDocente, $cargo) {
+    private $grupos;
+            
+    function __construct($idDocente,$contratacion) {
         $this->idDocente = $idDocente;
-        $this->cargo = $cargo;
+        $this->cargo = null;
+        $this->contratacion = $contratacion;
+        $this->grupos = array();
     }
     
     public function getIdDocente() {
@@ -28,5 +32,25 @@ class Docente {
 
     public function setCargo($cargo) {
         $this->cargo = $cargo;
+    }
+    
+    public function getContratacion() {
+        return $this->contratacion;
+    }
+
+    public function setContratacion($contratacion) {
+        $this->contratacion = $contratacion;
+    }
+    
+    public function getGrupos() {
+        return $this->grupos;
+    }
+
+    public function setGrupos($grupos) {
+        $this->grupos = $grupos;
+    }
+    
+    public function addGrupo($grupo){
+        $this->grupos[] = $grupo;
     }
 }

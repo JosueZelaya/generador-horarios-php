@@ -5,7 +5,7 @@
  *
  * @author abs
  */
-
+chdir(dirname(__FILE__));
 include_once '../acceso_datos/Conexion.php';
 include_once 'Departamento.php';
 
