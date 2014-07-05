@@ -23,9 +23,9 @@ abstract class ManejadorMaterias {
         $preferencias = self::getPreferenciasAulas();
         $materias = array();
         if(!$cicloPar){
-            $respuesta = Conexion::consulta("select m.cod_materia,m.nombre_materia,m.uv,m.ciclo_carrera,m.id_carrera,m.plan_estudio,ma.id_agrupacion,m.horas_lab_semana,m.horas_discu_semana,m.lab_dis_alter,m.horas_clase from materias as m natural join materia_agrupacion as ma WHERE m.ciclo_carrera IN (1,3,5,7,9) AND ma.año=$año AND ma.ciclo=1 ORDER BY m.cod_materia");
+            $respuesta = Conexion::consulta("select m.cod_materia,m.nombre_materia,m.uv,m.ciclo_carrera,m.id_carrera,m.plan_estudio,ma.id_agrupacion,m.horas_lab_semana,m.horas_discu_semana,m.lab_dis_alter,m.horas_clase from materias as m natural join materia_agrupacion as ma WHERE m.ciclo_carrera%2!=0 AND ma.año=$año AND ma.ciclo=1 ORDER BY m.cod_materia");
         } else {
-            $respuesta = Conexion::consulta("select m.cod_materia,m.nombre_materia,m.uv,m.ciclo_carrera,m.id_carrera,m.plan_estudio,ma.id_agrupacion,m.horas_lab_semana,m.horas_discu_semana,m.lab_dis_alter,m.horas_clase from materias as m natural join materia_agrupacion as ma WHERE m.ciclo_carrera IN (2,4,6,8,10) AND ma.año=$año AND ma.ciclo=2 ORDER BY m.cod_materia");
+            $respuesta = Conexion::consulta("select m.cod_materia,m.nombre_materia,m.uv,m.ciclo_carrera,m.id_carrera,m.plan_estudio,ma.id_agrupacion,m.horas_lab_semana,m.horas_discu_semana,m.lab_dis_alter,m.horas_clase from materias as m natural join materia_agrupacion as ma WHERE m.ciclo_carrera%2=0 AND ma.año=$año AND ma.ciclo=2 ORDER BY m.cod_materia");
         }
         while($fila = pg_fetch_array($respuesta)){
             $prefMateria = self::getPreferenciaAulaMateria($preferencias, $todas_aulas, $fila['cod_materia'], $fila['id_carrera'], $fila['plan_estudio']);
