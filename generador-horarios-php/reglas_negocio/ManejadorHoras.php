@@ -417,54 +417,6 @@ class ManejadorHoras {
         }
     }
 
-    /** Metodo para generar nuevas horas clase
-     * 
-     * @param initManana = hora de inicio del dia clase
-     * @param initTarde = hora de final dia clase
-     * @return horas generadas en los limites recibidos
-     */
-    public static function generarHoras($initManana,$initTarde){
-        $id=1;
-        $horaInicial=$initManana;
-        $horaFinal=new DateTime();
-        $duracionHora = 60 * 50;
-        $horas = array();
-        try{
-            if($horaInicial->getTimestamp()+($duracionHora*7) > $initTarde->getTimestamp()){
-                throw new Exception("Horas se sobrelapan");
-            }
-            while($id <= 15){
-                $horaFinal->setTimestamp($horaInicial->getTimestamp()+($duracionHora*7));
-                $hora = new Hora();
-                $hora->setId($id);
-                $elementosHora = getdate($horaInicial->getTimestamp());
-                $hora->setInicio($elementosHora[hours]+":"+$elementosHora[minutes]+":00");
-                $elementosHora = getdate($horaFinal->getTimestamp());
-                $hora->setFin($elementosHora[hours]+":"+$elementosHora[minutes]+":00");
-                $horas[] = $hora;
-                $horaInicial->setTimestamp($horaFinal->getTimestamp());
-                $id++;
-                if($id == 8){
-                    $horaInicial->setTimestamp($initTarde->getTimestamp());
-                    $horaFinal->setTimestamp($horaInicial->setTimestamp());
-                }
-            }
-        } catch (Exception $ex) {
-            echo "Error en generarHoras()";
-        }
-        return $horas;
-    }
-    
-    /** Metodo para actulizar las horas creadas con generarHoras() en la base de datos
-     * 
-     * @param horas = horas generadas con generarHoras()
-     */
-    public static function actualizarHoras($horas){
-        foreach ($horas as $hora) {
-            $resultado = Conexion::consulta("UPDATE horas_test SET inicio='$hora->getIdHora()',final='$h->getInicio()' WHERE id_hora='$h->getFin()'");
-        }
-    }
-    
     public static function mismoDepartamentoAgrupacionMateria($agrupacion,$materia){
         $materiasAgrup = $agrupacion->getMaterias();
         foreach ($materiasAgrup as $materiaAgrup){
