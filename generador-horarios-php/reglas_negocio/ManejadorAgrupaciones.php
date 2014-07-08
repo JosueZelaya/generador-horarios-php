@@ -287,7 +287,8 @@ abstract class ManejadorAgrupaciones {
                     "alumnos_grupo" => $agrupaciones[$index]->getAlumnosGrupo(),  
                     "nombre_depar" => $agrupaciones[$index]->getDepartamento()->getNombre(),
                     "label" => $agrupaciones[$index]->getNombre(),
-                    "category" => $agrupaciones[$index]->getDepartamento()->getNombre(),                    
+                    "category" => $agrupaciones[$index]->getDepartamento()->getNombre(),  
+                    "id_depar" => $agrupaciones[$index]->getDepartamento()->getId(),  
                     "cod_materia" => $agrupaciones[$index]->getCodigo(),
                     "id" => $agrupaciones[$index]->getIdAgrupacion()
                     );                    

@@ -44,9 +44,11 @@ abstract class ManejadorDocentes{
         $datos = array();
         $materias = array();
         if($idDepartamento=="todos"){
-            $consulta = "SELECT * FROM docentes WHERE (nombres iLIKE '%$buscarComo%' OR apellidos iLIKE '%$buscarComo%') LIMIT 15";
+//            $consulta = "SELECT * FROM docentes WHERE (nombres iLIKE '%$buscarComo%' OR apellidos iLIKE '%$buscarComo%') LIMIT 15";
+            $consulta = "SELECT * FROM docentes WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' LIMIT 15;";
         }else{
-            $consulta = "SELECT * FROM docentes WHERE (nombres iLIKE '%$buscarComo%' OR apellidos iLIKE '%$buscarComo%') AND id_depar='$idDepartamento' LIMIT 15";
+//            $consulta = "SELECT * FROM docentes WHERE (nombres iLIKE '%$buscarComo%' OR apellidos iLIKE '%$buscarComo%') AND id_depar='$idDepartamento' LIMIT 15";
+            $consulta = "SELECT * FROM docentes WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND id_depar='$idDepartamento' LIMIT 15;";
         }        
         $respuesta = conexion::consulta($consulta);
         while ($row = pg_fetch_array($respuesta)){

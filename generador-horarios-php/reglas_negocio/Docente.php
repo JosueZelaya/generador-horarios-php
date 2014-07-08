@@ -10,6 +10,7 @@ class Docente {
     private $contratacion;
     private $cargo;
     private $grupos;
+    private $nombre_completo;
             
     function __construct($idDocente,$contratacion) {
         $this->idDocente = $idDocente;
@@ -53,4 +54,15 @@ class Docente {
     public function addGrupo($grupo){
         $this->grupos[] = $grupo;
     }
+    
+    public function getNombre_completo() {
+        return $this->nombre_completo;
+    }
+
+    public function setNombre_completo($nombre_completo) {
+        $this->nombre_completo = $nombre_completo;
+    }
+
+
+    
 }

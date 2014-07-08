@@ -3,7 +3,7 @@
 abstract class Conexion {
 	
 	public static function conectar(){
-		$cadena_de_conexion = "host=localhost port=5432 dbname=horarios_bd_main user=horarios_bd password=password connect_timeout=5";
+		$cadena_de_conexion = "host=localhost port=5432 dbname=horarios_bd2 user=horarios_bd2 password=password connect_timeout=5";
 		$conexion = pg_connect($cadena_de_conexion) or die ('No se ha podido conectar a la Base de Datos');
 		return $conexion;	
 	}
@@ -26,4 +26,11 @@ abstract class Conexion {
 		conexion::desconectar($conexion);
 		return $array;
 	} 
+        
+        public static function consultaSinCerrarConexion($sql_consulta){
+            $respuesta = pg_exec($conexion, $sql_consulta) or die("No se pudo ejecutar la consulta:".$sql_consulta."\n"); 		
+//            Conexion::desconectar($conexion);
+            return $respuesta;
+        }
+        
 }

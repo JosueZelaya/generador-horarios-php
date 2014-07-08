@@ -17,10 +17,11 @@ if(isset($_GET)){
                 $grupos = array();                
                 try{
                     for ($i = 1; $i <= count($arrayGrupos); $i++) {    
-                        if($arrayGrupos[$i]["docentes"]==""){                            
+                        if($arrayGrupos[$i]["docentes"]=="" || $arrayGrupos[$i]["docentes"]==NULL){                            
                             throw new Exception("Debe agregar docentes a todos los grupos!");
                         }else{
-                            $docentes = explode(",", $arrayGrupos[$i]['docentes']);                           
+//                            $docentes = explode(",", $arrayGrupos[$i]['docentes']);         
+                            $docentes = $arrayGrupos[$i]['docentes'];
                             $grupo = new Grupo();
                             $grupo->setAgrup($arrayGrupos[$i]["agrupacion"]);
                             $grupo->setDocentes($docentes);

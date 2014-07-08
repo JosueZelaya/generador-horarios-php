@@ -48,7 +48,7 @@ if($_GET){
     }  else {
         $cicloPar=TRUE;
     }
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras()));
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
     ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
     $_SESSION['facultad'] = $facultad;
     $aulas = $facultad->getAulas();
