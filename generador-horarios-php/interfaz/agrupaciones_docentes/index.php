@@ -20,7 +20,20 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="../js/jquery-ui/css/smoothness/css/smoothness/jquery-ui-1.10.4.custom.min.css">
         <link href="../bootstrap/xeditable/css/bootstrap-editable.css" rel="stylesheet">        
         <link href="css/estilo.css" rel="stylesheet">  
-    
+         <style>
+        .ui-autocomplete {
+            max-height: 400px;
+            overflow-y: auto;
+            /* prevent horizontal scrollbar */
+            overflow-x: hidden;
+            }
+                /* IE 6 doesn't support max-height
+                * we use height instead, but this forces the menu to always be this tall
+                */
+                * html .ui-autocomplete {
+                height: 400px;
+            }
+        </style>
     </head>
     <body>
         <?php if (ManejadorSesion::comprobar_sesion() == true) : ?>   
