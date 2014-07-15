@@ -27,9 +27,8 @@ abstract class Conexion {
 		return $array;
 	} 
         
-        public static function consultaSinCerrarConexion($sql_consulta){
+        public static function consultaSinCerrarConexion($conexion,$sql_consulta){
             $respuesta = pg_exec($conexion, $sql_consulta) or die("No se pudo ejecutar la consulta:".$sql_consulta."\n"); 		
-//            Conexion::desconectar($conexion);
             return $respuesta;
         }
         

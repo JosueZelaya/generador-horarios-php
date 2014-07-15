@@ -42,21 +42,11 @@ $(document).ready(function() {
             delay: 0,
             source : 'buscarAgrupacion.php',
             select: function(event,ui){
+                grupos = new Object();
+                indice=0;
                 var nombreAgrupacion = ui.item.label;
                 var codMateria = ui.item.cod_materia;
-                var id_agrupacion = ui.item.id;
-//                var numGrupos = parseInt(ui.item.num_grupos);       //GRUPOS TEÓRICOS               
-//                var numGruposL = parseInt(ui.item.num_grupos_l);    //GRUPOS DE LABORATORIO                
-//                var numGruposD = parseInt(ui.item.num_grupos_d);    //GRUPOS DE DISCUCIÓN 
-//                var totalGrupos = numGrupos+numGruposL+numGruposD;
-//                for(i=1;i<=totalGrupos;i++){
-//                    var grupo = new Object();
-//                    grupo["docentes"] = "";
-//                    grupo["agrupacion"] = ui.item.id;
-//                    grupo["id"] = "";
-//                    grupo["tipo"] = 'teorico';
-//                    grupos[i]=grupo;
-//                }                
+                var id_agrupacion = ui.item.id;               
                 $("#mostrar_grupos").html("<h3>"+nombreAgrupacion+" codigo: "+codMateria+"</h3><br/>");
                 var dataString = "agrupacion="+id_agrupacion;
                 $.ajax({
@@ -100,62 +90,6 @@ $(document).ready(function() {
             }
        });
    });
-   
-//    $(document).on("keydown.catcomplete","#buscar_agrupacion",function(){        
-//       $(this).catcomplete({
-//            delay: 0,
-//            source : 'buscarAgrupacion.php',
-//            select: function(event,ui){
-//                $("#mostrar_grupos").html("");                                                    
-//                grupos = new Object();
-//                indice=1;
-//                var numGrupos = parseInt(ui.item.num_grupos);       //GRUPOS TEÓRICOS               
-//                var numGruposL = parseInt(ui.item.num_grupos_l);    //GRUPOS DE LABORATORIO                
-//                var numGruposD = parseInt(ui.item.num_grupos_d);    //GRUPOS DE DISCUCIÓN   
-//                var codMateria = ui.item.cod_materia;
-//                var nombreAgrupacion = ui.item.label;                
-//                
-//                $("#mostrar_grupos").html("<h3>"+nombreAgrupacion+" codigo: "+codMateria+"</h3>");
-//                
-//                for(i=1;i<=numGrupos;i++){
-//                    var grupo = new Object();
-//                    grupo["docentes"] = "";
-//                    grupo["agrupacion"] = ui.item.id;
-//                    grupo["id"] = i;
-//                    grupo["tipo"] = 'teorico';
-//                    grupos[indice]=grupo;
-//                    $("#mostrar_grupos").html($("#mostrar_grupos").html()+
-//                        "<div id='g"+i+"' numGrupo='"+i+"' grupo='"+indice+"' tipo='teorico' agrupacion='"+ui.item.id+"' style='padding: 8px 35px 8px 14px; border: 1px solid rgb(188, 232, 241); color: rgb(58, 135, 173); background-color: rgb(217, 237, 247);color: rgb(0, 136, 204);' class='grupo grupoTeorico row'>Grupo Teórico "+i+"<br/></div><br/>"                        
-//                    );                    
-//                    indice++;
-//                }                   
-//                for(i=1;i<=numGruposL;i++){
-//                    var grupo = new Object();
-//                    grupo["docentes"] = "";
-//                    grupo["agrupacion"] = ui.item.id;
-//                    grupo["id"] = i;
-//                    grupo["tipo"] = 'laboratorio';
-//                    grupos[indice]=grupo;
-//                    $("#mostrar_grupos").html($("#mostrar_grupos").html()+
-//                        "<div id='gl"+i+"' numGrupo='"+i+"' grupo='"+indice+"' tipo='laboratorio' agrupacion='"+ui.item.id+"' style='padding: 8px 35px 8px 14px; border: 1px solid rgb(188, 232, 241); color: rgb(58, 135, 173); background-color: #90EE90; color: rgb(0, 136, 0);' class='grupo grupoLaboratorio row'>Grupo Laboratorio "+i+"<br/></div><br/>"                        
-//                    );                    
-//                    indice++;
-//                }                
-//                for(i=1;i<=numGruposD;i++){
-//                    var grupo = new Object();
-//                    grupo["docentes"] = "";
-//                    grupo["agrupacion"] = ui.item.id;
-//                    grupo["id"] = i;
-//                    grupo["tipo"] = 'discusion';
-//                    grupos[indice]=grupo;
-//                    $("#mostrar_grupos").html($("#mostrar_grupos").html()+
-//                        "<div id='gd"+i+"' numGrupo='"+i+"' grupo='"+indice+"' tipo='discusion' agrupacion='"+ui.item.id+"' style='padding: 8px 35px 8px 14px; border: 1px solid rgb(188, 232, 241); color: rgb(58, 135, 173); background-color: #B0C4DE; color: rgb(0, 0, 204);' class='grupo grupoDiscusion row'>Grupo Discusion "+i+"<br/></div><br/>"                        
-//                    );
-//                    indice++;
-//                }                
-//            }
-//       }); 
-//    });
     
     $(document).on("mouseover.draggable",".docente_arrastrable",function(){        
         $(this).draggable({
@@ -215,8 +149,7 @@ function activarDroppables(){
             grupo["agrupacion"] = $(this).attr('agrupacion');
             grupo["id"] = $(this).attr('numGrupo');                
             grupo["tipo"] = tipoGrupo;                        
-            if(grupos[indice]["docentes"]!==""){
-//                grupo["docentes"] = grupos[indice]["docentes"]+","+ui.draggable.attr("id");                 
+            if(grupos[indice]["docentes"]!==""){            
                 var ultimoDocente = grupos[indice]["docentes"].length;                    
                 grupo["docentes"] = grupos[indice]["docentes"];
                 grupo["docentes"][ultimoDocente] = ui.draggable.attr("id");                
@@ -226,9 +159,8 @@ function activarDroppables(){
             }            
             grupos[indice] = grupo;                               
             var btn_quitarDocente = "<div style='display:inline-block; height:50px;' class='btn btn-default btn-lg btn-danger col-lg-1 center quitarDocente g"+indice+"d"+ui.draggable.attr("id")+"' indiceDocente='"+indice+"' docente='"+ui.draggable.attr("id")+"'><span class='glyphicon glyphicon-remove-circle center'></div>";
-            $(this).html($(this).html()+"<div class='btn-info col-lg-11 g"+indice+"d"+ui.draggable.attr("id")+"'>"+inventor+"</div>"+btn_quitarDocente);                                
-            
-//            mostrarDocentes(grupos[indice]["docentes"]);
+            $(this).html($(this).html()+"<div class='btn-info col-lg-11 g"+indice+"d"+ui.draggable.attr("id")+"'>"+inventor+"</div>"+btn_quitarDocente);                                            
+
         }
     });
     
@@ -236,13 +168,11 @@ function activarDroppables(){
 
 
 function quitarDocente(grupo,docente){
-//    alert("QUITANDO DOCENTE ... grupo: "+grupo+"docente: "+docente);
     var docentes = [];
     var ultimoDocente = grupos[grupo]["docentes"].length;       
     var cont=0;
     for(i=0;i<ultimoDocente;i++){        
         if(grupos[grupo]["docentes"][i]!==docente){            
-//            alert("grupo: "+grupo+"docente: "+grupos[grupo]["docentes"][i]);
             docentes[cont] = grupos[grupo]["docentes"][i];
             cont++;
         }
@@ -297,7 +227,6 @@ function mostrarGrupos(grupos,cantidad){
         }
     }
     $("#mostrar_grupos").html($("#mostrar_grupos").html()+respuesta);
-//    alert(respuesta);
 }
      
 });

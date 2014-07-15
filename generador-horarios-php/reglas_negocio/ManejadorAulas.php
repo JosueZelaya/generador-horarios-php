@@ -52,6 +52,21 @@ abstract class ManejadorAulas {
         return null;
     }
     
+    public static function buscarAulas($buscarComo){
+        $aulas = array();
+        $consulta = "SELECT * FROM aulas WHERE cod_aula iLIKE '$buscarComo%' ORDER BY cod_aula;";
+        $respuesta = Conexion::consulta($consulta);
+        while ($fila = pg_fetch_array($respuesta)){
+            $aula = new Aula();
+            $aula->setNombre($fila['cod_aula']);
+            $aula->setCapacidad($fila['capacidad']);
+            $aula->setDisponible(TRUE);
+            $aula->setExclusiva($fila['exclusiva']);
+            $aulas[] = $aula;
+        }
+        return $aulas;
+    }
+    
     /**
      * Devuelve las aulas capaces de albergar a la cantidad de alumnos especificada
      * 
@@ -415,4 +430,46 @@ abstract class ManejadorAulas {
         }
         return $aulasSeleccionadas;
     }
+    
+    public static function asignarAulas($materias,$aulas,$exclusiva,$gt,$gl,$gd,$año,$ciclo){
+//        if($exclusiva){
+//            throw new Exception("Exclusiva: TRUE");
+//        }else{
+//            throw new Exception("Exclusiva: FALSE");
+//        }
+        
+        $consulta = "";
+        $conexion = Conexion::conectar();
+        foreach ($materias as $materia) {
+            $consulta = "DELETE FROM info_agrup_aula WHERE id_agrupacion='$materia' AND año='$año' AND ciclo='$ciclo'";
+            Conexion::consultaSinCerrarConexion($conexion, $consulta);
+            if($gt){
+                $consulta = "INSERT INTO info_agrup_aula(id_agrupacion,año,ciclo,tipo_grupo,exclusiv_aula) VALUES ($materia,$año,$ciclo,1,'$exclusiva')";
+                Conexion::consultaSinCerrarConexion($conexion, $consulta);
+                foreach ($aulas as $aula) {
+                    $consulta = "INSERT INTO lista_agrup_aula(id_agrupacion,año,ciclo,tipo_grupo,cod_aula) VALUES ($materia,$año,$ciclo,1,'$aula')";
+                    Conexion::consultaSinCerrarConexion($conexion, $consulta);
+                }
+            }            
+            if($gl){
+                $consulta = "INSERT INTO info_agrup_aula(id_agrupacion,año,ciclo,tipo_grupo,exclusiv_aula) VALUES ($materia,$año,$ciclo,2,'$exclusiva')";
+                Conexion::consultaSinCerrarConexion($conexion, $consulta);
+                foreach ($aulas as $aula) {
+                    $consulta = "INSERT INTO lista_agrup_aula(id_agrupacion,año,ciclo,tipo_grupo,cod_aula) VALUES ($materia,$año,$ciclo,2,'$aula')";
+                    Conexion::consultaSinCerrarConexion($conexion, $consulta);
+                }
+            }
+            if($gd){
+                $consulta = "INSERT INTO info_agrup_aula(id_agrupacion,año,ciclo,tipo_grupo,exclusiv_aula) VALUES ($materia,$año,$ciclo,3,'$exclusiva')";
+                Conexion::consultaSinCerrarConexion($conexion, $consulta);
+                foreach ($aulas as $aula) {
+                    $consulta = "INSERT INTO lista_agrup_aula(id_agrupacion,año,ciclo,tipo_grupo,cod_aula) VALUES ($materia,$año,$ciclo,3,'$aula')";
+                    Conexion::consultaSinCerrarConexion($conexion, $consulta);
+                }
+            }
+            
+        }        
+        Conexion::desconectar($conexion);
+    }
+    
 }
