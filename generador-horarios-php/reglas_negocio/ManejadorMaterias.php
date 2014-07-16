@@ -149,15 +149,15 @@ abstract class ManejadorMaterias {
     public static function getMateriasParaAgrupar($materia,$ciclo,$departamento){
         if($ciclo=="impar"){
             if($departamento=="todos"){
-                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m JOIN carreras as c on m.id_carrera=c.id_carrera AND m.plan_estudio=c.plan_estudio JOIN departamentos as d ON c.id_depar=d.id_depar WHERE m.nombre_materia='".$materia."' AND m.ciclo_carrera%2!=0 ORDER BY m.cod_materia,m.id_carrera;";
+                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND m.ciclo_carrera%2!=0 ORDER BY m.cod_materia,m.id_carrera;";
             }else{
-                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m JOIN carreras as c on m.id_carrera=c.id_carrera AND m.plan_estudio=c.plan_estudio JOIN departamentos as d ON c.id_depar=d.id_depar WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' AND m.ciclo_carrera%2!=0 ORDER BY m.cod_materia,m.id_carrera;";
+                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' AND m.ciclo_carrera%2!=0 ORDER BY m.cod_materia,m.id_carrera;";
             }
         }else{
             if($departamento=="todos"){
-                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m JOIN carreras as c on m.id_carrera=c.id_carrera AND m.plan_estudio=c.plan_estudio JOIN departamentos as d ON c.id_depar=d.id_depar WHERE m.nombre_materia='".$materia."' AND m.ciclo_carrera%2=0 ORDER BY m.cod_materia,m.id_carrera;";
+                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND m.ciclo_carrera%2=0 ORDER BY m.cod_materia,m.id_carrera;";
             }else{
-                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m JOIN carreras as c on m.id_carrera=c.id_carrera AND m.plan_estudio=c.plan_estudio JOIN departamentos as d ON c.id_depar=d.id_depar WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' AND m.ciclo_carrera%2=0 ORDER BY m.cod_materia,m.id_carrera;";
+                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' AND m.ciclo_carrera%2=0 ORDER BY m.cod_materia,m.id_carrera;";
             }    
         }  
         $respuesta = conexion::consulta($consulta);
@@ -179,5 +179,4 @@ abstract class ManejadorMaterias {
         $materiasFiltradas = ManejadorMaterias::filtrarPorCiclo($materias, $ciclo);
         return count($materiasFiltradas);
     }
-    
 }

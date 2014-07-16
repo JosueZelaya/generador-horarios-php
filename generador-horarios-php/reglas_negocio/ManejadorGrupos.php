@@ -59,6 +59,61 @@ abstract class ManejadorGrupos {
         return ($a->getAgrup()->getNum_alumnos() < $b->getAgrup()->getNum_alumnos()) ? 1 : -1;
     }
 
+    public static function yaSeCreoGrupo($id_grupo,$tipo,$grupos){
+        foreach ($grupos as $grupo) {
+            if($grupo->getId_grupo()==$id_grupo && $grupo->getTipo()==$tipo){
+                return TRUE;
+            }
+        }
+        return FALSE;
+    }
+    
+    public static function agregar_docente_a_grupo($docente,$id_grupo,$tipo,$grupos){
+        foreach ($grupos as $grupo) {
+            if($grupo->getId_grupo()==$id_grupo && $grupo->getTipo()==$tipo){
+                $grupo->addDocente($docente);
+            }
+        }
+    }
+    
+    public static function getGruposDeAgrupacion($año,$ciclo,$agrupacion){        
+        $grupos = array();
+        $consulta = "SELECT * FROM docente_grupo NATURAL JOIN docentes WHERE id_agrupacion='$agrupacion' AND año='$año' AND ciclo='$ciclo' ORDER BY tipo_grupo,id_grupo;";
+        $respuesta = Conexion::consulta($consulta);        
+        if(pg_num_rows($respuesta)!=0){            
+            while($fila = pg_fetch_array($respuesta)){                
+                if(self::yaSeCreoGrupo($fila['id_grupo'], $fila['tipo_grupo'], $grupos)){
+                    $docente = new Docente($fila["id_docente"],"");
+                    $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
+                    self::agregar_docente_a_grupo($docente, $fila['id_grupo'], $fila['tipo_grupo'], $grupos);
+                }else{
+                    $grupo = new Grupo();
+                    $grupo->setAgrup($agrupacion);
+                    $grupo->setId_grupo($fila['id_grupo']);
+                    $grupo->setTipo($fila['tipo_grupo']);
+                    $docentes = array();
+                    $docente = new Docente($fila["id_docente"],"");
+                    $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
+                    $docentes[] = $docente;
+                    $grupo->setDocentes($docentes);
+                    $grupos[] = $grupo;
+                }
+            }
+        }else{
+            $consulta = "SELECT * FROM grupo WHERE id_agrupacion='$agrupacion' AND año='$año' AND ciclo='$ciclo' ORDER BY tipo,id;";
+            $respuesta = Conexion::consulta($consulta);   
+            while($fila = pg_fetch_array($respuesta)){                
+                $grupo = new Grupo();
+                $grupo->setAgrup($agrupacion);
+                $grupo->setId_grupo($fila['id']);
+                $grupo->setTipo($fila['tipo']);                
+                $grupo->setDocentes("");
+                $grupos[] = $grupo;
+            }
+        }
+        return $grupos;
+    }
+
     public static function getGrupoEnHora($aulas,$aulaElegida,$diaElegido,$idHora){
         if(isset($aulaElegida)){
             foreach ($aulas as $aula){

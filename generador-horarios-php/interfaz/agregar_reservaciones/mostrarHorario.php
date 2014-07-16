@@ -39,8 +39,9 @@ if($_GET){
         $aula = $_GET['aula'];  
     }
 }else{
-    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos($año,$ciclo), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),ManejadorAgrupaciones::getAgrupaciones($año, $ciclo),$año,$ciclo);
-    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos()));
+    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos($año,$ciclo), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),$año,$ciclo);
+    $facultad->setAgrupaciones(ManejadorAgrupaciones::getAgrupaciones($año, $ciclo,$facultad->getAulas()));
+    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos(),$año,$ciclo,$facultad->getDepartamentos()));
     $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
     $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
     if($ciclo==1){
@@ -48,7 +49,7 @@ if($_GET){
     }  else {
         $cicloPar=TRUE;
     }
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras()));
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
     ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
     $_SESSION['facultad'] = $facultad;
     $aulas = $facultad->getAulas();

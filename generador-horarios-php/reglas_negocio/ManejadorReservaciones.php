@@ -75,7 +75,7 @@ abstract class ManejadorReservaciones {
                 break;
             }
         }
-    }    
+    }
     
     public static function asignarRerservaciones($reservaciones,$aulas){
         foreach ($reservaciones as $reservacion){            
