@@ -21,20 +21,19 @@ class Facultad {
     private $carreras;
     private $grupos;
 
-    public function __construct($departamentos,$cargos,$reservaciones,$agrupaciones,$año,$ciclo) {
+    public function __construct($departamentos,$cargos,$reservaciones,$año,$ciclo) {
         $this->aulas = ManejadorAulas::getTodasAulas();
-        for ($i = 0; $i < count($this->aulas); $i++) {
+        foreach ($this->aulas as $aula){
             $dias = ManejadorDias::getDias($año,$ciclo);
             for ($x = 0; $x < count($dias); $x++) {
                 $horas = ManejadorDias::getHorasDia($dias[$x]->getId(),$año,$ciclo);
                 $dias[$x]->setHoras($horas);
             }
-            $this->aulas[$i]->setDias($dias);
+            $aula->setDias($dias);
         }
         $this->departamentos = $departamentos;
         $this->cargos = $cargos;
         $this->reservaciones = $reservaciones;
-        $this->agrupaciones = $agrupaciones;
     }
     
     public function getAulas() {

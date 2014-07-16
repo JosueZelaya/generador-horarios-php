@@ -1,6 +1,6 @@
 <?php
 
-ini_set('max_execution_time', 60);
+ini_set('max_execution_time', 500);
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Procesador.php';
 chdir(dirname(__FILE__));
@@ -45,9 +45,9 @@ if(isset($_SESSION['facultad'])){
 if(isset($_GET['op'])){
     $op = $_GET['op'];
     if($op == 'generar'){
-        $cicloPar = FALSE;
+        $ciclo = 1;
         $año = 2014;
-        generarHorario($año,$cicloPar);
+        generarHorario($año,$ciclo);
     } elseif ($op == 'intercambio') {
         $aula1 = htmlentities($_GET['aula1'], ENT_QUOTES, "UTF-8");
         $aula2 = htmlentities($_GET['aula2'], ENT_QUOTES, "UTF-8");
@@ -74,35 +74,41 @@ if(isset($_GET['op'])){
     }
 }
 
-function generarHorario($año,$cicloPar){
-    if(!$cicloPar){
-        $ciclo = 1;
-    } else{
-        $ciclo = 2;
-    }
-    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos(), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),ManejadorAgrupaciones::getAgrupaciones($año, $ciclo),$año,$ciclo);
-    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos()));
-    $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
-    $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
-    ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
+function generarHorario($año,$ciclo){
+    $facultad = asignarInfo($año, $ciclo);
     $procesador = new Procesador($facultad->getAulas());
     $docentes = ManejadorDocentes::clasificarDocentes($facultad->getDocentes());
-    $prioridad = true;
-    foreach ($docentes as $clasificacion) {
-        foreach ($clasificacion as $docente){
-            $grupos = $docente->getGrupos();
-            foreach ($grupos as $grupo) {
-                try {
-                    $procesador->procesarGrupo($grupo,$prioridad);
-                } catch (Exception $exc) {
-                    error_log($exc->getMessage(),0);    //Se produce cuando ya no hay aulas disponibles
-                }
+    foreach ($docentes[0] as $docente){
+        $grupos = $docente->getGrupos();
+        foreach ($grupos as $grupo) {
+            try {
+                $procesador->procesarGrupo($grupo,true);
+            } catch (Exception $exc) {
+                error_log($exc->getMessage(),0);    //Se produce cuando ya no hay aulas disponibles
             }
         }
-        $prioridad = false;
+    }
+    $grupos = ManejadorDocentes::extraerGruposDeDocentes($docentes[1]);
+    usort($grupos, "ManejadorGrupos::cmpGruposXAlumnos"); // Se ordenan los grupos de mayor a menor cantidad de alumnos
+    foreach ($grupos as $grupo) {
+        try {
+            $procesador->procesarGrupo($grupo,false);
+        } catch (Exception $exc) {
+            error_log($exc->getMessage(),0);    //Se produce cuando ya no hay aulas disponibles
+        }
     }
     $_SESSION['facultad'] = $facultad;
+}
+
+function asignarInfo($año,$ciclo) {
+    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos(), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),$año,$ciclo);
+    $facultad->setAgrupaciones(ManejadorAgrupaciones::getAgrupaciones($año, $ciclo, $facultad->getAulas()));
+    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos(),$año,$ciclo,$facultad->getDepartamentos()));
+    $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
+    $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($ciclo,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
+    ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
+    return $facultad;
 }
 
 function inicioIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2){

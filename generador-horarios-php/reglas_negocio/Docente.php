@@ -10,12 +10,16 @@ class Docente {
     private $contratacion;
     private $cargo;
     private $grupos;
+    private $horario;
+    private $depar;
             
-    function __construct($idDocente,$contratacion) {
+    function __construct($idDocente,$contratacion,$depar) {
         $this->idDocente = $idDocente;
         $this->cargo = null;
         $this->contratacion = $contratacion;
         $this->grupos = array();
+        $this->horario=null;
+        $this->depar = $depar;
     }
     
     public function getIdDocente() {
@@ -52,5 +56,45 @@ class Docente {
     
     public function addGrupo($grupo){
         $this->grupos[] = $grupo;
+    }
+    
+    public function getHorario() {
+        return $this->horario;
+    }
+
+    public function setHorario($horario) {
+        $this->horario = $horario;
+    }
+    
+    public function getDiasHabiles(){
+        if($this->horario!=null){
+            foreach ($this->horario as $dia) {
+                $dias[] = $dia->getId();
+            }
+            return $dias;
+        } else{
+            return null;
+        }
+    }
+    
+    public function diaHabil($id_dia){
+        if($this->horario==null){
+            return true;
+        } else{
+            foreach ($this->horario as $dia) {
+                if($dia->getId()==$id_dia){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public function getDepar() {
+        return $this->depar;
+    }
+
+    public function setDepar($depar) {
+        $this->depar = $depar;
     }
 }

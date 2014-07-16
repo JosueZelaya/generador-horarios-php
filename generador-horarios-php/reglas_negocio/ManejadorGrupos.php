@@ -46,20 +46,28 @@ abstract class ManejadorGrupos {
         }
         return $grupos;
     }
+    
+    /** Comparación de grupos para determinar el grupo con mayor cantidad de alumnos (dato se encuentra en el objeto agrupacion)
+     * 
+     * @param Grupo $a
+     * @param Grupo $b
+     */
+    public static function cmpGruposXAlumnos($a,$b){
+        if($a->getAgrup()->getNum_alumnos() == $b->getAgrup()->getNum_alumnos()){
+            return 0;
+        }
+        return ($a->getAgrup()->getNum_alumnos() < $b->getAgrup()->getNum_alumnos()) ? 1 : -1;
+    }
 
     public static function getGrupoEnHora($aulas,$aulaElegida,$diaElegido,$idHora){
         if(isset($aulaElegida)){
             foreach ($aulas as $aula){
                 if(strcmp($aula->getNombre(),$aulaElegida)==0){
-                    $dias = $aula->getDias();
-                    foreach ($dias as $dia){
-                        if(strcmp($dia->getNombre(), $diaElegido)==0){
-                            $horas = $dia->getHoras();
-                            foreach ($horas as $hora){
-                                if($hora->getIdHora() == $idHora){
-                                    return $hora->getGrupo();
-                                }
-                            }
+                    $dia = $aula->getDia($diaElegido);
+                    $horas = $dia->getHoras();
+                    foreach ($horas as $hora){
+                        if($hora->getIdHora() == $idHora){
+                            return $hora->getGrupo();
                         }
                     }
                 }

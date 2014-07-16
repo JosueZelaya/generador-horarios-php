@@ -11,13 +11,25 @@ class Agrupacion {
     private $num_alumnos;
     private $numGruposAsignados;
     private $materias;
+    private $lab_dis_alter;
+    private $aulas_gtd;
+    private $aulas_gl;
+    private $horasRequeridas;
+    private $horasLab;
+    private $horasDiscu;
     
-    public function __construct($id,$num_alumnos){
+    public function __construct($id,$num_alumnos,$lab_dis,$aulas_gtd,$aulas_gl,$horasReq,$horasLab,$horasDis){
         $this->id=$id;
         $this->num_alumnos=$num_alumnos;
         $this->numGruposAsignados=0;
         $this->materias = array();
         $this->grupos = array();
+        $this->lab_dis_alter = $lab_dis;
+        $this->aulas_gtd = $aulas_gtd;
+        $this->aulas_gl = $aulas_gl;
+        $this->horasRequeridas = $horasReq;
+        $this->horasLab = $horasLab;
+        $this->horasDiscu = $horasDis;
     }
     
     public function getId() {
@@ -76,5 +88,62 @@ class Agrupacion {
     
     public function addGrupo($grupo){
         $this->grupos[] = $grupo;
+    }
+    
+    public function isLab_dis_alter() {
+        if($this->lab_dis_alter=='f'){
+            return false;
+        } else{
+            return true;
+        }
+    }
+    
+    public function setLab_dis_alter($lab_dis_alter) {
+        $this->lab_dis_alter = $lab_dis_alter;
+    }
+    
+    public function getAulas_gtd() {
+        return $this->aulas_gtd;
+    }
+
+    public function getAulas_gl() {
+        return $this->aulas_gl;
+    }
+
+    public function setAulas_gtd($aulas_gtd) {
+        $this->aulas_gtd = $aulas_gtd;
+    }
+
+    public function setAulas_gl($aulas_gl) {
+        $this->aulas_gl = $aulas_gl;
+    }
+    
+    public function getHorasLab() {
+        return $this->horasLab;
+    }
+
+    public function getHorasDiscu() {
+        return $this->horasDiscu;
+    }
+
+    public function setHorasLab($horasLab) {
+        $this->horasLab = $horasLab;
+    }
+
+    public function setHorasDiscu($horasDiscu) {
+        $this->horasDiscu = $horasDiscu;
+    }
+    
+    public function setHorasRequeridas($horasRequeridas) {
+        $this->horasRequeridas = $horasRequeridas;
+    }
+
+    public function getTotalHorasRequeridas(){
+        if($this->horasRequeridas == 0){
+            $total = round(($this->materias[0]->getUnidadesValorativas()*20)/16,0,PHP_ROUND_HALF_DOWN);
+            return $total;
+        } else{
+            return $this->horasRequeridas;
+        }
     }
 }

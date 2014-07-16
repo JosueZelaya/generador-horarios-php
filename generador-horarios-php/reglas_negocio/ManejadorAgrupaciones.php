@@ -16,12 +16,14 @@ abstract class ManejadorAgrupaciones {
      * Este método devuelve todas las agrupaciones existentes en la base de datos que corresponden al año y al ciclo al cual se generara un horario.
      * @return \Agrupacion = array de tipo agrupacion
      */
-    public static function getAgrupaciones($año,$ciclo){
+    public static function getAgrupaciones($año,$ciclo,$todas_aulas){
+        $preferencias = self::getPreferenciasAulas();
         $agrupaciones = array();
-        $sql_consulta = 'SELECT id_agrupacion,alumnos_grupo FROM agrupacion WHERE "año"='.$año.' and ciclo='.$ciclo;
+        $sql_consulta = 'SELECT id_agrupacion,alumnos_grupo,lab_dis_alter,horas_clase,horas_lab_semana,horas_discu_semana FROM agrupacion WHERE "año"='.$año.' and ciclo='.$ciclo;
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
-            $agrupacion = new Agrupacion($fila['id_agrupacion'],$fila['alumnos_grupo']);
+            $prefAgrup = self::getPreferenciaAulaAgrup($preferencias, $todas_aulas, $fila['id_agrupacion']);
+            $agrupacion = new Agrupacion($fila['id_agrupacion'],$fila['alumnos_grupo'],$fila['lab_dis_alter'],$prefAgrup['gt'],$prefAgrup['gl'],$fila['horas_clase'],$fila['horas_lab_semana'],$fila['horas_discu_semana']);
             $agrupaciones[] = $agrupacion;
         }
         return $agrupaciones;
@@ -42,6 +44,29 @@ abstract class ManejadorAgrupaciones {
             }
         }      
         return null;
+    }
+    
+    public static function getPreferenciasAulas(){
+        $consulta = Conexion::consulta("select cod_aula,id_agrupacion,tipo_grupo,exclusiv_aula from info_agrup_aula natural join lista_agrup_aula natural join aulas order by capacidad");
+        $respuesta = pg_fetch_all($consulta);
+        return $respuesta;
+    }
+    
+    public static function getPreferenciaAulaAgrup($todas_prefs,$todas_aulas,$id_agrup){
+        $aulas_gt = array();
+        $aulas_lab = array();
+        foreach ($todas_prefs as $preferencia){
+            if($preferencia['id_agrupacion']==$id_agrup){
+                if(preg_match("/^(1|3)$/", strval($preferencia['tipo_grupo']))){
+                    $aulas_gt['aulas'][] = ManejadorAulas::getAula($todas_aulas, $preferencia['cod_aula']);
+                    $aulas_gt['exclusiv'] = $preferencia['exclusiv_aula'];
+                } else{
+                    $aulas_lab['aulas'][] = ManejadorAulas::getAula($todas_aulas, $preferencia['cod_aula']);
+                    $aulas_lab['exclusiv'] = true;
+                }
+            }
+        }
+        return array("gt"=>$aulas_gt,"gl"=>$aulas_lab);
     }
     
     /**
@@ -102,14 +127,11 @@ abstract class ManejadorAgrupaciones {
         return $materias;
     }
     
-    public static function getAgrupacionesPorNombre($nombre,$idDepartamento,$año,$ciclo){        
-        $consulta;        
+    public static function getAgrupacionesPorNombre($nombre,$idDepartamento,$año,$ciclo){              
         if($ciclo=="par"){
             $ciclo='2';
         }else if($ciclo=="impar"){
             $ciclo='1';
-        }else{
-            
         }
         
         if($idDepartamento=="todos"){

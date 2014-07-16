@@ -24,7 +24,7 @@ abstract class ManejadorAulas {
      */
     public static function getTodasAulas(){
         $aulas = array();
-        $sql_consulta = "SELECT * FROM aulas ORDER BY cod_aula ASC";
+        $sql_consulta = "SELECT * FROM aulas ORDER BY capacidad ASC";
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
             $aula = new Aula();
@@ -50,6 +50,19 @@ abstract class ManejadorAulas {
             }
         }
         return null;
+    }
+    
+    /** Determinar si un grupo de horas es permisible para una determinada aula en un determinado dia
+     * 
+     * @param Hora[] $horas Horas de un determinado dia en una determinada aula
+     * @param Integer $desde Limite inferior de bloque de horas a aprobar
+     * @param Integer $hasta Limite superior de bloque de horas a aprobar
+     */
+    public static function aprobarHorarioEnAula($horas,$desde,$hasta){
+        if ($desde > count($horas)-1 || $desde < $horas[0]->getIdHora() || $hasta > count($horas)){
+            return false;
+        }
+        return true;
     }
     
     /**
@@ -93,10 +106,10 @@ abstract class ManejadorAulas {
     /**
      * Devuelve el horario de la semana para un aula específica
      * 
-     * @param type $aulas = Las aulas
-     * @param type $aula = El nombre del aula
+     * @param Aula[] $aulas = Las aulas
+     * @param String $aula = El nombre del aula
      * @param array $tabla Matriz que contendra el horario
-     * @return type = una tabla que representa al horario de la semana
+     * @return array = una tabla que representa al horario de la semana
      */
     public static function getHorarioEnAula($aulas,$aula,$tabla){
         for ($i = 0; $i < count($aulas); $i++) {
@@ -116,7 +129,7 @@ abstract class ManejadorAulas {
                                 $nombre .= ' (Clonada)';
                             }
                             if($grupo->getTipo()=='TEORICO'){
-                            $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
+                                $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
                             } elseif($grupo->getTipo()=='DISCUSION'){
                                 $texto = $cod_materia[0]."<br/> GD: ".$grupo->getId_grupo();
                             } elseif($grupo->getTipo()=='LABORATORIO'){
@@ -137,7 +150,7 @@ abstract class ManejadorAulas {
                             if(count($cod_materia)>1){
                                 $array['more']=true;
                             }
-                        }else if(!$hora->estaDisponible() && $grupo->getAgrup() == ""){
+                        }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
                             $array = [
                                 "texto" => "reservada",
                                 "nombre" => "",
@@ -234,7 +247,7 @@ abstract class ManejadorAulas {
                                 "dia" => $dias[$x]->getNombre(),
                                 "more" => false];
                             }
-                        }else if(!$hora->estaDisponible() && $grupo->getAgrup() == ""){
+                        }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
                             $array = [
                                 "texto" => "reservada",
                                 "nombre" => "",
@@ -329,7 +342,7 @@ abstract class ManejadorAulas {
                                 "dia" => $dias[$x]->getNombre(),
                                 "more" => false];
                             }                            
-                        }else if(!$hora->estaDisponible() && $grupo->getAgrup() == ""){
+                        }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
                             $array = [
                                 "texto" => "reservada",
                                 "nombre" => "",

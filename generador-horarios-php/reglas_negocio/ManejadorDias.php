@@ -27,9 +27,8 @@ abstract class ManejadorDias {
             $dias[] = $dia;            
         }
         return $dias;
-        
     }
-    
+
     /**
      * Elige un día al azar dentro del array
      * @param type $dias = array de dias
