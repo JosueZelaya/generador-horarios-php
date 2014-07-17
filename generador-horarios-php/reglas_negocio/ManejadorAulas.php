@@ -98,24 +98,75 @@ abstract class ManejadorAulas {
         return $aulasSeleccionadas;
     }
     
+    /** Devuelve todas las aulas que no han sido evaluadas para la asignacion de un grupo
+     *  el array devuelto contiene las aulas en orden de capacidad descendente
+     * @param Aula[] $todasAulas
+     * @param Aula $aulaRef
+     */
+    public static function obtenerAulasCapacidadCercana($todasAulas,$aulaRef){
+        for($i=0;$i<count($todasAulas);$i++){
+            if($todasAulas[$i] === $aulaRef){
+                $index = $i;
+                break;
+            }
+        }
+        if($index>0){
+            $newArray = array_slice($todasAulas, 0, $index);
+            foreach ($newArray as $i => $aula){
+                if($aula->isExclusiva()){
+                    unset($newArray[$i]);
+                }
+            }
+            $invertArray = array_reverse($newArray);
+            return $invertArray;
+        } else{
+            return null;
+        }
+    }
+    
     public static function getRangoHoras($horas,$grupo){
         $grupoAnterior="";
         $rangoHoras=["inicio"=>"","fin"=>""];        
         foreach ($horas as $hora) {
             $grupoActual = $hora->getGrupo();
             if($grupoActual===$grupo){
-                if($grupoAnterior===$grupo){                                    
-//                    $rangoHoras['fin'] = $hora->getFin();
+                if($grupoAnterior===$grupo){
                       $rangoHoras['fin'] = $hora->getIdHora();   
-                }else{                    
-//                    $rangoHoras['inicio'] = $hora->getInicio();
-//                    $rangoHoras['fin'] = $hora->getFin();
-                      $rangoHoras['inicio'] = $hora->getIdHora(); 
+                }else{
+                    $rangoHoras['inicio'] = $hora->getIdHora(); 
                     $grupoAnterior = $grupo;
                 }
             }            
         }
         return $rangoHoras;
+    }
+    
+    private static function getInfoHoraVacia($index,$dias,$hora){
+        $array = ["texto" => "",
+                "nombre" => "",
+                "codigo" => "",                                
+                "grupo" => "",
+                "departamento" => "",
+                "inicioBloque" => "",
+                "finBloque" => "",
+                "idHora" => $hora->getIdHora(),
+                "dia" => $dias[$index]->getNombre(),
+                "more" => false];
+        return $array;
+    }
+    
+    private static function getInfoHoraReservada($index,$dias,$hora){
+        $array = ["texto" => "reservada",
+                "nombre" => "",
+                "codigo" => "",                                
+                "grupo" => "",
+                "departamento" => "",
+                "inicioBloque" => "",
+                "finBloque" => "",
+                "idHora" => $hora->getIdHora(),
+                "dia" => $dias[$index]->getNombre(),
+                "more" => false];
+        return $array;
     }
 
     /**
@@ -166,29 +217,9 @@ abstract class ManejadorAulas {
                                 $array['more']=true;
                             }
                         }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
-                            $array = [
-                                "texto" => "reservada",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                            $array = self::getInfoHoraReservada($x, $dias, $hora);
                         }else{
-                            $array = [
-                                "texto" => "",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                            $array = self::getInfoHoraVacia($x, $dias, $hora);
                         }
                         $tabla[$x+1][$y+1] = $array;
                     }
@@ -228,7 +259,7 @@ abstract class ManejadorAulas {
                                     $nombre .= ' (Clonada)';
                                 }
                                 if($grupo->getTipo()=='TEORICO'){
-                                $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
+                                    $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
                                 } elseif($grupo->getTipo()=='DISCUSION'){
                                     $texto = $cod_materia[0]."<br/> GD: ".$grupo->getId_grupo();
                                 } elseif($grupo->getTipo()=='LABORATORIO'){
@@ -250,42 +281,12 @@ abstract class ManejadorAulas {
                                     $array['more']=true;
                                 }
                             }else{
-                                 $array = [
-                                "texto" => "",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                                $array = self::getInfoHoraVacia($x, $dias, $hora);
                             }
                         }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
-                            $array = [
-                                "texto" => "reservada",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                            $array = self::getInfoHoraReservada($x, $dias, $hora);
                         }else{
-                            $array = [
-                                "texto" => "",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                            $array = self::getInfoHoraVacia($x, $dias, $hora);
                         }
                         $tabla[$x+1][$y+1] = $array;
                     }
@@ -323,7 +324,7 @@ abstract class ManejadorAulas {
                                     $nombre .= ' (Clonada)';
                                 }
                                 if($grupo->getTipo()=='TEORICO'){
-                                $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
+                                    $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
                                 } elseif($grupo->getTipo()=='DISCUSION'){
                                     $texto = $cod_materia[0]."<br/> GD: ".$grupo->getId_grupo();
                                 } elseif($grupo->getTipo()=='LABORATORIO'){
@@ -345,42 +346,12 @@ abstract class ManejadorAulas {
                                     $array['more']=true;
                                 }
                             }else{                                
-                                $array = [
-                                "texto" => "",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                                $array = self::getInfoHoraVacia($x, $dias, $hora);
                             }                            
                         }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
-                            $array = [
-                                "texto" => "reservada",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                            $array = self::getInfoHoraReservada($x, $dias, $hora);
                         }else{
-                            $array = [
-                                "texto" => "",
-                                "nombre" => "",
-                                "codigo" => "",                                
-                                "grupo" => "",
-                                "departamento" => "",
-                                "inicioBloque" => "",
-                                "finBloque" => "",
-                                "idHora" => $hora->getIdHora(),
-                                "dia" => $dias[$x]->getNombre(),
-                                "more" => false];
+                            $array = self::getInfoHoraVacia($x, $dias, $hora);
                         }
                         $tabla[$x+1][$y+1] = $array;
                     }

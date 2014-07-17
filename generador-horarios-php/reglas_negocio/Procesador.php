@@ -1,6 +1,6 @@
 <?php
 /**
- * Procesamiento diseñado para manejar 15 horas clase en un dia, cada aula maneja su horario puede o no tener 15 horas clase disponibles
+ * Procesamiento diseñado para manejar 15 horas clase en un dia
  *
  * @author arch
  */
@@ -25,12 +25,14 @@ class Procesador {
      * @var Integer $holguraAula = La holgura que cada aula debe tener al albergar alumnos
      * @var Aula[] $aulasPosibles = Todas las aulas en las que se podria asignar la materia
      * @var Integer $alumnosEnGrupo = cantidad de alumnos que tiene un grupo y se quieren asignar en un aula
+     * @var boolean $aulasExclusivas = true si se ha obtenido una lista de aulas unicas para evaluar la asignacion de un grupo
      */
     private $materia;
     private $todasAulas;
     private $holguraAula;
     private $aulasPosibles;
     private $alumnosEnGrupo;
+    private $aulasExclusivas;
     /**
      *
      * @var Integer[] $horasAsignables = ids de horas de trabajo de el(los) docente(s)
@@ -94,10 +96,13 @@ class Procesador {
         }
         if(count($aulasPref)==0){
             $this->aulasPosibles = ManejadorAulas::obtenerAulasPorCapacidad($this->todasAulas, $this->alumnosEnGrupo+$this->holguraAula);
+            $this->aulasExclusivas = false;
         } elseif(!$aulasPref['exclusiv']){
             $this->aulasPosibles = array_merge($aulasPref['aulas'],ManejadorAulas::obtenerAulasPorCapacidad($this->todasAulas, $this->alumnosEnGrupo+$this->holguraAula));
+            $this->aulasExclusivas = false;
         } elseif($aulasPref['exclusiv']){
             $this->aulasPosibles = $aulasPref['aulas'];
+            $this->aulasExclusivas = true;
         }
     }
 
@@ -210,7 +215,7 @@ class Procesador {
             } else{
                 return;
             }
-        }else{
+        }elseif(!$this->aulasExclusivas){
             regresion:
                 $this->regresionHolgura();
         }
@@ -226,14 +231,33 @@ class Procesador {
             }else{
                 self::reiniciarProceso();
             }
-        }    
+        }
         if($this->grupo->isIncompleto()){
-            throw new Exception("¡Sin cupo para el grupo ".$this->grupo->getId_grupo()." ".$this->grupo->getTipo()." Materia: ".implode(',',ManejadorGrupos::obtenerNombrePropietario($this->grupo->getAgrup()->getMaterias()))." Departamento: ".implode(',', ManejadorGrupos::obtenerIdDepartamento($this->grupo->getAgrup()->getMaterias()))." !");
+            $this->regresionAulas();
         }
     }
     
-    public function regresionNumAlumnos(){
-        
+    public function regresionAulas(){
+        if($this->aulasExclusivas){
+            goto fin;
+        }
+        error_log("voy a comenzar regresion aulas",0);
+        $this->aulasPosibles = ManejadorAulas::obtenerAulasCapacidadCercana($this->todasAulas, $this->aulasPosibles[0]);
+//        if($this->materia->getCodigo()=='QUR235'){
+//            foreach ($this->aulasPosibles as $aula){
+//                echo $aula->getNombre().'-'.$aula->getCapacidad().',';
+//            }
+//            exit(0);
+//        }
+        if($this->aulasPosibles == null){
+            goto fin;
+        } else{
+            if(self::localizarBloque()){
+                return;
+            }
+        }
+        fin:
+            throw new Exception("¡Sin cupo para el grupo ".$this->grupo->getId_grupo()." ".$this->grupo->getTipo()." Materia: ".implode(',',ManejadorGrupos::obtenerNombrePropietario($this->grupo->getAgrup()->getMaterias()))." Departamento: ".implode(',', ManejadorGrupos::obtenerIdDepartamento($this->grupo->getAgrup()->getMaterias()))." !");
     }
     
     public function asignarEnUltimoDia(){

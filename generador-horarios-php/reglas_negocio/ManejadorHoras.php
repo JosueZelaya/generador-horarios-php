@@ -40,7 +40,7 @@ class ManejadorHoras {
                 if(!$hora->estaDisponible() && $hora->getGrupo()->getId_grupo() != 0){
                     $grupo = $hora->getGrupo();
                     if($agrupacion === $grupo->getAgrup()){
-                        echo "Agrupacion ".$agrupacion->getId()." en conflicto en hora $h del dia ".$dia->getNombre()." en aula ".$aula->getNombre();
+//                        echo "Agrupacion ".$agrupacion->getId()." en conflicto en hora $h del dia ".$dia->getNombre()." en aula ".$aula->getNombre();
                         return true;
                     }
                     $materiasHora = $grupo->getAgrup()->getMaterias();
@@ -49,7 +49,7 @@ class ManejadorHoras {
                             if(strcmp($materiaDeAgrupHora->getCarrera()->getCodigo(),$materiaDeAgrup->getCarrera()->getCodigo())==0 && $materiaDeAgrupHora->getCiclo() == $materiaDeAgrup->getCiclo()){
                                 //$p = ManejadorAgrupaciones::obtenerNombrePropietario($grupo->getId_Agrup(),$todas_mats);
                                 //error_log ("Esta materia $m choca con $p GT $g en hora: $h del dia $nombre_dia en aula: $a",0);
-                                echo "Esta materia ".$materiaDeAgrup->getCodigo()." choca con ".$materiaDeAgrupHora->getCodigo()." GT ".$grupo->getId_grupo()." en hora: $h del dia $nombre_dia en aula: ".$aula->getNombre();
+//                                echo "Esta materia ".$materiaDeAgrup->getCodigo()." choca con ".$materiaDeAgrupHora->getCodigo()." GT ".$grupo->getId_grupo()." en hora: $h del dia $nombre_dia en aula: ".$aula->getNombre();
                                 return true;
                             }
                         }
@@ -70,7 +70,7 @@ class ManejadorHoras {
                     foreach ($docentes as $docente){
                         if(in_array($docente, $grupoHora->getDocentes())){
                             //error_log ("El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora(),0);
-                            echo "El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora();
+//                            echo "El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupoHora->getId_grupo()." a la hora: ".$hora->getIdHora();
                             return true;
                         }
                     }
@@ -88,7 +88,7 @@ class ManejadorHoras {
                 if(!$hora->estaDisponible() && $hora->getGrupo()->getId_grupo() != 0){
                     $grupoHora = $hora->getGrupo();
                     if($grupoHora === $grupo){
-                        error_log ("Este grupo: ".$grupo->getId_grupo()." de la Agrupacion ".$grupo->getAgrup()->getId()." choca en hora: $h del dia $nombre_dia",0);
+//                        error_log ("Este grupo: ".$grupo->getId_grupo()." de la Agrupacion ".$grupo->getAgrup()->getId()." choca en hora: $h del dia $nombre_dia",0);
                         return true;
                     }
                 }
@@ -291,7 +291,7 @@ class ManejadorHoras {
                 $hora = -1;
                 $horas = $aula->getDia($nombreDia)->getHoras();
                 for($x=0; $x<count($horas); $x++){
-                    if(!$horas[$x]->estaDisponible() && self::mismoDepartamentoAgrupacionMateria($horas[$x]->getGrupo()->getAgrup(), $materia)){
+                    if(!$horas[$x]->estaDisponible() && $horas[$x]->getGrupo()->getId_grupo() != 0 && self::mismoDepartamentoAgrupacionMateria($horas[$x]->getGrupo()->getAgrup(), $materia)){
                         $grupoHora = $horas[$x]->getGrupo();
                         $materias = $grupoHora->getAgrup()->getMaterias();
                         foreach ($materias as $materiaHora) {
@@ -429,7 +429,7 @@ class ManejadorHoras {
         foreach ($materiasAgrup as $materiaAgrup){
             if($materiaAgrup->getCarrera()->getDepartamento() == $materia->getCarrera()->getDepartamento()){
                 return true;
-}
+            }
         }
         return false;
     }
