@@ -22,13 +22,12 @@
                         <th data-toggle="true" class="text-left footable-first-column text-center">Materia</th>
                         <th data-hide="all" class="text-center">Materias Agrupadas</th>
                         <th class="text-center">Departamento</th>
-                        <th class="text-center">Ciclo</th>
-                        <th class="text-center">Alumnos Nuevos</th>
-                        <th class="text-center">Otros Alumnos</th>
-                        <th class="text-center">Total Alumnos</th>
-                        <th class="text-center">Grupos Teóricos</th>                        
-                        <th class="footable-last-column text-center">Alumnos por Grupo Teórico</th>                        
-                        <th class="text-center">Horas Clase</th>
+                        <th class="text-center">Ciclo</th>                                                
+                        <th class="text-center">Grupos Laboratorio</th>
+                        <th class="text-center">Grupos Discución</th>
+                        <th class="text-center">Horas Laboratorio</th>
+                        <th class="text-center">Horas Discución</th>                        
+                        <th class="text-center">Discusión y Labs alternados</th>                        
                     </tr>
                 </thead>
                 <!--<tbody id ="mostrarUsuarios" class="mostrarUsuarios" role="alert" aria-live="polite" aria-relevant="all">-->

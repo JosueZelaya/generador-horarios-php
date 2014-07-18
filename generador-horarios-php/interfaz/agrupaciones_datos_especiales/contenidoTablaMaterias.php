@@ -79,14 +79,21 @@ for ($i = $inicio; $i < $fin; $i++) {
     "<td>".$arrayMateriasFiltradas[$i]->getNombre()."</td>".
     "<td>".getStringMateriasCarreras($arrayMateriasFiltradas[$i]->getMaterias())."</td>".         
     "<td>".$arrayMateriasFiltradas[$i]->getDepartamento()->getNombre()."</td>".        
-    "<td>".$ciclos."</td>".
-    "<td><div style='cursor: pointer;' href='#' id='alumnos_nuevos' class='campoModificable n".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Alumnos Nuevos'>".$arrayMateriasFiltradas[$i]->getAlumnosNuevos()."</div></td>".        
-    "<td><div style='cursor: pointer;' href='#' id='otros_alumnos' class='campoModificable o".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Otros Alumnos'>".$arrayMateriasFiltradas[$i]->getOtrosAlumnos()."</div></td>".
-    "<td><div id='".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."'>".$totalAlumnos."</div></td>".
-    "<td><div style='cursor: pointer;' href='#' id='num_grupos' class='campoModificable ng".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>".$arrayMateriasFiltradas[$i]->getNumeroGrupos()."</div></td>".       
-    "<td><div style='cursor: pointer;' href='#' id='alumnos_grupo' class='campoModificable na".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Alumnos por grupo'>".$arrayMateriasFiltradas[$i]->getAlumnosGrupo()."</div></td>".        
-    "<td><div style='cursor: pointer;' href='#' id='horas_clase' class='campoModificable nhc".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Horas Por Semana'>".$arrayMateriasFiltradas[$i]->getNum_horas_clase()."</div></td>".        
-    "</tr>";
+    "<td>".$ciclos."</td>".    
+    "<td><div style='cursor: pointer;' href='#' id='num_grupos_l' class='campoModificable ngl".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>".$arrayMateriasFiltradas[$i]->getNumeroGruposLaboratorio()."</div></td>".           
+    "<td><div style='cursor: pointer;' href='#' id='num_grupos_d' class='campoModificable ngd".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>".$arrayMateriasFiltradas[$i]->getNumeroGruposDiscusion()."</div></td>".           
+    "<td><div style='cursor: pointer;' href='#' id='horas_lab_semana' class='campoModificable nhl".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Numero Horas Por Semana'>".$arrayMateriasFiltradas[$i]->getNum_horas_laboratorio()."</div></td>".
+    "<td><div style='cursor: pointer;' href='#' id='horas_discu_semana' class='campoModificable nhd".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' data-type='text' data-placement='bottom' data-pk=" . $arrayMateriasFiltradas[$i]->getIdAgrupacion() . " data-url='modificarAgrupacion.php' data-title='Numero Horas Por Semana'>".$arrayMateriasFiltradas[$i]->getNum_horas_discusion()."</div></td>";        
+    echo "<td><div class='checkbox'>
+                <label>";
+    if($arrayMateriasFiltradas[$i]->getDiscuciones_labs_alternados()=="t"){
+        echo "<input id='".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' type='checkbox' class='alternados' checked>";                                  
+    }else{
+        echo "<input id='".$arrayMateriasFiltradas[$i]->getIdAgrupacion()."' type='checkbox' class='alternados'>";
+    }
+    echo "</label>
+              </div></td>";
+    echo "</tr>";
 }
 
 function yaSeContoAgrupacion($idAgrupacion,$idAgrupaciones){

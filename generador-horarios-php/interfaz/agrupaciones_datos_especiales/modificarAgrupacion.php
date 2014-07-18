@@ -10,7 +10,8 @@ if($_POST){
         $id = $_POST['pk'];
         $campo = $_POST['name'];
         $valor = $_POST['value'];               
-        if($campo=="num_grupos" || $campo=="alumnos_nuevos" || $campo =="otros_alumnos" || $campo == "alumnos_grupo" || $campo == "num_grupos_l" || $campo == "num_grupos_d" || $campo=="horas_clase"){               
+        
+        if($campo=="num_grupos_l" || $campo=="num_grupos_d" || $campo=="horas_lab_semana" || $campo=="horas_discu_semana" || $campo="lab_dis_alter"){
             ManejadorAgrupaciones::modificarAgrupacion($id, $campo, $valor,$año,$ciclo);
             if($campo=="num_grupos"){
                 $respuesta = array('status'=>'ok','msg'=>'¡Actualizado!');
@@ -36,3 +37,21 @@ if($_POST){
     }
 }
 
+if($_GET){
+    $id = $_GET['id'];
+    $campo = $_GET['campo'];
+    $valor = $_GET['valor'];        
+    if($campo=="grupos_alternados"){
+        $campo = "lab_dis_alter";
+        if($valor=='false'){
+            $valor='f';
+        }else{
+            $valor='t';
+        }        
+        ManejadorAgrupaciones::modificarAgrupacion($id, $campo, $valor,$año,$ciclo);                
+    }else{
+        $respuesta = array('status'=>'error','msg'=>'¡No se permite modificar ese campo!');
+        echo json_encode($respuesta);
+    }
+    
+}

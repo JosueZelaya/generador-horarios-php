@@ -25,26 +25,30 @@ function imprimirMalla($tabla){
                 echo "<div class='celda-hora'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
             }else{
                 $celda = $tabla[$i][$j];
-                $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
-                if($celda['more']){
-                    $contenido .= '<br><a id="moreInfo" href="#">Mas</a>';
-                }
-                if(!strcmp($celda['grupo'],"")==0){                   
-                    echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
-                    if($j<3){
-                        echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
+                if($celda!=""){
+                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
+                    if($celda['more']){
+                        $contenido .= '<br><a id="moreInfo" href="#">Mas</a>';
+                    }
+                    if(!strcmp($celda['grupo'],"")==0){                   
+                        echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
+                        if($j<3){
+                            echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
+                        }else{
+                            echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
+                        }                    
                     }else{
-                        echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
-                    }                    
+                        if(strcmp($celda['texto'],"reservada")==0){
+                            echo "<div class='celda-hora ".$celda['dia'].$celda['idHora']."' style='background-color: #E6E6FA;' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
+                            echo "<div class='centrar'>".$celda['texto'].'</div></div>';
+                        }else{
+                            echo "<div class='celda-hora grupoVacio ".$celda['dia'].$celda['idHora']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
+                            echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
+                        }                    
+                    }                                        
                 }else{
-                    if(strcmp($celda['texto'],"reservada")==0){
-                        echo "<div class='celda-hora ".$celda['dia'].$celda['idHora']."' style='background-color: #E6E6FA;' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
-                        echo "<div class='centrar'>".$celda['texto'].'</div></div>';
-                    }else{
-                        echo "<div class='celda-hora grupoVacio ".$celda['dia'].$celda['idHora']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
-                        echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
-                    }                    
-                }                                        
+                    //¿hay que poner algo?
+                }                
             }
         }
         echo '</div>';
@@ -139,14 +143,18 @@ function imprimirMallaParaReservaciones($tabla){
                 echo "<div class='col-header'>".$tabla[$i][$j]."</div>";
             }else if($i==0){
                 echo "<div class='celda-hora'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
-            }else{
-                $celda = $tabla[$i][$j];
+            }else{                
+                $celda = $tabla[$i][$j];                
                 $dia = getDia($i);
-                if($celda['texto']!=""){
-                    echo "<div id='".$dia.$j."' class='celda-hora grupo hora-reservada' data-hora='".$j."' data-dia='".$dia."'><div class='centrar'>".$celda['texto']."</div></div>";                                    
+                if($celda!=""){
+                    if($celda['texto']!=""){
+                        echo "<div id='".$dia.$j."' class='celda-hora grupo hora-reservada' data-hora='".$j."' data-dia='".$dia."'><div class='centrar'>".$celda['texto']."</div></div>";                                    
+                    }else{
+                        echo "<div id='".$dia.$j."' class='celda-hora grupo' data-hora='".$j."' data-dia='".$dia."'></div>";                                    
+                    }
                 }else{
                     echo "<div id='".$dia.$j."' class='celda-hora grupo' data-hora='".$j."' data-dia='".$dia."'></div>";                                    
-                }                
+                }                                
             }
         }
         echo '</div>';

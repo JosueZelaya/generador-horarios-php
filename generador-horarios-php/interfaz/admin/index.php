@@ -60,6 +60,15 @@ chdir(dirname(__FILE__));
                     <p><a class="btn btn-default" href="../agrupaciones_datos/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
                   <div class="col-lg-3">
+                      <a href="../agrupaciones_datos_especiales/index.php"  target="_blank">
+                        <img width="140px" height="140px" src="../imagenes/placeholder2.jpg" class="img-circle">
+                        <h2>Agrupaciones y Datos Especiales</h2>
+                        <p>Puede agregar grupos de laboratorio y de discusión a sus materias.
+                        </p>
+                      </a>                    
+                    <p><a class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
+                  <div class="col-lg-3">
                       <a href="../agrupaciones_docentes/index.php" target="_blank">
                             <img width="140px" height="140px" src="../imagenes/placeholder3-1.jpg" class="img-circle">
                             <h2>Agrupaciones y docentes</h2>
@@ -68,7 +77,10 @@ chdir(dirname(__FILE__));
                       </a>                    
                     <p><a class="btn btn-default" href="../agrupaciones_docentes/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
-                  <div class="col-lg-2">
+                  
+                </div><!-- /.row -->
+                <div class="row">
+                    <div class="col-lg-2">
                       <a href="../agregar_reservaciones/index.php" target="_blank">
                             <img width="140px" height="140px" src="../imagenes/placeholder4.jpg" class="img-circle">
                             <h2>Reservaciones de Aulas</h2>
@@ -77,7 +89,7 @@ chdir(dirname(__FILE__));
                       </a>                    
                     <p><a class="btn btn-default" href="../agregar_reservaciones/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
-                </div><!-- /.row -->
+                </div>
               </div>
         </div>
     </div>
