@@ -90,20 +90,20 @@ abstract class ManejadorAgrupaciones {
         if($ciclo=="par"){    
             if($idDepartamento=="todos"){
 //                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE ma.año='".$año."' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
-                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
+                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
             }else{
 //                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE c.id_depar='".$idDepartamento."' AND ma.año='".$año."' AND ma.ciclo='2' ORDER BY m.nombre_materia;";
-                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
+                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
             }            
         }else{            
             if($idDepartamento=="todos"){
 //                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE ma.año='".$año."' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
 //                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias AS m NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d JOIN agrupacion AS a ON a.id_agrupacion=ma.id_agrupacion WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
 //                  $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,a.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";  
-                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
+                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
             }else{                
 //                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE c.id_depar='".$idDepartamento."' AND ma.año='".$año."' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
-                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
+                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
             }
         }
         $respuesta = conexion::consulta($consulta);
@@ -122,6 +122,7 @@ abstract class ManejadorAgrupaciones {
             $materia->setNumeroGruposDiscusion($row['num_grupos_d']);
             $materia->addMateria($row['nombre_materia']." carrera: ".$row['nombre_carrera']);
             $materia->setCarrera($row['nombre_carrera']);
+            $materia->setUnidadesValorativas($row['uv']);
             $materia->setNum_horas_clase($row['horas_clase']);
             $materia->setNum_horas_laboratorio($row['horas_lab_semana']);
             $materia->setNum_horas_discusion($row['horas_discu_semana']);
@@ -146,7 +147,7 @@ abstract class ManejadorAgrupaciones {
             $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion WHERE nombre_materia iLIKE '$nombre' AND año='$año' AND ciclo='$ciclo';";
             $respuesta = conexion::consulta($consulta); 
 
-            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
+            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
             $cont=1;
             while ($row = pg_fetch_array($respuesta)){
                 $id_agrupacion = $row['id_agrupacion'];
@@ -166,7 +167,7 @@ abstract class ManejadorAgrupaciones {
             $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion NATURAL JOIN carreras WHERE nombre_materia iLIKE '$nombre' AND id_depar='$idDepartamento' AND año='$año' AND ciclo='$ciclo';";
             $respuesta = conexion::consulta($consulta); 
 
-            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
+            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
             $cont=1;
             while ($row = pg_fetch_array($respuesta)){
                 $id_agrupacion = $row['id_agrupacion'];
@@ -195,6 +196,7 @@ abstract class ManejadorAgrupaciones {
             $materia->setNumeroGruposDiscusion($row['num_grupos_d']);
             $materia->addMateria($row['nombre_materia']." carrera: ".$row['nombre_carrera']);
             $materia->setCarrera($row['nombre_carrera']);
+            $materia->setUnidadesValorativas($row['uv']);
             $materia->setNum_horas_clase($row['horas_clase']);
             $materia->setNum_horas_laboratorio($row['horas_lab_semana']);
             $materia->setNum_horas_discusion($row['horas_discu_semana']);
@@ -279,15 +281,15 @@ abstract class ManejadorAgrupaciones {
             $consulta="";
             if($ciclo=="par"){
                 if($idDepartamento=="todos"){
-                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";
+                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,m.uv,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";
                 }else{
-                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND c.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";
+                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,m.uv,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND c.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";
                 }                
             }else{
                 if($idDepartamento=="todos"){
-                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";                      
+                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,m.uv,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";                      
                 }else{
-                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND c.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";
+                    $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,m.uv,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND c.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia LIMIT 15;";
                 }
             }            
             $respuesta = conexion::consulta($consulta);
@@ -303,6 +305,7 @@ abstract class ManejadorAgrupaciones {
                 $agrupacion->setNumeroGruposLaboratorio($row['num_grupos_l']);
                 $agrupacion->setNumeroGruposDiscusion($row['num_grupos_d']);
                 $agrupacion->setAlumnosGrupo($row['alumnos_grupo']);
+                $agrupacion->setUnidadesValorativas($row['uv']);
                 $agrupacion->setNum_horas_clase($row['horas_clase']);
                 $agrupacion->setNum_horas_laboratorio($row['horas_lab_semana']);
                 $agrupacion->setNum_horas_discusion($row['horas_discu_semana']);
@@ -410,94 +413,3 @@ abstract class ManejadorAgrupaciones {
     }
 
 }
-
-        
-//        if($ciclo=="par"){    
-//            if($idDepartamento=="todos"){
-//                $consulta = "SELECT COUNT(id_agrupacion) FROM materias NATURAL JOIN materia_agrupacion WHERE nombre_materia iLIKE '$nombre' AND año='$año' AND ciclo='2';";
-//                $respuesta = conexion::consulta2($consulta); 
-//                $cantidad = $respuesta['count'];
-//                
-//                $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion WHERE nombre_materia iLIKE '$nombre' AND año='$año' AND ciclo='2';";
-//                $respuesta = conexion::consulta($consulta); 
-//                
-//                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
-//                $cont=1;
-//                while ($row = pg_fetch_array($respuesta)){
-//                    $id_agrupacion = $row['id_agrupacion'];
-//                    if($cont==$cantidad){
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' ";
-//                    }else{
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' OR ";
-//                    }
-//                    $cont++;
-//                }
-//                $consulta = $consulta."AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
-//            }else{
-//                $consulta = "SELECT COUNT(id_agrupacion) FROM materias NATURAL JOIN materia_agrupacion NATURAL JOIN carreras WHERE nombre_materia iLIKE '$nombre' AND id_depar='$idDepartamento' AND año='$año' AND ciclo='2';";
-//                $respuesta = conexion::consulta2($consulta); 
-//                $cantidad = $respuesta['count'];
-//                
-//                $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion NATURAL JOIN carreras WHERE nombre_materia iLIKE '$nombre' AND id_depar='$idDepartamento' AND año='$año' AND ciclo='2';";
-//                $respuesta = conexion::consulta($consulta); 
-//                
-//                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
-//                $cont=1;
-//                while ($row = pg_fetch_array($respuesta)){
-//                    $id_agrupacion = $row['id_agrupacion'];
-//                    if($cont==$cantidad){
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' ";
-//                    }else{
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' OR ";
-//                    }
-//                    $cont++;
-//                }
-//                $consulta = $consulta."AND d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
-//            }            
-//        }else{            
-//            if($idDepartamento=="todos"){
-////                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia='$nombre' AND  ma.año='".$año."' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
-//                $consulta = "SELECT COUNT(id_agrupacion) FROM materias NATURAL JOIN materia_agrupacion WHERE nombre_materia iLIKE '$nombre' AND año='$año' AND ciclo='1';";
-//                $respuesta = conexion::consulta2($consulta); 
-//                $cantidad = $respuesta['count'];
-//                
-//                $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion WHERE nombre_materia iLIKE '$nombre' AND año='$año' AND ciclo='1';";
-//                $respuesta = conexion::consulta($consulta); 
-//                
-//                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
-//                $cont=1;
-//                while ($row = pg_fetch_array($respuesta)){
-//                    $id_agrupacion = $row['id_agrupacion'];
-//                    if($cont==$cantidad){
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' ";
-//                    }else{
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' OR ";
-//                    }
-//                    $cont++;
-//                }
-//                $consulta = $consulta."AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
-//                
-////                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.id_agrupacion='$id_agrupacion' AND ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
-//            }else{   
-//                $consulta = "SELECT COUNT(id_agrupacion) FROM materias NATURAL JOIN materia_agrupacion NATURAL JOIN carreras WHERE nombre_materia iLIKE '$nombre' AND id_depar='$idDepartamento' AND año='$año' AND ciclo='1';";
-//                $respuesta = conexion::consulta2($consulta); 
-//                $cantidad = $respuesta['count'];
-//                
-//                $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion NATURAL JOIN carreras WHERE nombre_materia iLIKE '$nombre' AND id_depar='$idDepartamento' AND año='$año' AND ciclo='1';";
-//                $respuesta = conexion::consulta($consulta); 
-//                
-//                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
-//                $cont=1;
-//                while ($row = pg_fetch_array($respuesta)){
-//                    $id_agrupacion = $row['id_agrupacion'];
-//                    if($cont==$cantidad){
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' ";
-//                    }else{
-//                        $consulta = $consulta."ma.id_agrupacion='$id_agrupacion' OR ";
-//                    }
-//                    $cont++;
-//                }
-//                $consulta = $consulta."AND d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
-////                $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE m.nombre_materia iLIKE '$nombre%' AND d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
-//            }
-//        }
