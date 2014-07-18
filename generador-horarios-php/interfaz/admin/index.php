@@ -81,13 +81,13 @@ chdir(dirname(__FILE__));
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-lg-2">
-                      <a href="../agregar_reservaciones/index.php" target="_blank">
+                      <a href="../reservaciones_aulas/index.php" target="_blank">
                             <img width="140px" height="140px" src="../imagenes/placeholder4.jpg" class="img-circle">
                             <h2>Reservaciones de Aulas</h2>
                             <p>Se pueden hacer reservaciones en las aulas para que nos sean tomadas en cuenta en la generación
                             del nuevo horario.</p>
                       </a>                    
-                    <p><a class="btn btn-default" href="../agregar_reservaciones/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
+                    <p><a class="btn btn-default" href="../reservaciones_aulas/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
                 </div>
               </div>
