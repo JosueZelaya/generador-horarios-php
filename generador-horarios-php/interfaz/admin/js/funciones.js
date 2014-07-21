@@ -386,8 +386,7 @@ $(function (){
                 bootbox.alert(data);
             }
         });
-    });
-    
+    });    
 });
 
 function limpiarMain(){

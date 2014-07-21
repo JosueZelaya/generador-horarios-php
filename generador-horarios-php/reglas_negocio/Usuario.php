@@ -10,6 +10,7 @@ class Usuario{
 	private $apellidos;        	
         private $departamento;	
 	private $habilitado;
+        private $docente;
         
         public function __construct() {            
             $this->login = "";
@@ -102,6 +103,14 @@ class Usuario{
 	public function setHabilitado($habilitado){
 		$this->habilitado = $habilitado;
 	}
+        
+        public function getDocente() {
+            return $this->docente;
+        }
+
+        public function setDocente($docente) {
+            $this->docente = $docente;
+        }
         
 }
 

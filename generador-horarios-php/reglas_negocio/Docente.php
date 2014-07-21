@@ -13,6 +13,8 @@ class Docente {
     private $horario;
     private $depar;
     private $nombre_completo;
+    private $nombres;
+    private $apellidos;
             
     function __construct($idDocente,$contratacion,$depar) {
         $this->idDocente = $idDocente;
@@ -105,4 +107,23 @@ class Docente {
     public function setNombre_completo($nombre_completo) {
         $this->nombre_completo = $nombre_completo;
     }
+    
+    public function getNombres() {
+        return $this->nombres;
+    }
+
+    public function getApellidos() {
+        return $this->apellidos;
+    }
+
+    public function setNombres($nombres) {
+        $this->nombres = $nombres;
+    }
+
+    public function setApellidos($apellidos) {
+        $this->apellidos = $apellidos;
+    }
+
+
+    
 }

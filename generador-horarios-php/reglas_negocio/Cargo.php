@@ -6,6 +6,7 @@
  */
 class Cargo {
     
+    private $nombre;
     private $id_cargo;
     private $id_dia_exento;
     
@@ -14,6 +15,15 @@ class Cargo {
         $this->id_dia_exento = $dia_exento;
     }
     
+    public function getNombre() {
+        return $this->nombre;
+    }
+
+    public function setNombre($nombre) {
+        $this->nombre = $nombre;
+    }
+
+        
     public function getId_cargo() {
         return $this->id_cargo;
     }

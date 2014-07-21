@@ -19,9 +19,9 @@ if (isset($_GET)){
                 $docentes = $grupo->getDocentes();
                 $arrayGrupos[$cont]["docentes"] = array();
                 $arrayGrupos[$cont]["id_docentes"] = array();
-                foreach ($docentes as $docente) {
-                    $arrayGrupos[$cont]["docentes"][] = $docente->getNombre_completo();
-                    $arrayGrupos[$cont]["id_docentes"][] = $docente->getIdDocente();
+                foreach ($docentes as $usuario) {
+                    $arrayGrupos[$cont]["docentes"][] = $usuario->getNombre_completo();
+                    $arrayGrupos[$cont]["id_docentes"][] = $usuario->getIdDocente();
                 }
             }else{
                 $arrayGrupos[$cont]["docentes"]="";

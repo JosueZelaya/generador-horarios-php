@@ -16,6 +16,7 @@ abstract class ManejadorCargos {
         $respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
             $cargo = new Cargo($fila['id'],$fila['dia_exento']);
+            $cargo->setNombre($fila['nombre']);
             $cargos[] = $cargo;
         }
         return $cargos;

@@ -61,7 +61,7 @@ chdir(dirname(__FILE__));
                   </div><!-- /.col-lg-4 -->
                   <div class="col-lg-3">
                       <a href="../agrupaciones_datos_especiales/index.php"  target="_blank">
-                        <img width="140px" height="140px" src="../imagenes/placeholder2.jpg" class="img-circle">
+                          <img width="140px" height="140px" src="../imagenes/placeholder-datos-especiales.jpg" class="img-circle">
                         <h2>Agrupaciones y Datos Especiales</h2>
                         <p>Puede agregar grupos de laboratorio y de discusión a sus materias.
                         </p>
@@ -80,7 +80,7 @@ chdir(dirname(__FILE__));
                   
                 </div><!-- /.row -->
                 <div class="row">
-                    <div class="col-lg-2">
+                    <div class="col-lg-3">
                       <a href="../reservaciones_aulas/index.php" target="_blank">
                             <img width="140px" height="140px" src="../imagenes/placeholder4.jpg" class="img-circle">
                             <h2>Reservaciones de Aulas</h2>
@@ -89,11 +89,28 @@ chdir(dirname(__FILE__));
                       </a>                    
                     <p><a class="btn btn-default" href="../reservaciones_aulas/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
+                  <div class="col-lg-3">
+                      <a href="../agrupaciones_aulas/index.php" target="_blank">
+                          <img width="140px" height="140px" src="../imagenes/placeholder-aulas.jpg" class="img-circle">
+                            <h2>Agrupaciones y Aulas</h2>
+                            <p>Se puede definir en qué aulas se impartirán los grupos de determinada materia.</p>
+                      </a>                    
+                    <p><a class="btn btn-default" href="../agrupaciones_aulas/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
+                  <div class="admin-users col-lg-3">
+                      <a href="#admin_users_modal" data-toggle="modal">
+                          <img width="140px" height="140px" src="../imagenes/placeholder-usuarios.jpg" class="img-circle">
+                            <h2>Administrar Docentes y Usuarios</h2>
+                            <p>Agregar, modificar y eliminar Docentes y Usuarios</p>
+                      </a>                    
+                    <p><a href="#admin_users_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
                 </div>
               </div>
         </div>
     </div>
  </div>
+ <?php include_once 'admin_users_modal.php'; ?> 
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.
