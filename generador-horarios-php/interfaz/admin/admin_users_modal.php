@@ -16,7 +16,7 @@
                       </a>                                          
                   </div>
                   <div class="col-md-4">
-                      <a href="../agrupaciones_crear/index.php" target="_blank">
+                      <a href="../docentes_usuarios/modificar/index.php" target="_blank">
                           <img width="140px" height="140px" src="../imagenes/editar_usuario.jpg" class="img-circle">
                           <h2>Modificar</h2>
                           <p>Modificar Docentes y/o Usuarios
@@ -24,7 +24,7 @@
                       </a>                    
                   </div>
                   <div class="col-md-4">
-                      <a href="../agrupaciones_crear/index.php" target="_blank">
+                      <a href="../docentes_usuarios/eliminar/index.php" target="_blank">
                           <img width="140px" height="140px" src="../imagenes/eliminar_usuario.jpg" class="img-circle">
                           <h2>Eliminar</h2>
                           <p>Eliminar Docentes y/o Usuarios

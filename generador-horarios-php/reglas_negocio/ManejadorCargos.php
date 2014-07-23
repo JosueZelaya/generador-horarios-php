@@ -30,5 +30,11 @@ abstract class ManejadorCargos {
         }
         return null;
     }
+     
+    public static function getIdCargo($nombre){
+        $consulta = "SELECT * FROM cargo WHERE nombre='$nombre'";
+        $respuesta = Conexion::consulta2($consulta);
+        return $respuesta['id'];
+    }
     
 }

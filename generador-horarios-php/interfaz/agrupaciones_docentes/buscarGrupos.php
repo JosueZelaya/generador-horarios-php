@@ -16,10 +16,10 @@ if (isset($_GET)){
             $arrayGrupos[$cont]["tipo"] = $grupo->getTipo();
             $arrayGrupos[$cont]["agrupacion"] = $grupo->getAgrup();            
             if($grupo->getDocentes()!=""){                    
-                $docentes = $grupo->getDocentes();
+                $usuarios = $grupo->getDocentes();
                 $arrayGrupos[$cont]["docentes"] = array();
                 $arrayGrupos[$cont]["id_docentes"] = array();
-                foreach ($docentes as $usuario) {
+                foreach ($usuarios as $usuario) {
                     $arrayGrupos[$cont]["docentes"][] = $usuario->getNombre_completo();
                     $arrayGrupos[$cont]["id_docentes"][] = $usuario->getIdDocente();
                 }

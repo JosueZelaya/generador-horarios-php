@@ -1,9 +1,9 @@
 <?php
-/**
- * Description of Docente
- *
- * @author abs
- */
+
+chdir(dirname(__FILE__));
+require_once '../acceso_datos/Conexion.php';
+chdir(dirname(__FILE__));
+
 class Docente {
     
     private $idDocente;
@@ -124,6 +124,30 @@ class Docente {
         $this->apellidos = $apellidos;
     }
 
-
+    public function ocultar(){
+        $consulta = "UPDATE docentes SET activo='f' WHERE id_docente='".$this->idDocente."';";            
+        conexion::consulta($consulta);
+        $consulta = "UPDATE usuarios SET habilitado='f' WHERE id_docente='".$this->idDocente."';";
+        conexion::consulta($consulta);
+    }
+    
+    public function guardar(){
+        if($this->cargo=="" || $this->cargo==NULL){
+            $consulta = "UPDATE docentes SET nombres='".$this->nombres."',"
+            . "apellidos='".$this->apellidos."',"                    
+            . "contratacion='".$this->contratacion."',"
+            . "id_depar=".$this->depar.","
+            . "cargo=NULL"            
+            . " WHERE id_docente='".$this->idDocente."'";
+        }else{
+            $consulta = "UPDATE docentes SET nombres='".$this->nombres."',"
+            . "apellidos='".$this->apellidos."',"                    
+            . "contratacion='".$this->contratacion."',"
+            . "id_depar=".$this->depar.","
+            . "cargo=".$this->cargo.""            
+            . " WHERE id_docente='".$this->idDocente."'";
+        }        
+        conexion::consulta($consulta);
+    }
     
 }

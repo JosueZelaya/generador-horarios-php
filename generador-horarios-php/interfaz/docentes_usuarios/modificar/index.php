@@ -17,8 +17,9 @@ ManejadorSesion::sec_session_start();
      <meta http-equiv="content-type" content="text/html; charset=UTF-8">         
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Agregar Docentes</title>
+    <title>Modificar Docentes y Usuarios</title>
     <link rel="stylesheet" type="text/css" href="../../js/jquery-ui/css/smoothness/css/smoothness/jquery-ui-1.10.4.custom.min.css">
+    <link href="../../bootstrap/xeditable/css/bootstrap-editable.css" rel="stylesheet">
     <!-- Bootstrap -->
     <link href="../../bootstrap/css/bootstrap.min.css" rel="stylesheet">
      <style>
@@ -45,13 +46,13 @@ ManejadorSesion::sec_session_start();
     <?php include 'menuPrincipal.php';?>  
     
     <ul class='nav nav-tabs'>
-        <li id='agregar_docentes' class='active'><a href='#'>Docentes</a></li>
-        <li  id='agregar_usuarios'><a href='#'>Usuarios</a></li>
+        <li id='modificar_docentes' class='active'><a href='#'>Docentes</a></li>
+        <li  id='modificar_usuarios'><a href='#'>Usuarios</a></li>
     </ul>
     <br/>
     
     <div id="contenido">
-        <?php include 'agregarDocente.php';?>  
+        <?php include 'modificarDocente.php';?>  
     </div>     
 
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -63,7 +64,8 @@ ManejadorSesion::sec_session_start();
     <script type="text/javascript" src="../../js/jquery-ui/ui/jquery.ui.position.js"></script>
     <script type="text/javascript" src="../../js/jquery-ui/ui/jquery.ui.menu.js"></script>
     <script type="text/javascript" src="../../js/jquery-ui/ui/jquery.ui.autocomplete.js"></script>
-    <script type="text/javascript" src="../../bootstrap/js/bootstrap.js"></script>       
+    <script type="text/javascript" src="../../bootstrap/js/bootstrap.js"></script>
+    <script type="text/javascript" src="../../bootstrap/xeditable/js/bootstrap-editable.js"></script>
     <script type="text/javascript" src="js/funciones.js"></script>    
   </body>
 </html>

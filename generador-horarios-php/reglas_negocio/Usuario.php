@@ -1,6 +1,7 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../acceso_datos/Conexion.php';
+chdir(dirname(__FILE__));
 
 class Usuario{	
         
@@ -11,6 +12,7 @@ class Usuario{
         private $departamento;	
 	private $habilitado;
         private $docente;
+        private $id;
         
         public function __construct() {            
             $this->login = "";
@@ -110,6 +112,19 @@ class Usuario{
 
         public function setDocente($docente) {
             $this->docente = $docente;
+        }
+        
+        public function getId() {
+            return $this->id;
+        }
+
+        public function setId($id) {
+            $this->id = $id;
+        }
+        
+        public function ocultar(){            
+            $consulta = "UPDATE usuarios SET habilitado='f' WHERE id_usuario='".$this->getId()."';";
+            conexion::consulta($consulta);
         }
         
 }
