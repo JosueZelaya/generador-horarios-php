@@ -19,16 +19,16 @@ abstract class ManejadorGrupos {
     
     public static function obtenerGrupos($año,$ciclo,$agrupaciones,$docentes){
         $grupos = array();
-        $consulta = "select id_grupo,id_agrupacion,id_docente,tipo from docente_grupo dg join tipos_grupos on tipo_grupo=id where dg.año=$año and dg.ciclo=$ciclo order by id_agrupacion,id_grupo asc";
+        $consulta = "select id_grupo,id_agrupacion,id_docente,tipo_grupo,tipo from docente_grupo dg join tipos_grupos as tg on dg.tipo_grupo=tg.id where dg.año=$año and dg.ciclo=$ciclo order by id_agrupacion,id_grupo,tipo_grupo asc";
         $respuesta = Conexion::consulta($consulta);
         $id_grupo = 0;
         $id_agrup = 0;
         $tipo_grupo = '';
         while ($fila = pg_fetch_array($respuesta)){
             $docente = ManejadorDocentes::obtenerDocente($fila['id_docente'], $docentes);
-            if($id_grupo == $fila['id_grupo'] && $id_agrup == $fila['id_agrupacion'] && $tipo_grupo == $fila['tipo']){
-                $grupos[count($grupos)-1]->addDocente($docente);
-                $docente->addGrupo($grupos[count($grupos)-1]);
+            if($id_grupo == $fila['id_grupo'] && $id_agrup == $fila['id_agrupacion'] && $tipo_grupo == $fila['tipo_grupo']){
+                end($grupos)->addDocente($docente);
+                $docente->addGrupo(end($grupos));
             } else{
                 $agrupacion = ManejadorAgrupaciones::getAgrupacion($fila['id_agrupacion'], $agrupaciones);
                 $grupo = new Grupo();
@@ -41,7 +41,7 @@ abstract class ManejadorGrupos {
                 $docente->addGrupo($grupo);
                 $id_grupo = $fila['id_grupo'];
                 $id_agrup = $fila['id_agrupacion'];
-                $tipo_grupo = $fila['tipo'];
+                $tipo_grupo = $fila['tipo_grupo'];
             }
         }
         return $grupos;
@@ -57,6 +57,24 @@ abstract class ManejadorGrupos {
             return 0;
         }
         return ($a->getAgrup()->getNum_alumnos() < $b->getAgrup()->getNum_alumnos()) ? 1 : -1;
+    }
+    
+    /** Clasificar un conjunto de objetos grupo en base a si tienen preferencia de aula o no para su posterior asignacion
+     * 
+     * @param Grupo[] $grupos array de grupos a clasificar
+     */
+    public static function clasificarGruposPrefAula($grupos){
+        $gruposClaf = array('exclusiv'=>array(),'nonexclusiv'=>array(),'nopref'=>array());
+        foreach ($grupos as $grupo){
+            if((preg_match("/^(TEORICO|DISCUSION)$/", $grupo->getTipo()) && count($grupo->getAgrup()->getAulas_gtd())!=0 && $grupo->getAgrup()->getAulas_gtd()['exclusiv']) || ($grupo->getTipo()=='LABORATORIO' && count($grupo->getAgrup()->getAulas_gl())!=0 && $grupo->getAgrup()->getAulas_gl()['exclusiv'])){ //grupo con preferencia exclusiva
+                $gruposClaf['exclusiv'][] = $grupo;
+            } elseif((preg_match("/^(TEORICO|DISCUSION)$/", $grupo->getTipo()) && count($grupo->getAgrup()->getAulas_gtd())!=0 && !$grupo->getAgrup()->getAulas_gtd()['exclusiv']) || ($grupo->getTipo()=='LABORATORIO' && count($grupo->getAgrup()->getAulas_gl())!=0 && !$grupo->getAgrup()->getAulas_gl()['exclusiv'])){ //grupo con preferencia no exclusiva
+                $gruposClaf['nonexclusiv'][] = $grupo;
+            } else { // grupo sin preferencia de aula
+                $gruposClaf['nopref'][] = $grupo;
+            }
+        }
+        return $gruposClaf;
     }
 
     public static function yaSeCreoGrupo($id_grupo,$tipo,$grupos){

@@ -77,27 +77,28 @@ if(isset($_GET['op'])){
 function generarHorario($año,$ciclo){
     $facultad = asignarInfo($año, $ciclo);
     $procesador = new Procesador($facultad->getAulas());
-    $docentes = ManejadorDocentes::clasificarDocentes($facultad->getDocentes());
-    foreach ($docentes[0] as $docente){
-        $grupos = $docente->getGrupos();
+    $clasifDocentes = ManejadorDocentes::clasificarDocentes($facultad->getDocentes());
+    $prioridad = true;
+    foreach ($clasifDocentes as $clasif) {
+        $gruposClasifDocente = ManejadorDocentes::extraerGruposDeDocentes($clasif);
+        usort($gruposClasifDocente, "ManejadorGrupos::cmpGruposXAlumnos"); // Se ordenan los grupos de mayor a menor cantidad de alumnos
+        $gruposClasifAula = ManejadorGrupos::clasificarGruposPrefAula($gruposClasifDocente);
+        procesarGrupos($procesador, $gruposClasifAula, $prioridad);
+        $prioridad = false;
+    }
+    $_SESSION['facultad'] = $facultad;
+}
+
+function procesarGrupos($procesador,$gruposClasif,$prioridad){
+    foreach ($gruposClasif as $grupos) {
         foreach ($grupos as $grupo) {
             try {
-                $procesador->procesarGrupo($grupo,true);
+                $procesador->procesarGrupo($grupo,$prioridad);
             } catch (Exception $exc) {
                 error_log($exc->getMessage(),0);    //Se produce cuando ya no hay aulas disponibles
             }
         }
     }
-    $grupos = ManejadorDocentes::extraerGruposDeDocentes($docentes[1]);
-    usort($grupos, "ManejadorGrupos::cmpGruposXAlumnos"); // Se ordenan los grupos de mayor a menor cantidad de alumnos
-    foreach ($grupos as $grupo) {
-        try {
-            $procesador->procesarGrupo($grupo,false);
-        } catch (Exception $exc) {
-            error_log($exc->getMessage(),0);    //Se produce cuando ya no hay aulas disponibles
-        }
-    }
-    $_SESSION['facultad'] = $facultad;
 }
 
 function asignarInfo($año,$ciclo) {

@@ -59,7 +59,11 @@ abstract class ManejadorAgrupaciones {
             if($preferencia['id_agrupacion']==$id_agrup){
                 if(preg_match("/^(1|3)$/", strval($preferencia['tipo_grupo']))){
                     $aulas_gt['aulas'][] = ManejadorAulas::getAula($todas_aulas, $preferencia['cod_aula']);
-                    $aulas_gt['exclusiv'] = $preferencia['exclusiv_aula'];
+                    if($preferencia['exclusiv_aula'] == 't'){
+                        $aulas_gt['exclusiv'] = true;
+                    } else{
+                        $aulas_gt['exclusiv'] = false;
+                    }
                 } else{
                     $aulas_lab['aulas'][] = ManejadorAulas::getAula($todas_aulas, $preferencia['cod_aula']);
                     $aulas_lab['exclusiv'] = true;
@@ -391,6 +395,17 @@ abstract class ManejadorAgrupaciones {
             $consulta = "UPDATE agrupacion SET ".$campo."='".$dato."' WHERE id_agrupacion='".$id."'";
             Conexion::consulta2($consulta);
         }
+    }
+    
+    public static function obtenerHorasTipoGrupo($grupo,$agrupacion){
+        if($grupo->getTipo()=='TEORICO'){
+            $horasRequeridas = $agrupacion->getTotalHorasRequeridas();
+        } elseif($grupo->getTipo()=='LABORATORIO'){
+            $horasRequeridas = $agrupacion->getHorasLab();
+        } elseif($grupo->getTipo()=='DISCUSION'){
+            $horasRequeridas = $agrupacion->getHorasDiscu();
+        }
+        return $horasRequeridas;
     }
 
 }

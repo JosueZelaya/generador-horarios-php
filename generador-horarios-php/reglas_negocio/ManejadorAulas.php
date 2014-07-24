@@ -52,19 +52,6 @@ abstract class ManejadorAulas {
         return null;
     }
     
-    /** Determinar si un grupo de horas es permisible para una determinada aula en un determinado dia
-     * 
-     * @param Hora[] $horas Horas de un determinado dia en una determinada aula
-     * @param Integer $desde Limite inferior de bloque de horas a aprobar
-     * @param Integer $hasta Limite superior de bloque de horas a aprobar
-     */
-    public static function aprobarHorarioEnAula($horas,$desde,$hasta){
-        if ($desde > count($horas)-1 || $desde < $horas[0]->getIdHora() || $hasta > count($horas)){
-            return false;
-        }
-        return true;
-    }
-    
     public static function buscarAulas($buscarComo){
         $aulas = array();
         $consulta = "SELECT * FROM aulas WHERE cod_aula iLIKE '$buscarComo%' ORDER BY cod_aula;";
@@ -100,8 +87,8 @@ abstract class ManejadorAulas {
     
     /** Devuelve todas las aulas que no han sido evaluadas para la asignacion de un grupo
      *  el array devuelto contiene las aulas en orden de capacidad descendente
-     * @param Aula[] $todasAulas
-     * @param Aula $aulaRef
+     * @param Aula[] $todasAulas = todas las aulas de la facultad
+     * @param Aula $aulaRef = aula que limita el area de busqueda en el array, se devolveran aulas desde indice 0 hasta el indice en que esta aula se encuentra en el array
      */
     public static function obtenerAulasCapacidadCercana($todasAulas,$aulaRef){
         for($i=0;$i<count($todasAulas);$i++){
@@ -110,7 +97,9 @@ abstract class ManejadorAulas {
                 break;
             }
         }
-        if($index>0){
+//        if($index!=(count($todasAulas)-1)){
+        if($index!=0){
+//            $newArray = array_slice($todasAulas, $index);
             $newArray = array_slice($todasAulas, 0, $index);
             foreach ($newArray as $i => $aula){
                 if($aula->isExclusiva()){
@@ -119,8 +108,10 @@ abstract class ManejadorAulas {
             }
             $invertArray = array_reverse($newArray);
             return $invertArray;
+//            return array_values($newArray);
         } else{
-            return null;
+            return array($todasAulas[0]);
+//            return array(end($todasAulas));
         }
     }
     
