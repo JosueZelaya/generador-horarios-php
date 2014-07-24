@@ -387,7 +387,6 @@ $(function (){
             }
         });
     });
-    
 });
 
 function limpiarMain(){

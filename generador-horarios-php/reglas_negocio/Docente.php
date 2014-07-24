@@ -1,9 +1,9 @@
 <?php
-/**
- * Description of Docente
- *
- * @author abs
- */
+
+chdir(dirname(__FILE__));
+require_once '../acceso_datos/Conexion.php';
+chdir(dirname(__FILE__));
+
 class Docente {
     
     private $idDocente;
@@ -13,6 +13,8 @@ class Docente {
     private $horario;
     private $depar;
     private $nombre_completo;
+    private $nombres;
+    private $apellidos;
             
     function __construct($idDocente,$contratacion,$depar) {
         $this->idDocente = $idDocente;
@@ -104,5 +106,47 @@ class Docente {
 
     public function setNombre_completo($nombre_completo) {
         $this->nombre_completo = $nombre_completo;
+    }
+    
+    public function getNombres() {
+        return $this->nombres;
+    }
+
+    public function getApellidos() {
+        return $this->apellidos;
+    }
+
+    public function setNombres($nombres) {
+        $this->nombres = $nombres;
+    }
+
+    public function setApellidos($apellidos) {
+        $this->apellidos = $apellidos;
+    }
+
+    public function ocultar(){
+        $consulta = "UPDATE docentes SET activo='f' WHERE id_docente='".$this->idDocente."';";            
+        conexion::consulta($consulta);
+        $consulta = "UPDATE usuarios SET habilitado='f' WHERE id_docente='".$this->idDocente."';";
+        conexion::consulta($consulta);
+    }
+    
+    public function guardar(){
+        if($this->cargo=="" || $this->cargo==NULL){
+            $consulta = "UPDATE docentes SET nombres='".$this->nombres."',"
+            . "apellidos='".$this->apellidos."',"                    
+            . "contratacion='".$this->contratacion."',"
+            . "id_depar=".$this->depar.","
+            . "cargo=NULL"            
+            . " WHERE id_docente='".$this->idDocente."'";
+        }else{
+            $consulta = "UPDATE docentes SET nombres='".$this->nombres."',"
+            . "apellidos='".$this->apellidos."',"                    
+            . "contratacion='".$this->contratacion."',"
+            . "id_depar=".$this->depar.","
+            . "cargo=".$this->cargo.""            
+            . " WHERE id_docente='".$this->idDocente."'";
+        }        
+        conexion::consulta($consulta);
     }
 }

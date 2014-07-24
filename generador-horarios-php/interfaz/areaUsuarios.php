@@ -49,8 +49,8 @@ chdir(dirname(__FILE__));
             <div class="container marketing">
                 <!-- Three columns of text below the carousel -->
                 <div class="row">
-                  <div class="col-lg-4">
-                      <a href="agrupaciones_crear/index.php">
+                  <div class="col-lg-3">
+                      <a href="agrupaciones_crear/index.php" target="_blank">
                           <img width="140px" height="140px" src="imagenes/placeholder1-3.jpg" class="img-circle">
                           <h2>Crear Agrupaciones</h2>
                           <p>Paso 1: Desde acá usted podrá crear agrupaciones de materias.
@@ -63,8 +63,8 @@ chdir(dirname(__FILE__));
                       </a>                      
                     <p><a class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
-                  <div class="col-lg-4">
-                      <a href="agrupaciones_datos/index.php">
+                  <div class="col-lg-3">
+                      <a href="agrupaciones_datos/index.php" target="_blank">
                         <img width="140px" height="140px" src="imagenes/placeholder2.jpg" class="img-circle">
                         <h2>Agrupaciones y Datos</h2>
                         <p>Paso 2: Una vez completado el paso anterior acá podrá indicar cuálos son los requerimientos
@@ -74,8 +74,17 @@ chdir(dirname(__FILE__));
                       </a>                    
                     <p><a class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
-                  <div class="col-lg-4">
-                      <a href="agrupaciones_docentes/index.php">
+                  <div class="col-lg-3">
+                      <a href="agrupaciones_datos_especiales/index.php" target="_blank">
+                        <img width="140px" height="140px" src="imagenes/placeholder2.jpg" class="img-circle">
+                        <h2>Agrupaciones y Datos Especiales</h2>
+                        <p>Puede agregar grupos de laboratorio y de discusión a sus materias.
+                        </p>
+                      </a>                    
+                    <p><a class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
+                  <div class="col-lg-3">
+                      <a href="agrupaciones_docentes/index.php" target="_blank">
                             <img width="140px" height="140px" src="imagenes/placeholder3-1.jpg" class="img-circle">
                             <h2>Agrupaciones y docentes</h2>
                             <p>Paso 3: Una vez completado el paso 2, en esta sección podrá asignar los docentes que impartirán

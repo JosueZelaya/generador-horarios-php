@@ -133,7 +133,7 @@ abstract class ManejadorAulas {
     }
     
     private static function getInfoHoraVacia($index,$dias,$hora){
-        $array = ["texto" => "",
+        return ["texto" => "",
                 "nombre" => "",
                 "codigo" => "",                                
                 "grupo" => "",
@@ -142,12 +142,11 @@ abstract class ManejadorAulas {
                 "finBloque" => "",
                 "idHora" => $hora->getIdHora(),
                 "dia" => $dias[$index]->getNombre(),
-                "more" => false];
-        return $array;
+                "more" => false];        
     }
     
     private static function getInfoHoraReservada($index,$dias,$hora){
-        $array = ["texto" => "reservada",
+        return ["texto" => "reservada",
                 "nombre" => "",
                 "codigo" => "",                                
                 "grupo" => "",
@@ -156,8 +155,7 @@ abstract class ManejadorAulas {
                 "finBloque" => "",
                 "idHora" => $hora->getIdHora(),
                 "dia" => $dias[$index]->getNombre(),
-                "more" => false];
-        return $array;
+                "more" => false];        
     }
 
     /**

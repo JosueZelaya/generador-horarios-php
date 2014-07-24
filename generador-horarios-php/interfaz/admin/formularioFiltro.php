@@ -22,9 +22,9 @@ if(isset($_GET['criterio'])){
             <select id='departamento' class='departamento form-control'>
                 <option value='todos'>Ninguno</option>    
                 <?php
-                $departamentos = $facultad->getDepartamentos();
-                for ($index = 0; $index < count($departamentos); $index++) {    
-                    echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
+                $usuarios = $facultad->getDepartamentos();
+                for ($index = 0; $index < count($usuarios); $index++) {    
+                    echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
                 }
                 ?>
             </select>
@@ -49,9 +49,9 @@ if(isset($_GET['criterio'])){
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
             <?php
-            $departamentos = $facultad->getDepartamentos();
-            for ($index = 0; $index < count($departamentos); $index++) {    
-                echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
+            $usuarios = $facultad->getDepartamentos();
+            for ($index = 0; $index < count($usuarios); $index++) {    
+                echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
             }
             ?>
         </select>
@@ -88,9 +88,9 @@ if(isset($_GET['criterio'])){
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
         <?php
-        $departamentos = $facultad->getDepartamentos();
-        for ($index = 0; $index < count($departamentos); $index++) {    
-            echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
+        $usuarios = $facultad->getDepartamentos();
+        for ($index = 0; $index < count($usuarios); $index++) {    
+            echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
         }
         ?>
         </select>
@@ -124,9 +124,9 @@ if(isset($_GET['criterio'])){
     <select id='departamento' class='departamento form-control'>
         <option value='todos'>TODOS</option>    
     <?php
-    $departamentos = $facultad->getDepartamentos();
-    for ($index = 0; $index < count($departamentos); $index++) {    
-        echo "<option value='".$departamentos[$index]->getId()."'>".$departamentos[$index]->getNombre()."</option>";    
+    $usuarios = $facultad->getDepartamentos();
+    for ($index = 0; $index < count($usuarios); $index++) {    
+        echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
     }
     ?>
     </select>    

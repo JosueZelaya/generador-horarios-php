@@ -41,7 +41,34 @@ $(function (){
         });
     });
     
-    $(document).on("click","#aulas",function(){         
+    $(document).on("click","#liberarHoras",function(){
+        var aula = $("#aulas").val();        
+        var dataString = "dia="+dia+"&hora_inicio="+horaInicioSeleccionada+"&hora_fin="+horaFinSeleccionada+"&aula="+aula;
+        $.ajax({
+            type: "GET",
+            url: './liberarHoras.php',
+            data: dataString,
+            success: function(respuesta){
+                respuesta = jQuery.parseJSON(respuesta);
+                if(respuesta==="ok"){
+                    dataString = 'aula='+$("#aulas").val();
+                    $.ajax({
+                        type: "GET",
+                        url: './mostrarHorario.php',
+                        data: dataString,
+                        success: function(datos){
+                           asignarDiasHoras("","","");
+                           $("#mostrarHorario").html(datos);                           
+                        }
+                    });                     
+                }else{
+                    alert(respuesta);
+                }                               
+            }            
+        });
+    });
+    
+    $(document).on("change","#aulas",function(){         
         var aula = $(this).val();
         var dataString = 'aula='+aula;
         $.ajax({

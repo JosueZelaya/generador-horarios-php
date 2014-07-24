@@ -13,7 +13,7 @@
         
         <div class="table-responsive">
             <div id="example2_wrapper" class="dataTables_wrapper form-inline" role="grid">
-                <table class="table table-bordered table-condensed table-striped table-hover">
+                <table class="table table-bordered table-condensed table-striped table-hover table-responsive">
 <!--                <table class="table table-condensed table-striped table-hover ">-->
                 <thead>
                     <tr>
@@ -26,10 +26,9 @@
                         <th class="text-center">Alumnos Nuevos</th>
                         <th class="text-center">Otros Alumnos</th>
                         <th class="text-center">Total Alumnos</th>
-                        <th class="text-center">Grupos Teóricos</th>
-                        <th class="text-center">Grupos Laboratorio</th>
-                        <th class="text-center">Grupos Discución</th>
-                        <th class="footable-last-column text-center">Alumnos por Grupo Teórico</th>
+                        <th class="text-center">Grupos Teóricos</th>                        
+                        <th class="footable-last-column text-center">Alumnos por Grupo Teórico</th>                        
+                        <th class="text-center">Horas Clase</th>
                     </tr>
                 </thead>
                 <!--<tbody id ="mostrarUsuarios" class="mostrarUsuarios" role="alert" aria-live="polite" aria-relevant="all">-->

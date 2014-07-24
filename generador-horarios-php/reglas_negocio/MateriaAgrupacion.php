@@ -25,7 +25,11 @@ class MateriaAgrupacion {
     private $carrera;
     private $plan_estudio;
     private $materias;
-    
+    private $num_horas_clase;
+    private $num_horas_laboratorio;
+    private $num_horas_discusion;
+    private $discuciones_labs_alternados;
+    private $unidadesValorativas;
     
     public function __construct() {
         $this->codigo = "";
@@ -184,6 +188,50 @@ class MateriaAgrupacion {
 
     public function addMateria($materia){
         $this->materias[] = $materia;
+    }
+    
+    public function getNum_horas_clase(){
+        if($this->num_horas_clase == 0 || $this->num_horas_clase == "0"){
+            $total = round(($this->getUnidadesValorativas()*20)/16,0,PHP_ROUND_HALF_DOWN);
+            return $total;
+        } else{
+            return $this->num_horas_clase;
+        }
+    }
+    public function getNum_horas_laboratorio() {
+        return $this->num_horas_laboratorio;
+    }
+
+    public function getNum_horas_discusion() {
+        return $this->num_horas_discusion;
+    }
+
+    public function getDiscuciones_labs_alternados() {
+        return $this->discuciones_labs_alternados;
+    }
+
+    public function setNum_horas_clase($num_horas_clase) {
+        $this->num_horas_clase = $num_horas_clase;
+    }
+
+    public function setNum_horas_laboratorio($num_horas_laboratorio) {
+        $this->num_horas_laboratorio = $num_horas_laboratorio;
+    }
+
+    public function setNum_horas_discusion($num_horas_discusion) {
+        $this->num_horas_discusion = $num_horas_discusion;
+    }
+
+    public function setDiscuciones_labs_alternados($discuciones_labs_alternados) {
+        $this->discuciones_labs_alternados = $discuciones_labs_alternados;
+    }
+    
+    public function getUnidadesValorativas() {
+        return $this->unidadesValorativas;
+    }
+
+    public function setUnidadesValorativas($unidadesValorativas) {
+        $this->unidadesValorativas = $unidadesValorativas;
     }
     
 }

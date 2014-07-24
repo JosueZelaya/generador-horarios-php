@@ -21,10 +21,10 @@ if(isset($_GET)){
                             throw new Exception("Debe agregar docentes a todos los grupos!");
                         }else{
 //                            $docentes = explode(",", $arrayGrupos[$i]['docentes']);         
-                            $docentes = $arrayGrupos[$i]['docentes'];
+                            $usuarios = $arrayGrupos[$i]['docentes'];
                             $grupo = new Grupo();
                             $grupo->setAgrup($arrayGrupos[$i]["agrupacion"]);
-                            $grupo->setDocentes($docentes);
+                            $grupo->setDocentes($usuarios);
                             $grupo->setId_grupo($arrayGrupos[$i]["id"]);
                             $grupo->setTipo($arrayGrupos[$i]["tipo"]);
                             $grupos[]=$grupo;                    

@@ -10,7 +10,7 @@ if($_POST){
         $id = $_POST['pk'];
         $campo = $_POST['name'];
         $valor = $_POST['value'];               
-        if($campo=="num_grupos" || $campo=="alumnos_nuevos" || $campo =="otros_alumnos" || $campo == "alumnos_grupo" || $campo == "num_grupos_l" || $campo == "num_grupos_d"){               
+        if($campo=="num_grupos" || $campo=="alumnos_nuevos" || $campo =="otros_alumnos" || $campo == "alumnos_grupo" || $campo == "num_grupos_l" || $campo == "num_grupos_d" || $campo=="horas_clase"){               
             ManejadorAgrupaciones::modificarAgrupacion($id, $campo, $valor,$año,$ciclo);
             if($campo=="num_grupos"){
                 $respuesta = array('status'=>'ok','msg'=>'¡Actualizado!');
@@ -24,6 +24,8 @@ if($_POST){
                 $respuesta = array('status'=>'actualizar_otros','msg'=> $id);
             }else if($campo =="alumnos_grupo"){
                 $respuesta = array('status'=>'actualizar_alumnos_grupo','msg'=> $id);
+            }else{
+                $respuesta = array('status'=>'ok','msg'=>'¡Actualizado!');
             }            
             echo json_encode($respuesta);
         }else{

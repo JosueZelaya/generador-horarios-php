@@ -72,6 +72,9 @@ if($_GET){
     <a class="btn btn-lg btn-primary" href="#" id='reservarHoras'>
         <i class="fa fa-retweet fa-lg"></i> Reservar
     </a>                    
+    <a class="btn btn-lg btn-primary" href="#" id='liberarHoras'>
+        <i class="fa fa-retweet fa-lg"></i> Liberar
+    </a> 
 </form>            
 <br/>
 <?php

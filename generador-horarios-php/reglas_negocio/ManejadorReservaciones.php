@@ -39,10 +39,15 @@ abstract class ManejadorReservaciones {
                 }
                 $cont++;
             }
-            Conexion::consulta($consulta);            
+            Conexion::consulta($consulta);
         }else{
             throw new Exception("No se puede realizar la reservación. Asegúrese de que no querer reservar sobre espacio reservado");
         }
+    }
+    
+    public static function liberarHoras($dia,$aula,$hora_inicial,$hora_final,$año,$ciclo){
+        $consulta = "DELETE FROM reservaciones WHERE id_dia='$dia' AND cod_aula='$aula' AND id_hora>='$hora_inicial' AND id_hora<='$hora_final' AND año='$año' AND ciclo='$ciclo';";
+        Conexion::consulta($consulta);
     }
     
     public static function estaLibreParaReservar($dia,$desde,$hasta,$aula,$año,$ciclo){
@@ -80,7 +85,7 @@ abstract class ManejadorReservaciones {
     public static function asignarRerservaciones($reservaciones,$aulas){
         foreach ($reservaciones as $reservacion){            
             $hecha = FALSE;
-            foreach ($aulas as $aula){
+            foreach ($aulas as $aula){                                
                 if(strcmp($aula->getNombre(), $reservacion->getCod_aula())==0){
                     $dia = $aula->getDias()[$reservacion->getId_dia()-1];
                     $horas = $dia->getHoras();
@@ -97,6 +102,20 @@ abstract class ManejadorReservaciones {
                 }
             }
         }
+    }
+    
+    public static function limpiarReservaciones($aulas){
+        foreach ($aulas as $aula) {
+            $dias = $aula->getDias();
+            foreach ($dias as $dia) {
+                $horas = $dia->getHoras();
+                foreach ($horas as $hora) {
+                    if(!$hora->estaDisponible() && $hora->getGrupo()->getAgrup()==NULL){
+                        $hora->setDisponible(TRUE);
+                    }
+                }
+            }
+        }        
     }
     
 }
