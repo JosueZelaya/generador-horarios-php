@@ -114,7 +114,11 @@ abstract class ManejadorPersonal{
                     if(self::docenteActivo($docente)){
                         throw new Exception("El docente ya ha sido agregado anteriormente");
                     }else{
-                     $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo='".$docente->getCargo()."' WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
+                        if($docente->getCargo()==""){
+                            $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo=NULL WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
+                        }else{
+                            $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo='".$docente->getCargo()."' WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
+                        }                     
                      conexion::consulta($consulta);
                     }                    
                 }else{
