@@ -196,4 +196,21 @@ abstract class ManejadorMaterias {
         $materiasFiltradas = ManejadorMaterias::filtrarPorCiclo($materias, $ciclo);
         return count($materiasFiltradas);
     }
+    
+    public static function getMateriasDeAgrupacion($id_agrupacion){
+        $materias = array();
+        $consulta = "SELECT * FROM materia_agrupacion NATURAL JOIN materias NATURAL JOIN carreras WHERE id_agrupacion='$id_agrupacion';";
+        $respuesta = conexion::consulta($consulta);
+        while ($row = pg_fetch_array($respuesta)){
+            $materia = new MateriaAgrupacion();     
+            $materia->setCodigo($row['cod_materia']);
+            $materia->setNombre($row['nombre_materia']);
+            $materia->setPlan_estudio($row['plan_estudio']);
+            $materia->setCarrera(new Carrera($row['id_carrera'],"",$row['nombre_carrera'],""));
+            $materia->setDepartamento(new Departamento($row['id_depar'], $row['nombre_depar']));            
+            $materias[] = $materia;
+        }                   			
+        return $materias;
+    }
+    
 }
