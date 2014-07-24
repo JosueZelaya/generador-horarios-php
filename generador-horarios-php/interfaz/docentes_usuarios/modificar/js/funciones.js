@@ -54,6 +54,7 @@ $(function(){
     
     //BUSCADOR DOCENTES
     $(document).on("keydown.autocomplete","#buscar_docente_modificar",function(){
+        var contrataciones = "[{value: 'ADHO', text: 'ADHO'}, {value: 'EVHC',text: 'EVHC'},{value: 'EVMT',text: 'EVMT'},{value: 'EVCT',text: 'EVCT'},{value: 'HC',text: 'HC'},{value: 'CT',text: 'CT'},{value: 'TC',text: 'TC'},{value: 'MC',text: 'MT'}]";
          $(this).autocomplete({   
             delay : 0,
             source : 'buscarDocente.php',
@@ -61,15 +62,35 @@ $(function(){
                 $('#mostrarDocentes').slideUp('fast',function(){
                    $('#mostrarDocentes').html(                    
                         "<tr>"+
-                        "<td id='nombre"+ui.item.id+"'>"+ui.item.nombres+"</td>"+
-                        "<td id='apellido"+ui.item.id+"'>"+ui.item.apellidos+"</td>"+
-                        "<td>"+ui.item.contratacion+"</td>"+
-                        "<td>"+ui.item.depar+"</td>"+
-                        "<td>"+ui.item.cargo+"</td>"+                        
+                        "<td><div style='cursor: pointer;' id='nombres' class='campoModificable' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='mDocentes.php' data-title='Ingrese Nombres'>"+ui.item.nombres+"</div></td>"+
+                        "<td><div style='cursor: pointer;' id='apellidos' class='campoModificable' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='mDocentes.php' data-title='Ingrese Apellidos'>"+ui.item.apellidos+"</div></td>"+
+                        "<td><div style='cursor: pointer;' id='contratacion' class='campoSeleccionable' data-type='select' data-placement='bottom' data-pk="+ui.item.id+" data-url='mDocentes.php' data-title='Contratacion' data-source=\""+contrataciones+"\">"+ui.item.contratacion+"</div></td>"+
+                        "<td><div style='cursor: pointer;' id='departamento' class='campoSeleccionable' data-type='select' data-placement='bottom' data-pk="+ui.item.id+" data-url='mDocentes.php' data-title='Departamento' data-source=\""+ui.item.depars+"\">"+ui.item.depar+"</div></td>"+
+                        "<td><div style='cursor: pointer;' id='cargo' class='campoSeleccionable' data-type='select' data-placement='bottom' data-pk="+ui.item.id+" data-url='mDocentes.php' data-title='Cargo' data-source=\""+ui.item.cargos+"\">"+ui.item.cargo+"</div></td>"+                        
                         "<tr/>"
                     );
                 });
                 $('#mostrarDocentes').slideDown('fast');
+                $('.pagination').html("");
+            }                        
+        });
+    });
+    
+    //BUSCADOR USUARIOS
+    $(document).on("keydown.autocomplete","#buscar_usuario_modificar",function(){        
+         $(this).autocomplete({   
+            delay : 0,
+            source : 'buscarUsuario.php',
+            select : function(event,ui){
+                $('#mostrarUsuarios').slideUp('fast',function(){
+                   $('#mostrarUsuarios').html(                    
+                        "<tr>"+
+                        "<td><div style='cursor: pointer;' id='login' class='campoModificable' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='mUsuarios.php' data-title='Ingrese Login'>"+ui.item.login+"</div></td>"+
+                        "<td><div style='cursor: pointer;' id='docente' class='campoModificable' data-type='select' data-placement='bottom' data-pk="+ui.item.id+" data-url='mUsuarios.php' data-title='Ingrese Docente' data-source=\""+ui.item.docentes+"\">"+ui.item.docente+"</div></td>"+                        
+                        "<tr/>"
+                    );
+                });
+                $('#mostrarUsuarios').slideDown('fast');
                 $('.pagination').html("");
             }                        
         });

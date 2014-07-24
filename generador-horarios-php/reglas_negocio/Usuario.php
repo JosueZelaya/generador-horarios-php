@@ -43,16 +43,6 @@ class Usuario{
 		
 	}
 	
-	public function guardar(){
-                $consulta = "UPDATE usuarios SET nombres='".$this->getNombres()."',"
-                    . "apellidos='".$this->getApellidos()."',"                                       
-                    . "departamento='".$this->getDepartamento()."',"
-                    . "login='".$this->getLogin()."',"
-                    . "password='".$this->getPassword()."'"    
-                    . " WHERE id_usuario='".$this->getId()."'";                           
-                conexion::consulta2($consulta);
-	}
-	
 	public function destruir(){
 		$consulta = "DELETE FROM usuarios WHERE id_usuario='".$this->getId()."'";            
                 conexion::consulta2($consulta);
@@ -126,6 +116,13 @@ class Usuario{
             $consulta = "UPDATE usuarios SET habilitado='f' WHERE id_usuario='".$this->getId()."';";
             conexion::consulta($consulta);
         }
+        
+        public function guardar(){
+             $consulta = "UPDATE usuarios SET login='".$this->login."',"
+            . "id_docente='".$this->docente->getIdDocente()."'"
+            . " WHERE id_usuario='".$this->id."'";
+        conexion::consulta($consulta);
+    }
         
 }
 

@@ -29,23 +29,20 @@ if (ManejadorSesion::comprobar_sesion() == true) : ?>
 <!--                <table class="table table-condensed table-striped table-hover ">-->
                 <thead>
                     <tr>                        
-                        <th data-toggle="true" class="text-left footable-first-column">Nombres</th>
-                        <th class="text-left">Apellidos</th>
-                        <th class="text-left">Contratacion</th>
-                        <th class="text-left">Departamento</th>
-                        <th class="text-left">Cargo</th>                        
+                        <th data-toggle="true" class="text-left footable-first-column">Login</th>
+                        <th class="text-left">Docente</th>                                                
                     </tr>
                 </thead>                
                 <tbody id="mostrarUsuarios" class="mostrarUsuarios">
 
-                    <?php // include_once 'contenidoTablaUsuarios.php'; ?>
+                    <?php include_once 'contenidoTablaUsuarios.php'; ?>
                 </tbody>                
             </table>
             <div class="row">                
                 <div class="col-xs-12">
                     <div class="dataTables_paginate paging_bootstrap">
                         <div id="paginacion">
-                                <?php // $css_class='paginaUsuariosModificar'; require_once 'paginadorUsuarios.php'; ?>
+                                <?php $css_class='paginaUsuariosModificar'; require_once 'paginadorUsuarios.php'; ?>
                         </div>                        
                     </div>
                 </div>

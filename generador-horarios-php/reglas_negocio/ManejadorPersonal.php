@@ -35,7 +35,9 @@ abstract class ManejadorPersonal{
                         $usuario->setHabilitado($respuesta['habilitado']);
                         $usuario->setNombres($respuesta['nombres']);
                         $usuario->setApellidos($respuesta['apellidos']);                        
-                        $usuario->setDepartamento($respuesta['id_depar']);                        
+                        $usuario->setDepartamento($respuesta['id_depar']);  
+                        $docente = self::getDocente($respuesta['id_docente']);
+                        $usuario->setDocente($docente);
                     }
                     return $usuario;
             }		
@@ -52,6 +54,8 @@ abstract class ManejadorPersonal{
         $usuario->setPassword($password);
         $usuario->setHabilitado($respuesta['habilitado']);
         $usuario->setId($id);
+        $docente = self::getDocente($respuesta['id_docente']);
+        $usuario->setDocente($docente);
         return $usuario;            
     }
     
@@ -74,6 +78,10 @@ abstract class ManejadorPersonal{
             $docente->setCargo($cargo);
         }
         return $docente;
+    }
+    
+    public static function getIdDocente($nombre_completo){
+        
     }
     
     public static function getDocentes(){
@@ -253,7 +261,13 @@ abstract class ManejadorPersonal{
                 $usuario = new Usuario();
                 $usuario->setId($fila['id_usuario']);
                 $usuario->setLogin($fila['login']);
-                $usuario->setDocente($fila['nombres']." ".$fila['apellidos']);
+//                $docente = new Docente("","","");
+//                $docente->setNombres($fila['nombres']);
+//                $docente->setApellidos($fila['apellidos']);
+//                $docente->setNombre_completo($fila['nombres']." ".$fila['apellidos']);
+//                $docente->setIdDocente($fila['id_docente']);  
+                $docente = self::getDocente($fila['id_docente']);
+                $usuario->setDocente($docente);
                 $usuarios[] = $usuario;
             }                   			
             return $usuarios;
@@ -299,7 +313,9 @@ abstract class ManejadorPersonal{
                     $usuario = new Usuario();
                     $usuario->setId($fila['id_usuario']);
                     $usuario->setLogin($fila['login']);
-                    $usuario->setDocente($fila['nombres']." ".$fila['apellidos']);
+                    $docente = self::getDocente($fila['id_docente']);
+                    $usuario->setDocente($docente);
+//                    $usuario->setDocente($fila['nombres']." ".$fila['apellidos']);
                     $usuarios[] = $usuario;
                 }                   			
                 return $usuarios;
@@ -327,6 +343,14 @@ abstract class ManejadorPersonal{
                 $nueva->guardar();
             }else{
                 throw new Exception("No existe el docente que se quiere modificar");
+            }            		
+	}
+        
+        public static function modificarUsuario($actual,$nueva){            
+            if(ManejadorPersonal::existeUsuario($actual)){                
+                    $nueva->guardar();  //Se guarda el usuario               
+            }else{
+                throw new Exception("No existe el usuario que se quiere modificar");
             }            		
 	}
         
