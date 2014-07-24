@@ -110,7 +110,7 @@ abstract class ManejadorGrupos {
                     $grupo->setId_grupo($fila['id_grupo']);
                     $grupo->setTipo($fila['tipo_grupo']);
                     $docentes = array();
-                    $docente = new Docente($fila["id_docente"],"");
+                    $docente = new Docente($fila["id_docente"],"","");
                     $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
                     $docentes[] = $docente;
                     $grupo->setDocentes($docentes);
