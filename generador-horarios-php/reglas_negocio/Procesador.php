@@ -398,7 +398,7 @@ class Procesador {
                 if(!$choques){
                     $horasDisponibles = ManejadorHoras::buscarHoras($this->grupo->getDocentes(), $numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->agrupacion, $this->aulasPosibles, $this->todasAulas, false);
                 } else{
-                    $horasDisponibles = ManejadorHoras::buscarHorasConChoque($numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->aulasPosibles, $this->grupo);
+                    $horasDisponibles = ManejadorHoras::buscarHorasConChoque($this->agrupacion,$this->grupo->getDocentes(),$numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->aulasPosibles);
                 }
             } else{
                 break;
@@ -416,7 +416,7 @@ class Procesador {
             return;
         }
         $numHorasContinuas = self::calcularHorasContinuasRequeridas();  //Calculamos el numero de horas continuas para la clase
-        $horasDisponibles = ManejadorHoras::buscarHorasConChoque($numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->aulasPosibles, $this->grupo);
+        $horasDisponibles = ManejadorHoras::buscarHorasConChoque($this->agrupacion,$this->grupo->getDocentes(),$numHorasContinuas, $this->desde, $this->hasta, $nombreDia, $this->aulasPosibles);
         if($horasDisponibles != null){
             self::asignar($horasDisponibles);
         }
