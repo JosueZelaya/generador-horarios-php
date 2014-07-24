@@ -1,10 +1,10 @@
 <?php
 
 chdir(dirname(__FILE__));
-include_once 'Facultad.php';
+include_once '../../reglas_negocio/Facultad.php';
 session_start();
 
-$u = file_get_contents("../horarios_guardados/facultad");
+$u = file_get_contents("../../horarios_guardados/facultad");
 if(!$u){
     $respuesta = "fallo";
     echo json_encode($respuesta);

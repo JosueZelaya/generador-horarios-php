@@ -35,6 +35,23 @@ abstract class ManejadorMaterias {
         return $materias;
     }
     
+    public static function materiasMismoNivel($a,$b){
+        if(is_array($a) && is_array($b)){
+            foreach ($a as $materiaA){
+                foreach ($b as $materiaB) {
+                    if($materiaA->getCarrera() === $materiaB->getCarrera() && $materiaA->getCiclo() == $materiaB->getCiclo()){
+                        return true;
+                    }
+                }
+            }
+        } elseif(!is_array($a) && !is_array($b)){
+            if($a->getCarrera() === $b->getCarrera() && $a->getCiclo() == $b->getCiclo()){
+                return true;
+            }
+        }
+        return false;
+    }
+    
     public static function getMateriasDeCarrera($materias, $carrera){
         $materiasCarrera = array();
         foreach($materias as $materia){

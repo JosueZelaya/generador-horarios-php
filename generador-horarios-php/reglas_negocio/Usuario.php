@@ -123,7 +123,6 @@ class Usuario{
             . " WHERE id_usuario='".$this->id."'";
         conexion::consulta($consulta);
     }
-        
 }
 
 ?>

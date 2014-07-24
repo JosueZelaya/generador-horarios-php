@@ -15,6 +15,7 @@ class Agrupacion {
     private $aulas_gtd;
     private $aulas_gl;
     private $horasRequeridas;
+    private $bloquesRequeridos;
     private $horasLab;
     private $horasDiscu;
     
@@ -30,6 +31,7 @@ class Agrupacion {
         $this->horasRequeridas = $horasReq;
         $this->horasLab = $horasLab;
         $this->horasDiscu = $horasDis;
+        $this->bloquesRequeridos = null;
     }
     
     public function getId() {
@@ -119,11 +121,25 @@ class Agrupacion {
     }
     
     public function getHorasLab() {
-        return $this->horasLab;
+        if(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)>0){
+            $hora = $this->bloquesRequeridos[0];
+            return array($hora);
+        } elseif(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)==0){
+            return null;
+        } else{
+            return $this->horasLab;
+        }
     }
 
     public function getHorasDiscu() {
-        return $this->horasDiscu;
+        if(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)>0){
+            $hora = $this->bloquesRequeridos[0];
+            return array($hora);
+        } elseif(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)==0){
+            return null;
+        } else{
+            return $this->horasDiscu;
+        }
     }
 
     public function setHorasLab($horasLab) {
@@ -142,8 +158,24 @@ class Agrupacion {
         if($this->horasRequeridas == 0){
             $total = round(($this->materias[0]->getUnidadesValorativas()*20)/16,0,PHP_ROUND_HALF_DOWN);
             return $total;
+        } elseif(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)>0){
+            $hora = $this->bloquesRequeridos[0];
+            return array($hora);
+        } elseif(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)==0){
+            return null;
         } else{
             return $this->horasRequeridas;
         }
+    }
+    
+    public function limpiarBloqueAsignado(){
+        if(is_array($this->bloquesRequeridos) && count($this->bloquesRequeridos)>0){
+            unset($this->bloquesRequeridos[0]);
+            $this->bloquesRequeridos = array_values($this->bloquesRequeridos);
+        }
+    }
+
+    public function setBloquesRequeridos($bloquesRequeridos) {
+        $this->bloquesRequeridos = $bloquesRequeridos;
     }
 }

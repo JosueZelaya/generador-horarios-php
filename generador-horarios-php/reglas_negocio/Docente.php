@@ -149,5 +149,4 @@ class Docente {
         }        
         conexion::consulta($consulta);
     }
-    
 }

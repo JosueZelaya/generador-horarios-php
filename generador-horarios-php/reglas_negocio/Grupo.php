@@ -12,6 +12,7 @@ class Grupo {
     private $tipo;
     private $horasAsignadas;
     private $incompleto;
+    private $procesado;
     
     function __construct() {
         $this->incompleto=true;
@@ -20,6 +21,7 @@ class Grupo {
         $this->docentes = array();
         $this->horasAsignadas = 0;
         $this->tipo = "";
+        $this->procesado = false;
     }
 
     public function Grupo($id_grupo, $agrup, $docentes) {
@@ -78,5 +80,13 @@ class Grupo {
     
     public function addDocente($docente){
         $this->docentes[] = $docente;
+    }
+    
+    public function isProcesado() {
+        return $this->procesado;
+    }
+
+    public function setProcesado($procesado) {
+        $this->procesado = $procesado;
     }
 }

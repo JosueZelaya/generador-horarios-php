@@ -58,24 +58,27 @@ abstract class ManejadorDocentes{
         return $horario;
     }
     
-    /** Asumiendo que un docente tiene el mismo horario todos los dias, se busca la hora comun entre los docentes que imparten un solo grupo
+    /** Asumiendo que un docente tiene el mismo horario de lunes a viernes, se busca la hora comun entre los docentes que imparten un solo grupo
      *  para determinar el inicio de la clase
      * @param Docente[] $docentes
      */
-    public static function intersectarHorarios($docentes){
+    public static function intersectarHorarios($docentes,$dia){
+        if($dia == null){
+            $indexDia = 0;
+        }
         $index = 0;
         $horasComunes = null;
         $horas = array();
         foreach ($docentes as $docente){
             if($docente->getHorario()!=null){
-                $horasDoc = $docente->getHorario()[0]->getHoras();
+                $horasDoc = $docente->getHorario()[$indexDia]->getHoras();
                 foreach ($horasDoc as $hora) {
                     $horas[$index][] = $hora->getIdHora();
                 }
                 $index++;
             }
         }
-        if(count($horas)!=1){
+        if(count($horas)>1){
             $horarioDoc1 = $horas[0];
             foreach ($horarioDoc1 as $hora){ // Todas las horas del docente 0
                 for ($i=0; $i<count($horas);$i++){ // horarios de todos los docentes
@@ -99,9 +102,8 @@ abstract class ManejadorDocentes{
             return $horasComunes;
         } elseif(count($horas)==1){
             return $horas[0];
-        } elseif (count($horas)==0){
-            return null;
         }
+        return null;
     }
     
     public static function obtenerDocente($idDocente,$todos_docentes){
@@ -147,11 +149,12 @@ abstract class ManejadorDocentes{
      * @return Docente[]
      */
     public static function clasificarDocentes($todos_docentes){
+        $docentes = array('conprior'=>array(),'noprior'=>array());
         foreach ($todos_docentes as $docente){
             if($docente->getHorario()!=null){
-                $docentes[0][] = $docente;
+                $docentes['conprior'][] = $docente;
             } else{
-                $docentes[1][] = $docente;
+                $docentes['noprior'][] = $docente;
             }
         }
         return $docentes;
@@ -165,6 +168,22 @@ abstract class ManejadorDocentes{
             }
         }
         return $grupos;
+    }
+    
+    /** Determina si el docente o los docentes de un grupo ya estan ocupados en una hora específica de un día especifico
+     * 
+     * @param type $docentes
+     * @param type $hora
+     */
+    public static function docenteTrabajaHora($docentes,$hora){
+        $grupo = $hora->getGrupo();
+        $docentesGrupo = $grupo->getDocentes();
+        foreach ($docentes as $docente){
+            if(in_array($docente, $grupo->getDocentes(),TRUE)){
+                error_log ("El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupo->getTipo()." ".$grupo->getId_grupo()." de la agrupacion: ".$grupo->getAgrup()->getId()." a la hora: ".$hora->getIdHora(),0);
+                return true;
+            }
+        }
     }
     
     public static function buscarDocentes($buscarComo,$idDepartamento){

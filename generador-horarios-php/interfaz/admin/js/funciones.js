@@ -197,7 +197,7 @@ $(function (){
     $(document).on("click","#guardarHorario",function(){
         $.ajax({
             type: "GET",
-            url: "../../reglas_negocio/save.php",
+            url: "save.php",
             success: function(datos){
                 datos = jQuery.parseJSON(datos);            
                 if(datos==="exito"){
@@ -216,7 +216,7 @@ $(function (){
         limpiarMain();
         $.ajax({
             type: "GET",
-            url: "../../reglas_negocio/open.php",
+            url: "open.php",
             success: function(datos){
                 datos = jQuery.parseJSON(datos);            
                 if(datos==="exito"){
@@ -386,7 +386,7 @@ $(function (){
                 bootbox.alert(data);
             }
         });
-    });    
+    });
 });
 
 function limpiarMain(){
