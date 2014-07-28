@@ -7,8 +7,7 @@ $(document).ready(function() {
         $(this).autocomplete({
             delay: 0,
             source : 'buscarMateria.php',
-            select : function(event,ui){
-                //$('#mostrarMaterias').html(ui.item.value);
+            select : function(event,ui){                
                 var dataString = "materia="+ui.item.value;
                 $.ajax({
                     type: "GET",
@@ -150,8 +149,8 @@ $(document).ready(function() {
             appendTo:'body',
             helper: "clone",
             start: function(event, ui) {                   
-                $("#panel").removeClass("panel-danger").addClass("panel-warning");
-                $("#panel").removeClass("panel-success").addClass("panel-warning");
+                $("#panelAgrupaciones").removeClass("panel-danger").addClass("panel-warning");
+                $("#panelAgrupaciones").removeClass("panel-success").addClass("panel-warning");
                 $("#cabeceraPanel").html("<p class='center'>Suelte acá las materias que desea que formen parte de la agrupación</p>");
                 c.tr = this;
                 c.codigo = $(this).attr("cod_materia");
@@ -165,22 +164,28 @@ $(document).ready(function() {
     $("#panelAgrupaciones").droppable({        
         tolerance: "touch",
         drop: function(event, ui) { 
-            var inventor = ui.draggable.html();  
-            var materia = new Object();            
-            materia['codigo'] = c.codigo;                        
-            materia['id_carrera'] = c.carrera;
-            materia['plan_estudio'] = c.plan;            
-            materia['agrupacion'] = c.agrupacion;
-            materias[materias.length]=materia; 
-            $("#cabecera_materias_arrastradas").html("<th class='text-center'>Codigo</th>"+
-                            "<th class='text-center'>Materia</th>"+
-                            "<th class='text-center'>Carrera</th>"+
-                            "<th class='text-center'>Plan Estudio</th> "+
-                            "<th class='text-center'>Departamento</th>"+
-                            "<th class='text-center'>Eliminar</th>");
-            $('#contenido_materias_arrastradas').html($('#contenido_materias_arrastradas').html()+"<tr>"+inventor+"<td align='center'><a agrupacion='"+agrupacion+"' codigo='"+c.codigo+"' id_carrera='"+c.carrera+"' plan_estudio='"+c.plan+"' id='' class='center centre-block row-delete'><span class='glyphicon glyphicon-remove'></span></a></td><tr/>");           
-            $(c.tr).remove();
-            $(c.helper).remove();            
+            if(materias.length>0){
+                var inventor = ui.draggable.html();  
+                var materia = new Object();            
+                materia['codigo'] = c.codigo;                        
+                materia['id_carrera'] = c.carrera;
+                materia['plan_estudio'] = c.plan;            
+                materia['agrupacion'] = c.agrupacion;
+                materias[materias.length]=materia; 
+                $("#cabecera_materias_arrastradas").html("<th class='text-center'>Codigo</th>"+
+                                "<th class='text-center'>Materia</th>"+
+                                "<th class='text-center'>Carrera</th>"+
+                                "<th class='text-center'>Plan Estudio</th> "+
+                                "<th class='text-center'>Departamento</th>"+
+                                "<th class='text-center'>Eliminar</th>");
+                $('#contenido_materias_arrastradas').html($('#contenido_materias_arrastradas').html()+"<tr>"+inventor+"<td align='center'><a agrupacion='"+agrupacion+"' codigo='"+c.codigo+"' id_carrera='"+c.carrera+"' plan_estudio='"+c.plan+"' id='' class='center centre-block row-delete'><span class='glyphicon glyphicon-remove'></span></a></td><tr/>");           
+                $(c.tr).remove();
+                $(c.helper).remove();            
+            }else{
+                $("#panelAgrupaciones").removeClass("panel-warning").addClass("panel-danger");
+                $("#panelAgrupaciones").removeClass("panel-success").addClass("panel-danger");
+                $("#cabeceraPanel").html("<p class='center'> Error: Primero debe elegir una agrupación para luego soltar las materias en ella</p>");
+            }            
         }
     });
     

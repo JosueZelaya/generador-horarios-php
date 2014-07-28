@@ -2,7 +2,7 @@
     <div class="panel panel-success">  
     
         <div class="panel-heading">  
-            <p class="center center-block">Busque y arrastre las materias de la agrupación que desea crear</p>
+            <p class="center center-block">Busque y arrastre las materias para agregarlas a la agrupacion</p>
         </div>
         <div class="panel-body">
             <div class="container-fluid">

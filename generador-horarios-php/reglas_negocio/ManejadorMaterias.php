@@ -12,6 +12,7 @@ include_once 'Hora.php';
 include_once 'Aula.php';
 include_once 'Grupo.php';
 include_once 'Materia.php';
+include_once 'Carrera.php';
 include_once 'ManejadorAgrupaciones.php';
 include_once 'ManejadorCarreras.php';
 include_once 'ManejadorGrupos.php';
@@ -228,6 +229,7 @@ abstract class ManejadorMaterias {
             $materia->setDepartamento(new Departamento($row['id_depar'], $row['nombre_depar']));            
             $materia->setCiclo($row['ciclo_carrera']);
             $materia->setUnidadesValorativas($row['uv']);
+            $materia->setTipo($row['tipo_materia']);
             $materias[] = $materia;
         }                   			
         return $materias;
@@ -316,12 +318,62 @@ abstract class ManejadorMaterias {
             $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE cod_materia='MAT535' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
             $respuesta = Conexion::consulta2($consulta);
             $id_agrupacion = $respuesta['id_agrupacion'];
-            $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
-            $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
-            $consulta = $consulta." DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."'";
+            if($id_agrupacion!=""){
+                $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
+                $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+                $consulta = $consulta." DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."'";
+            }else{
+                $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
+                $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";                
+            }            
             Conexion::consulta2($consulta);
         }
     }
     
+    public static function modificarMateria($cod,$plan,$id_carrera,$campo,$valor,$año){
+        $ciclo_agrupacion = "";
+        if($campo=="nombre"){
+            $campo = "nombre_materia";
+        }else if($campo=="ciclo"){
+            $campo = "ciclo_carrera";
+            if(fmod($valor,2)==0){
+                $ciclo_agrupacion = 2;
+            }else{
+                $ciclo_agrupacion = 1;
+            }
+        }else if($campo=="uv"){
+            $campo = "uv";
+        }else if($campo=="tipo"){
+            $campo = "tipo_materia";
+        }else{
+            throw new Exception("Error: Campo no permitido");
+        }
+        $consulta_update = "UPDATE materias SET $campo='$valor' WHERE cod_materia='$cod' AND plan_estudio='$plan' AND id_carrera='$id_carrera';";
+        if($campo=="ciclo_carrera"){
+            $carrera = new Carrera($id_carrera,$plan,"","");
+            $materia = new Materia($cod,"","","", $carrera,"","");
+            $materia->setPlan_estudio($plan);            
+            $consulta = "SELECT ciclo FROM materia_agrupacion WHERE cod_materia='$cod' AND plan_estudio='$plan' AND id_carrera='$id_carrera' AND año='$año';";
+            $respuesta = Conexion::consulta2($consulta);
+            $ciclo_anterior = $respuesta['ciclo'];
+            if((fmod($ciclo_agrupacion,2)==0 && fmod($ciclo_anterior,2)==0) || (fmod($ciclo_agrupacion,2)!=0 && fmod($ciclo_anterior,2)!=0)){
+                //El ciclo sigue siendo el mismo para la agrupacion.
+
+            }else{
+                //El ciclo cambió para la agrupación.
+                if(ManejadorAgrupaciones::materiaEstaFusionada($materia, $año,$ciclo_anterior)){
+                    ManejadorAgrupaciones::liberarMateria($materia, $año, $ciclo_anterior);
+                    ManejadorAgrupaciones::crearAgrupacionParaMateria($materia, $año, $ciclo_agrupacion);
+                }else{
+                    $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE cod_materia='$cod' AND plan_estudio='$plan' AND id_carrera='$id_carrera' AND año='$año' AND ciclo='$ciclo_anterior';";
+                    $respuesta = Conexion::consulta2($consulta);
+                    $id_agrupacion = $respuesta['id_agrupacion'];                    
+                    $consulta_update = $consulta_update." UPDATE agrupacion SET ciclo='$ciclo_agrupacion' WHERE id_agrupacion='$id_agrupacion'";
+                }                
+            }
+            
+        }
+        Conexion::consulta2($consulta_update);
+    }
     
 }

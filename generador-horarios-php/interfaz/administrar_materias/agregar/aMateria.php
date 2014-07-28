@@ -27,6 +27,11 @@ if (ManejadorSesion::comprobar_sesion() == true){
             $materia->setUnidadesValorativas($_POST['uv']);
             $materia->setTipo($_POST['tipo']);
             try{
+                if(fmod ($materia->getCiclo(),2)==0){
+                    $ciclo = 2;
+                }else{
+                    $ciclo = 1;
+                }
                 ManejadorMaterias::agregarMateria($materia,$año,$ciclo);
                 $respuesta = "¡Materia Agregada!";
                 echo json_encode($respuesta);

@@ -71,8 +71,7 @@ $(function(){
         var dataString = 'codigo='+$('#materia'+id).attr('codigo')+"&plan="+$('#materia'+id).attr('plan')+"&carrera="+$('#materia'+id).attr('carrera');        
         var mensaje = "";
         mensaje = "<font color='red'>¿Realmente desea borrar la materia: "+$('#materia'+id).attr('nombre')+" plan: "+$('#materia'+id).attr('plan')+" carrera: "+$('#materia'+id).attr('nombre_carrera')+"?</font>\n\
-            <br/>Los datos borrados ya no podran recuperarse";          
-        
+            <br/>Se borrarán con ella los datos históricos de la materia. <br/> Los datos borrados ya no podran recuperarse";        
         bootbox.confirm(mensaje, function(resultado) {
             if(resultado===true){
                 $.ajax({

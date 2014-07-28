@@ -12,7 +12,7 @@ if(isset($_GET)){
         $arrayMaterias = utf8_encode($_GET['materias']);                
         $arrayMaterias = json_decode($arrayMaterias,true);                        
         $agrupacion = $_GET['agrupacion'];
-        if($arrayMaterias!=NULL && $agrupacion!=NULL && $agrupacion!=""){            
+        if($arrayMaterias!=NULL && $agrupacion!=NULL && $agrupacion!="" && $agrupacion!="undefined" && is_numeric($agrupacion)){            
             if(count($arrayMaterias)<=0){
                 echo json_encode("Debe añadir materias a la agrupacion");
             }else{                
@@ -33,7 +33,11 @@ if(isset($_GET)){
                 }
             }            
         }else{
-            echo json_encode("Debe añadir materias e indicar a cual agrupacion");
+            if($arrayMaterias==NULL){
+                echo json_encode("Error: No ha arrastrado ninguna materia.");
+            }else{
+                echo json_encode("Error: Debe indicar a cual agrupacion desea agregar las materias.");                
+            }            
         }
     }
 }
