@@ -81,6 +81,14 @@ chdir(dirname(__FILE__));
                 </div><!-- /.row -->
                 <div class="row">
                     <div class="col-lg-3">
+                        <a href="../agrupaciones_materias/index.php" target="_blank">
+                            <img width="140px" height="140px" src="../imagenes/libros3.jpg" class="img-circle">
+                            <h2>Agrupaciones y Materias</h2>
+                            <p>Se pueden añadir o quitar materias a las agrupaciones</p>
+                      </a>                    
+                        <p><a class="btn btn-default" href="../agrupaciones_materias/index.php" target="_blank" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
+                    <div class="col-lg-3">
                       <a href="../reservaciones_aulas/index.php" target="_blank">
                             <img width="140px" height="140px" src="../imagenes/placeholder4.jpg" class="img-circle">
                             <h2>Reservaciones de Aulas</h2>
@@ -106,11 +114,22 @@ chdir(dirname(__FILE__));
                     <p><a href="#admin_users_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
                 </div>
+                <div class='row'>
+                    <div class="admin-users col-lg-3">
+                      <a href="#admin_materias_modal" data-toggle="modal">
+                          <img width="140px" height="140px" src="../imagenes/libros2.jpg" class="img-circle">
+                            <h2>Administrar Materias</h2>
+                            <p>Agregar, modificar y eliminar Materias</p>
+                      </a>                    
+                    <p><a href="#admin_materias_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
+                </div>
               </div>
         </div>
     </div>
  </div>
  <?php include_once 'admin_users_modal.php'; ?> 
+ <?php include_once './admin_materias_modal.php'; ?> 
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.

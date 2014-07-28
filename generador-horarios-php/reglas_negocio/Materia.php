@@ -12,6 +12,9 @@ class Materia {
     private $carrera;
     private $agrupacion;
     private $incompleta;
+    private $tipo;
+    private $plan_estudio;
+    private $departamento;
     
     function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $carrera, $agrupacion,$incompleta) {
         $this->codigo = $codigo;
@@ -78,4 +81,29 @@ class Materia {
     public function setCarrera($carrera) {
         $this->carrera = $carrera;
     }
+    
+    public function getTipo() {
+        return $this->tipo;
+    }
+
+    public function setTipo($tipo) {
+        $this->tipo = $tipo;
+    }
+
+    public function getPlan_estudio() {
+        return $this->plan_estudio;
+    }
+
+    public function setPlan_estudio($plan_estudio) {
+        $this->plan_estudio = $plan_estudio;
+    }
+    
+    public function getDepartamento() {
+        return $this->departamento;
+    }
+
+    public function setDepartamento($departamento) {
+        $this->departamento = $departamento;
+    }
+    
 }

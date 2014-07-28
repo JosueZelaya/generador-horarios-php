@@ -9,6 +9,7 @@ chdir(dirname(__FILE__));
 include_once '../acceso_datos/Conexion.php';
 require_once 'Agrupacion.php';
 require_once 'MateriaAgrupacion.php';
+require_once 'ManejadorMaterias.php';
 
 abstract class ManejadorAgrupaciones {
  
@@ -93,20 +94,14 @@ abstract class ManejadorAgrupaciones {
         $consulta;
         if($ciclo=="par"){    
             if($idDepartamento=="todos"){
-//                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE ma.año='".$año."' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
             }else{
-//                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE c.id_depar='".$idDepartamento."' AND ma.año='".$año."' AND ma.ciclo='2' ORDER BY m.nombre_materia;";
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY d.nombre_depar,m.nombre_materia;";
             }            
         }else{            
             if($idDepartamento=="todos"){
-//                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE ma.año='".$año."' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
-//                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias AS m NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d JOIN agrupacion AS a ON a.id_agrupacion=ma.id_agrupacion WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
-//                  $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,a.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";  
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
-            }else{                
-//                $consulta = "SELECT DISTINCT m.cod_materia,m.nombre_materia,ma.ciclo,ma.id_agrupacion,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,d.nombre_depar,d.id_depar FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE c.id_depar='".$idDepartamento."' AND ma.año='".$año."' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
+            }else{
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY d.nombre_depar,m.nombre_materia;";
             }
         }
@@ -210,47 +205,63 @@ abstract class ManejadorAgrupaciones {
         return $materias;
     }
     
-    public static function agregarAgrupacion($materias,$año,$ciclo){        
-        try{
-            self::verificarDisponibilidadMateriasAgrupar($materias, $año, $ciclo);
-        }catch(Exception $e){
-            throw new Exception($e->getMessage());
-        }
-        $consulta = "INSERT INTO agrupacion(alumnos_nuevos,otros_alumnos,alumnos_grupo,año,ciclo) VALUES (0,0,0,$año,$ciclo) RETURNING id_agrupacion";
-        $respuesta = conexion::consulta2($consulta);
-        $id_agrupacion = $respuesta['id_agrupacion']; 
-//        $consulta = "INSERT INTO agrupacion_historial VALUES ($id_agrupacion,$año,$ciclo)";
-//        conexion::consulta($consulta);   
-        $consulta = "INSERT INTO materia_agrupacion(cod_materia,plan_estudio,id_carrera,año,ciclo,id_agrupacion) VALUES ";
-        $cont=1;
+    
+   /*
+    * Todas las materias tienen una agrupación, aunque esa agrupación solo contenga una materia.
+    * Las fusiones son aquellas agrupaciones que tienen más de una materia.
+    * Para poder fusionar materias debe verificarse que las materias no estén fusionadas con otras.
+    * Luego deben eliminarse sus agrupaciones para crear una nueva y agregarlas a ella.
+    */ 
+    public static function fusionarMaterias($materias,$año,$ciclo){                
         foreach ($materias as $materia) {
-            if($cont<count($materias)){
-                $consulta = $consulta."('".$materia->getCodigo()."',".$materia->getPlan_estudio().",'".$materia->getCarrera()."',$año,$ciclo,$id_agrupacion),";
-            }else{
-                $consulta = $consulta."('".$materia->getCodigo()."',".$materia->getPlan_estudio().",'".$materia->getCarrera()."',$año,$ciclo,$id_agrupacion)";
-            }
-            $cont++;
-        }        
-        conexion::consulta($consulta);   
+            if(self::materiaEstaFusionada($materia, $año, $ciclo)){
+                throw new Exception("Error: Ya está fusionada la materia: ".$materia->getNombre()." codigo: ".$materia->getCodigo()." carrera: ".$materia->getCarrera()->getCodigo()." plan: ".$materia->getPlan_estudio()." Debe liberar esa materia antes de fusionarla con otras.");
+            }                
+        }   
+        //Si ninguna de las materias está fusionada entonces se procede a eliminar su agrupación por defecto para
+        //que puedan agregarse a una nueva agrupación.
+        foreach ($materias as $materia) {
+            self::eliminarAgrupacion($materia, $año, $ciclo);
+        }                
+        $id_agrupacion = self::crearAgrupacion($año, $ciclo);            
+        self::agregarMateriasAgrupacion($materias, $año, $ciclo, $id_agrupacion);
     }
     
+    /*
+     * Crea una nueva agrupación y devuelve su id.
+     */
+    public static function crearAgrupacion($año,$ciclo){
+        $consulta = "INSERT INTO agrupacion(alumnos_nuevos,otros_alumnos,alumnos_grupo,año,ciclo) VALUES (0,0,0,$año,$ciclo) RETURNING id_agrupacion";
+        $respuesta = conexion::consulta2($consulta);
+        return $respuesta['id_agrupacion'];
+    }
+    
+    /*
+     * Elimina la agrupación.
+     */
+    public static function eliminarAgrupacion($materia,$año,$ciclo){
+        $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";         
+        $respuesta = conexion::consulta2($consulta);
+        if($respuesta['id_agrupacion']!=""){
+            $consulta = "DELETE FROM agrupacion WHERE id_agrupacion='".$respuesta['id_agrupacion']."';";
+            $consulta = $consulta." DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
+            conexion::consulta($consulta);
+        }        
+    }
+        
     public static function buscarAgrupacionSoloNombre($buscarComo,$idDepartamento,$año,$ciclo){
         $datos = array();   
         $consulta="";
         if($ciclo=="par"){
             if($idDepartamento=="todos"){
-//                $consulta = "SELECT DISTINCT m.nombre_materia FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='2' ORDER BY m.nombre_materia LIMIT 15;";                      
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='2' ORDER BY m.nombre_materia;";
             }else{
-//                $consulta = "SELECT DISTINCT m.nombre_materia FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND c.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY m.nombre_materia LIMIT 15;";
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE m.nombre_materia iLIKE '%$buscarComo%' AND d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='2' ORDER BY m.nombre_materia;";
             }                
         }else{
             if($idDepartamento=="todos"){
-//                $consulta = "SELECT DISTINCT m.nombre_materia FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia LIMIT 15;";                      
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE m.nombre_materia iLIKE '%$buscarComo%' AND ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
             }else{
-//                $consulta = "SELECT DISTINCT m.nombre_materia FROM materias as m join materia_agrupacion as ma on ma.cod_materia=m.cod_materia join carreras as c on c.id_carrera=ma.id_carrera join departamentos as d on c.id_depar=d.id_depar join agrupacion as a on a.id_agrupacion = ma.id_agrupacion WHERE m.nombre_materia iLIKE '%$buscarComo%' AND c.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia LIMIT 15;";
                 $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,m.cod_materia,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE m.nombre_materia iLIKE '%$buscarComo%' AND d.id_depar='$idDepartamento' AND ma.año='$año' AND ma.ciclo='1' ORDER BY m.nombre_materia;";
             }
         }
@@ -342,26 +353,48 @@ abstract class ManejadorAgrupaciones {
             return $datos;
 //        }
     }    
-    
-    public static function verificarDisponibilidadMateriasAgrupar($materias,$año,$ciclo){
-        foreach ($materias as $materia) {
-            if(self::materiaYaEstaAgrupada($materia, $año, $ciclo)){
-                throw new Exception("Ya existe una agrupación para la materia ".$materia->getNombre()." codigo: ".$materia->getCodigo()." plan: ".$materia->getPlan_estudio()." carrera: ".$materia->getCarrera());
-            }
-        }
+       
+    /*
+     * Verifica si alguna materia está fusionada con otras.     
+     */
+    public static function materiaEstaFusionada($materia,$año,$ciclo){
+        $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";         
+        $respuesta = conexion::consulta2($consulta);
+        if($respuesta['id_agrupacion']==""){
+            return false;
+        }        
+        $consulta = "SELECT count(*) FROM materia_agrupacion WHERE id_agrupacion='".$respuesta['id_agrupacion']."'";
+        $respuesta = conexion::consulta2($consulta);
+        if($respuesta['count']>1){
+            return true;
+        }else{
+            return false;
+        }        
     }
     
-    public static function materiaYaEstaAgrupada($materia,$año,$ciclo){   
-        $consulta = "SELECT count(*) FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";
+    public static function materiaYaEstaAgrupada($materia,$año,$ciclo){
+        $consulta = "SELECT count(*) FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";
         $respuesta = conexion::consulta2($consulta);
         if($respuesta['count']>0){
             return true;
         }else{
             return false;
         }
-    }    
+    }
     
-     public static function modificarAgrupacion($id,$campo,$dato,$año,$ciclo){
+    public static function crearAgrupacionParaMateria($materia,$año,$ciclo){
+        if(!self::materiaYaEstaAgrupada($materia, $año, $ciclo)){
+            $consulta = "INSERT INTO agrupacion(alumnos_nuevos,otros_alumnos,alumnos_grupo,año,ciclo) VALUES (0,0,0,$año,$ciclo) RETURNING id_agrupacion";
+            $respuesta = conexion::consulta2($consulta);
+            $id_agrupacion = $respuesta['id_agrupacion']; 
+            $consulta = "INSERT INTO materia_agrupacion(cod_materia,plan_estudio,id_carrera,año,ciclo,id_agrupacion) VALUES ('".$materia->getCodigo()."',".$materia->getPlan_estudio().",'".$materia->getCarrera()->getCodigo()."',$año,$ciclo,$id_agrupacion);";
+            conexion::consulta($consulta);   
+        }else{
+            throw new Exception("esta materia ya existe");
+        }
+    }
+    
+    public static function modificarAgrupacion($id,$campo,$dato,$año,$ciclo){
         if($campo=="num_grupos_d"){
             $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='3'";
             Conexion::consulta($consulta);
@@ -427,4 +460,87 @@ abstract class ManejadorAgrupaciones {
         return $horasRequeridas;
     }
 
+    /*
+     * Borra las materias de la agrupacion y agrega las nuevas materias
+     */
+    public static function agregarMateriasAgrupacion($materias,$año,$ciclo,$agrupacion){        
+        $consulta = "";
+        foreach ($materias as $materia) {
+            $consulta = $consulta." UPDATE materia_agrupacion SET id_agrupacion='$agrupacion' WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
+        }        
+        conexion::consulta($consulta);   
+    }
+    
+    /*
+     * Actualiza las materias que pertenecen a determinada agrupación.
+     * Sustituye las materias antiguas por las nuevas que se le pasan en el array.
+     */
+    public static function actualizarMateriasAgrupacion($materias,$año,$ciclo,$id_agrupacion){
+        foreach ($materias as $materia) {
+            //Se verifica que la materia no esté fusionada en otra agrupación.
+            if(self::materiaEstaFusionada($materia, $año, $ciclo)){
+                //Si la materia está fusionada debe verificarse que pertenezca a esta agrupación donde se quiere agregar.                
+                if(!self::materiaPerteneceAgrupacion($materia, $id_agrupacion)){
+                    throw new Exception("Error: Ya está fusionada la materia: ".$materia->getNombre()." codigo: ".$materia->getCodigo()." carrera: ".$materia->getCarrera()->getCodigo()." plan: ".$materia->getPlan_estudio()." Debe liberar esa materia antes de fusionarla con otras.");
+                }
+            }                
+        }   
+        //Se obtienen las materias antiguas de la agrupación
+        $materiasAntiguas = ManejadorMaterias::getMateriasDeAgrupacion($id_agrupacion, $año, $ciclo);        
+        foreach ($materiasAntiguas as $materiaAntigua) {               
+            $continuara_en_agrupacion = FALSE;
+            foreach ($materias as $materia) {
+                if(ManejadorMaterias::materiasSonIguales($materiaAntigua, $materia)){                    
+                    $continuara_en_agrupacion = TRUE;
+                }
+            }
+            if(!$continuara_en_agrupacion){
+                //Si la materia no va a continuar en la agrupación entonces debe liberarse y crearse
+                //otra agrupación para ella
+//                error_log("no continuará ".$materiaAntigua->getCodigo()." carrera: ".$materiaAntigua->getCarrera()->getCodigo(),0);
+                self::liberarMateria($materiaAntigua, $año, $ciclo);
+                self::crearAgrupacionParaMateria($materiaAntigua, $año, $ciclo);
+            }else{
+//                error_log("continuará ".$materiaAntigua->getCodigo()." carrera: ".$materiaAntigua->getCarrera()->getCodigo(),0);
+            }
+        }
+        //Debe determinarse cuales materias serán agregadas a la agrupación.
+        $materiasNuevas = [];
+        foreach ($materias as $materia) {
+            $esNueva = TRUE;
+            foreach ($materiasAntiguas as $materiaAntigua) {
+                if(ManejadorMaterias::materiasSonIguales($materiaAntigua, $materia)){
+                    $esNueva = FALSE;
+                }
+            }
+            if($esNueva){
+                $materiasNuevas[] = $materia;
+            }
+        }       
+        if(count($materiasNuevas)>0){            
+            self::agregarMateriasAgrupacion($materiasNuevas, $año, $ciclo, $id_agrupacion);
+        }        
+    }
+    
+    /*
+     * Devuelve TRUE si la materia pertenece a la agrupación indicada.
+     */
+    public static function materiaPerteneceAgrupacion($materia,$id_agrupacion){
+        $consulta = "SELECT COUNT(*) FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_agrupacion='$id_agrupacion'";
+        $respuesta = Conexion::consulta2($consulta);
+        if($respuesta['count']>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+    
+    /*
+     * Sirve para que una materia ya no pertenezca a ninguna agrupación y esté disponible para agregarse a otra.     
+     */
+    public static function liberarMateria($materia,$año,$ciclo){
+        $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";            
+        conexion::consulta($consulta);
+    }
+    
 }

@@ -7,27 +7,27 @@ require_once '../../reglas_negocio/ManejadorGrupos.php';
 
 if(isset($_GET)){
     if(isset($_GET['grupos'])){        
-        $arrayGrupos = utf8_encode($_GET['grupos']);                
-        $arrayGrupos = json_decode($arrayGrupos,true);                        
-        if($arrayGrupos!=NULL){
-            if(count($arrayGrupos[0])<=0){
+        $arrayMaterias = utf8_encode($_GET['grupos']);                
+        $arrayMaterias = json_decode($arrayMaterias,true);                        
+        if($arrayMaterias!=NULL){
+            if(count($arrayMaterias[0])<=0){
                 echo json_encode("No se recibió ningún grupo!");
             }else{
-                $arrayGrupos = $arrayGrupos[0];
+                $arrayMaterias = $arrayMaterias[0];
                 $grupos = array();                
                 try{
-                    for ($i = 1; $i <= count($arrayGrupos); $i++) {    
-                        if($arrayGrupos[$i]["docentes"]=="" || $arrayGrupos[$i]["docentes"]==NULL){                            
+                    for ($i = 1; $i <= count($arrayMaterias); $i++) {    
+                        if($arrayMaterias[$i]["docentes"]=="" || $arrayMaterias[$i]["docentes"]==NULL){                            
                             throw new Exception("Debe agregar docentes a todos los grupos!");
                         }else{
 //                            $docentes = explode(",", $arrayGrupos[$i]['docentes']);         
-                            $usuarios = $arrayGrupos[$i]['docentes'];
-                            $grupo = new Grupo();
-                            $grupo->setAgrup($arrayGrupos[$i]["agrupacion"]);
-                            $grupo->setDocentes($usuarios);
-                            $grupo->setId_grupo($arrayGrupos[$i]["id"]);
-                            $grupo->setTipo($arrayGrupos[$i]["tipo"]);
-                            $grupos[]=$grupo;                    
+                            $usuarios = $arrayMaterias[$i]['docentes'];
+                            $materia = new Grupo();
+                            $materia->setAgrup($arrayMaterias[$i]["agrupacion"]);
+                            $materia->setDocentes($usuarios);
+                            $materia->setId_grupo($arrayMaterias[$i]["id"]);
+                            $materia->setTipo($arrayMaterias[$i]["tipo"]);
+                            $grupos[]=$materia;                    
                         }                    
                     }                
                     ManejadorGrupos::actualizarGrupos($grupos, $año, $ciclo);                    

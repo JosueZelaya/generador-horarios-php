@@ -8,7 +8,7 @@ include_once 'Carrera.php';
 abstract class ManejadorCarreras {
     
     public static function getTodasCarreras($todos_depars){
-        $sql_consulta = "SELECT * FROM carreras";
+        $sql_consulta = "SELECT * FROM carreras WHERE id_depar<12 ORDER BY nombre_carrera";
         $respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
             $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],ManejadorDepartamentos::obtenerDepartamento($fila['id_depar'], $todos_depars));

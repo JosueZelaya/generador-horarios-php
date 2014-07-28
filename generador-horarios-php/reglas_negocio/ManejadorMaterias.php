@@ -17,7 +17,35 @@ include_once 'ManejadorCarreras.php';
 include_once 'ManejadorGrupos.php';
 include_once 'ManejadorAulas.php';
 
-abstract class ManejadorMaterias {
+abstract class ManejadorMaterias { 
+    
+    public static function agregarMateria($materia,$año,$ciclo){
+        if(!self::exite($materia)){
+            $consulta = "INSERT INTO materias(id_carrera,plan_estudio,cod_materia,nombre_materia,tipo_materia,ciclo_carrera,uv) VALUES (";
+            $consulta = $consulta."'".$materia->getCarrera()->getCodigo()."',";
+            $consulta = $consulta."'".$materia->getCarrera()->getPlanEstudio()."',";
+            $consulta = $consulta."'".$materia->getCodigo()."',";
+            $consulta = $consulta."'".$materia->getNombre()."',";
+            $consulta = $consulta."'".$materia->getTipo()."',";
+            $consulta = $consulta."'".$materia->getCiclo()."',";
+            $consulta = $consulta."'".$materia->getUnidadesValorativas()."'";
+            $consulta = $consulta.");";            
+            conexion::consulta2($consulta);
+            ManejadorAgrupaciones::crearAgrupacionParaMateria($materia, $año, $ciclo);
+        }else{
+            throw new Exception("Ya existe esa materia");
+        }
+    }
+    
+    public static function exite($materia){
+        $consulta = "SELECT count(*) FROM materias WHERE plan_estudio='".$materia->getCarrera()->getPlanEstudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."';";
+        $respuesta = conexion::consulta2($consulta);
+        if($respuesta['count']>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
     
     public static function getTodasMaterias($ciclo,$año,$todas_agrups,$todas_carreras){
         $materias = array();
@@ -143,16 +171,22 @@ abstract class ManejadorMaterias {
     
     public static function buscarMateriaParaAgrupar($materia,$ciclo,$departamento){
         if($ciclo=="impar"){
-            if($departamento=="todos"){
+            if($departamento=="todos"){                
                 $consulta = "SELECT DISTINCT nombre_materia FROM materias WHERE nombre_materia iLIKE '$materia%' AND ciclo_carrera%2!=0 ORDER BY nombre_materia LIMIT 15;";
             }else{
                 $consulta = "SELECT DISTINCT m.nombre_materia FROM materias AS m JOIN carreras AS c ON m.id_carrera=c.id_carrera WHERE m.nombre_materia iLIKE '%$materia%' AND c.id_depar='$departamento' AND m.ciclo_carrera%2!=0 ORDER BY m.nombre_materia LIMIT 15;";
             }            
-        }else{            
+        }else if($ciclo=="par"){
             if($departamento=="todos"){
                 $consulta = "SELECT DISTINCT nombre_materia FROM materias WHERE nombre_materia iLIKE '$materia%' AND ciclo_carrera%2=0 ORDER BY nombre_materia LIMIT 15;";
             }else{
                 $consulta = "SELECT DISTINCT m.nombre_materia FROM materias AS m JOIN carreras AS c ON m.id_carrera=c.id_carrera WHERE m.nombre_materia iLIKE '%$materia%' AND c.id_depar='$departamento' AND m.ciclo_carrera%2=0 ORDER BY m.nombre_materia LIMIT 15;";
+            }            
+        }else{            
+            if($departamento=="todos"){
+                $consulta = "SELECT DISTINCT nombre_materia FROM materias WHERE nombre_materia iLIKE '$materia%' ORDER BY nombre_materia LIMIT 15;";
+            }else{
+                $consulta = "SELECT DISTINCT m.nombre_materia FROM materias AS m JOIN carreras AS c ON m.id_carrera=c.id_carrera WHERE m.nombre_materia iLIKE '%$materia%' AND c.id_depar='$departamento' ORDER BY m.nombre_materia LIMIT 15;";
             }            
         }        
         $respuesta = conexion::consulta($consulta);
@@ -170,39 +204,54 @@ abstract class ManejadorMaterias {
             }else{
                 $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' AND m.ciclo_carrera%2!=0 ORDER BY m.cod_materia,m.id_carrera;";
             }
-        }else{
+        }else if($ciclo=="par"){
             if($departamento=="todos"){
                 $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND m.ciclo_carrera%2=0 ORDER BY m.cod_materia,m.id_carrera;";
             }else{
                 $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' AND m.ciclo_carrera%2=0 ORDER BY m.cod_materia,m.id_carrera;";
             }    
+        }else{
+            if($departamento=="todos"){
+                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' ORDER BY m.cod_materia,m.id_carrera;";
+            }else{
+                $consulta = "SELECT DISTINCT m.cod_materia,m.id_carrera,m.plan_estudio,m.nombre_materia,m.tipo_materia,m.ciclo_carrera,m.uv,c.id_carrera,c.id_depar,c.nombre_carrera,d.nombre_depar FROM materias as m NATURAL JOIN carreras as c NATURAL JOIN departamentos as d WHERE m.nombre_materia='".$materia."' AND c.id_depar='$departamento' ORDER BY m.cod_materia,m.id_carrera;";
+            }    
         }  
+        $materias = array();
         $respuesta = conexion::consulta($consulta);
         while ($row = pg_fetch_array($respuesta)){
-            $materia = new MateriaAgrupacion();     
+            $materia = new Materia("","","","","","","");
             $materia->setCodigo($row['cod_materia']);
             $materia->setNombre($row['nombre_materia']);
-            $materia->setPlan_estudio($row['plan_estudio']);
+            $materia->setPlan_estudio($row['plan_estudio']);            
             $materia->setCarrera(new Carrera($row['id_carrera'],"",$row['nombre_carrera'],""));
             $materia->setDepartamento(new Departamento($row['id_depar'], $row['nombre_depar']));            
+            $materia->setCiclo($row['ciclo_carrera']);
+            $materia->setUnidadesValorativas($row['uv']);
             $materias[] = $materia;
         }                   			
         return $materias;
     }
     
     //Devuelve el número de materias que existen en el departamento para un ciclo par o impar
-    public static function getCuantasMateriasExisten($idDepartamento,$ciclo){
-        $materias = ManejadorMaterias::getMaterias($idDepartamento);
-        $materiasFiltradas = ManejadorMaterias::filtrarPorCiclo($materias, $ciclo);
-        return count($materiasFiltradas);
+    public static function getCuantasMateriasExisten($idDepartamento){
+        $consulta = "";
+        if($idDepartamento=="todos"){
+            $consulta = "SELECT COUNT(*) FROM materias;";
+        }else{
+            $consulta = "SELECT COUNT(*) FROM materias AS m NATURAL JOIN carreras AS c WHERE c.id_depar='$idDepartamento';";
+        }        
+        $respuesta = Conexion::consulta2($consulta);
+        $cantidad = $respuesta['count'];
+        return $cantidad;
     }
     
-    public static function getMateriasDeAgrupacion($id_agrupacion){
+    public static function getMateriasDeAgrupacion($id_agrupacion,$año,$ciclo){
         $materias = array();
-        $consulta = "SELECT * FROM materia_agrupacion NATURAL JOIN materias NATURAL JOIN carreras WHERE id_agrupacion='$id_agrupacion';";
+        $consulta = "SELECT * FROM agrupacion NATURAL JOIN materia_agrupacion NATURAL JOIN materias NATURAL JOIN carreras NATURAL JOIN departamentos WHERE id_agrupacion='$id_agrupacion' AND año='$año' AND ciclo='$ciclo';";
         $respuesta = conexion::consulta($consulta);
         while ($row = pg_fetch_array($respuesta)){
-            $materia = new MateriaAgrupacion();     
+            $materia = new MateriaAgrupacion();
             $materia->setCodigo($row['cod_materia']);
             $materia->setNombre($row['nombre_materia']);
             $materia->setPlan_estudio($row['plan_estudio']);
@@ -212,5 +261,67 @@ abstract class ManejadorMaterias {
         }                   			
         return $materias;
     }
+    
+    public static function materiasSonIguales($materia1,$materia2){
+        return ($materia1->getCodigo() == $materia2->getCodigo() && $materia1->getCarrera()->getCodigo() == $materia2->getCarrera()->getCodigo() && $materia1->getPlan_estudio()==$materia2->getPlan_estudio());
+    }
+    
+    public static function getTodasMateriasConPaginacion($pagina,$numeroResultados){
+        $materias = array();
+        $pagina = ($pagina-1)*$numeroResultados;
+        $sql_consulta = "SELECT * FROM materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d ORDER BY nombre_materia ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        $respuesta = conexion::consulta($sql_consulta);
+        while ($fila = pg_fetch_array($respuesta)){
+            $materia = new Materia("","","","","","","");
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],"");
+            $materia->setCarrera($carrera);
+            $materia->setCodigo($fila['cod_materia']);
+            $materia->setNombre($fila['nombre_materia']);
+            $materia->setCiclo($fila['ciclo_carrera']);
+            $materia->setUnidadesValorativas($fila['uv']);
+            $materia->setTipo($fila['tipo_materia']);
+            $materia->setPlan_estudio($fila['plan_estudio']);   
+            $materia->setDepartamento(new Departamento($fila['id_depar'], $fila['nombre_depar']));
+            $materias[] = $materia;
+        }                   			
+        return $materias;
+    }
+    
+    public static function getTodasMateriasSinPaginacion(){
+        $materias = array();        
+        $sql_consulta = "SELECT * FROM materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d ORDER BY nombre_materia ASC";
+        $respuesta = conexion::consulta($sql_consulta);
+        while ($fila = pg_fetch_array($respuesta)){
+            $materia = new Materia("","","","","","","");
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],"");
+            $materia->setCarrera($carrera);
+            $materia->setCodigo($fila['cod_materia']);
+            $materia->setNombre($fila['nombre_materia']);
+            $materia->setCiclo($fila['ciclo_carrera']);
+            $materia->setUnidadesValorativas($fila['uv']);
+            $materia->setTipo($fila['tipo_materia']);
+            $materia->setPlan_estudio($fila['plan_estudio']);   
+            $materia->setDepartamento(new Departamento($fila['id_depar'], $fila['nombre_depar']));
+            $materias[] = $materia;
+        }                   			
+        return $materias;
+    }
+    
+    public static function eliminarMateria($materia,$año,$ciclo){
+        if(ManejadorAgrupaciones::materiaEstaFusionada($materia, $año, $ciclo)){
+            $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
+            $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+            Conexion::consulta2($consulta);
+        }else{
+            $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE cod_materia='MAT535' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+            $respuesta = Conexion::consulta2($consulta);
+            $id_agrupacion = $respuesta['id_agrupacion'];
+            $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
+            $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+            $consulta = $consulta." DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."'";
+            Conexion::consulta2($consulta);
+        }
+    }
+    
     
 }

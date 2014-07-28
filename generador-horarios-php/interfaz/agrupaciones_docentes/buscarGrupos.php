@@ -10,26 +10,26 @@ if (isset($_GET)){
         $agrupacion = $_GET['agrupacion'];  
         $grupos = ManejadorGrupos::getGruposDeAgrupacion($año, $ciclo, $agrupacion);        
         $cont=0;
-        $arrayGrupos=array();           
-        foreach ($grupos as $grupo){                     
-            $arrayGrupos[$cont]["id"] = $grupo->getId_grupo();
-            $arrayGrupos[$cont]["tipo"] = $grupo->getTipo();
-            $arrayGrupos[$cont]["agrupacion"] = $grupo->getAgrup();            
-            if($grupo->getDocentes()!=""){                    
-                $usuarios = $grupo->getDocentes();
-                $arrayGrupos[$cont]["docentes"] = array();
-                $arrayGrupos[$cont]["id_docentes"] = array();
+        $arrayMaterias=array();           
+        foreach ($grupos as $materia){                     
+            $arrayMaterias[$cont]["id"] = $materia->getId_grupo();
+            $arrayMaterias[$cont]["tipo"] = $materia->getTipo();
+            $arrayMaterias[$cont]["agrupacion"] = $materia->getAgrup();            
+            if($materia->getDocentes()!=""){                    
+                $usuarios = $materia->getDocentes();
+                $arrayMaterias[$cont]["docentes"] = array();
+                $arrayMaterias[$cont]["id_docentes"] = array();
                 foreach ($usuarios as $usuario) {
-                    $arrayGrupos[$cont]["docentes"][] = $usuario->getNombre_completo();
-                    $arrayGrupos[$cont]["id_docentes"][] = $usuario->getIdDocente();
+                    $arrayMaterias[$cont]["docentes"][] = $usuario->getNombre_completo();
+                    $arrayMaterias[$cont]["id_docentes"][] = $usuario->getIdDocente();
                 }
             }else{
-                $arrayGrupos[$cont]["docentes"]="";
-                $arrayGrupos[$cont]["id_docentes"][]="";
+                $arrayMaterias[$cont]["docentes"]="";
+                $arrayMaterias[$cont]["id_docentes"][]="";
             } 
             $cont++;
         }
-        echo json_encode($arrayGrupos);
+        echo json_encode($arrayMaterias);
 //        foreach ($grupos as $grupo) {
 //            if($grupo->getTipo()=='1'){
 //                $respuesta = $respuesta."<div id='g".$grupo->getId_grupo()."' numGrupo='".$grupo->getId_grupo()."' grupo='".$cont."' tipo='teorico' agrupacion='".$grupo->getAgrup()."' style='padding: 8px 35px 8px 14px; border: 1px solid rgb(188, 232, 241); color: rgb(58, 135, 173); background-color: rgb(217, 237, 247);color: rgb(0, 136, 204);' class='grupo grupoTeorico row'>Grupo Teórico ".$grupo->getId_grupo()."<br/>";
