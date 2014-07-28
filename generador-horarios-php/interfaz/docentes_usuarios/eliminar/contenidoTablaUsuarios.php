@@ -18,7 +18,7 @@ $usuarios = ManejadorPersonal::getTodosUsuariosConPaginacion($pagina, $numeroRes
 foreach ($usuarios as $usuario) {
     echo "<tr>".
          "<td usuario='t' id='login".$usuario->getId()."' class='text-left'>".$usuario->getLogin()."</td>".
-         "<td class='text-left'>".$usuario->getDocente()."</td>".         
+         "<td class='text-left'>".$usuario->getDocente()->getNombre_completo()."</td>".         
          "<td class='text-center'><a usuario='t' id='".$usuario->getId()."' class='row-delete'><span class='glyphicon glyphicon-remove'></span></a></td>".   
          "<tr/>";
 }

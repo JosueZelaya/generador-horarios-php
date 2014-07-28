@@ -99,7 +99,7 @@ abstract class ManejadorGrupos {
         $consulta = "SELECT * FROM docente_grupo NATURAL JOIN docentes WHERE id_agrupacion='$agrupacion' AND año='$año' AND ciclo='$ciclo' ORDER BY tipo_grupo,id_grupo;";
         $respuesta = Conexion::consulta($consulta);        
         if(pg_num_rows($respuesta)!=0){            
-            while($fila = pg_fetch_array($respuesta)){                
+            while($fila = pg_fetch_array($respuesta)){
                 if(self::yaSeCreoGrupo($fila['id_grupo'], $fila['tipo_grupo'], $grupos)){
                     $docente = new Docente($fila["id_docente"],"");
                     $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
