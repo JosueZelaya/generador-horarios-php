@@ -16,6 +16,30 @@ include_once 'Procesador.php';
 include_once 'ManejadorGrupos.php';
 
 abstract class ManejadorAulas {
+    
+    public static function agregarAula($aula){
+        if(!self::existe($aula)){
+            if($aula->isExclusiva()){
+                $exclusiva = "t";
+            }else{
+                $exclusiva = "f";
+            }
+            $consulta = "INSERT INTO aulas(cod_aula,capacidad,exclusiva) VALUES ('".$aula->getNombre()."',".$aula->getCapacidad().",'".$exclusiva."')";
+            conexion::consulta2($consulta);
+        }else{
+            throw new Exception("Ya existe un aula con ese codigo");
+        }
+    }
+    
+    public static function existe($aula){
+        $consulta = "SELECT COUNT(*) FROM aulas WHERE cod_aula='".$aula->getNombre()."'";
+        $respuesta = conexion::consulta2($consulta);
+        if($respuesta['count']>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
    
     /**
      * Devuelve todas las aulas de la facultad por capacidad ascendente
@@ -443,6 +467,26 @@ abstract class ManejadorAulas {
             
         }        
         Conexion::desconectar($conexion);
+    }
+    
+    public static function getTodasAulasConPaginacion($pagina,$numeroResultados){
+        $aulas = array();
+        $pagina = ($pagina-1)*$numeroResultados;
+        $sql_consulta = "SELECT * FROM aulas ORDER BY cod_aula ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        $respuesta = conexion::consulta($sql_consulta);
+        while ($fila = pg_fetch_array($respuesta)){
+            $aula = new Aula();
+            $aula->setNombre($fila['cod_aula']);
+            $aula->setCapacidad($fila['capacidad']);
+            $aula->setExclusiva($fila['exclusiva']);                        
+            $aulas[] = $aula;
+        }                   			
+        return $aulas;
+    }
+    
+    public static function eliminarAula($aula){
+        $consulta = "DELETE FROM aulas WHERE cod_aula='".$aula->getNombre()."'";
+        Conexion::consulta2($consulta);
     }
     
 }
