@@ -21,8 +21,7 @@ if($_GET){
             $plan = $_GET['plan'];
             $id_carrera = $_GET['carrera']; 
             $carrera = new Carrera($id_carrera,$plan,"","");
-            $materia = new Materia($codigo,"","","",$carrera,"","");
-            $materia->setPlan_estudio($plan);            
+            $materia = new Materia($codigo,"","","",$carrera,"","");                    
             ManejadorMaterias::eliminarMateria($materia, $año, $ciclo);
             if(isset($_SESSION['datos_tabla_materias'])){
                 $materias = $_SESSION['datos_tabla_materias'];
@@ -38,7 +37,9 @@ if($_GET){
 function quitarDeArray($materias,$materia){
     $materiasN = array();
     foreach ($materias as $materiaX) {
-        if($materia->getCodigo()!=$materiaX->getCodigo() && $materia->getPlan_estudio()!=$materiaX->getPlan_estudio() && $materia->getCarrera()->getCodigo()!=$materiaX->getCarrera()->getCodigo()){
+        $carrera = $materia->getCarrera();
+        $carreraX = $materiaX->getCarrera();
+        if($materia->getCodigo()!=$materiaX->getCodigo() && $carrera->getPlanEstudio()!=$carreraX->getPlanEstudio() && $carrera->getCodigo()!=$carreraX->getCodigo()){
             $materiasN[] = $materiaX;
         }
     }

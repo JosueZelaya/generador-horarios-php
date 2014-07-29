@@ -61,49 +61,37 @@ abstract class ManejadorDocentes{
     /** Asumiendo que un docente tiene el mismo horario de lunes a viernes, se busca la hora comun entre los docentes que imparten un solo grupo
      *  para determinar el inicio de la clase
      * @param Docente[] $docentes
+     * @param boolean $horarioFinde true si se desea saber el horario de fin de semana, false para horario de lunes a viernes
      */
-    public static function intersectarHorarios($docentes,$dia){
-        if($dia == null){
-            $indexDia = 0;
-        }
-        $index = 0;
+    public static function intersectarHorarios($docentes,$horarioFinde){
+        $indexDia = (!$horarioFinde) ? 0 : 5;
         $horasComunes = null;
-        $horas = array();
-        foreach ($docentes as $docente){
+        for ($i=0;$i<count($docentes);$i++){
+            $docente = $docentes[$i];
             if($docente->getHorario()!=null){
                 $horasDoc = $docente->getHorario()[$indexDia]->getHoras();
                 foreach ($horasDoc as $hora) {
-                    $horas[$index][] = $hora->getIdHora();
+                    $horas[$i][] = $hora->getIdHora();
                 }
-                $index++;
             }
         }
-        if(count($horas)>1){
+        if(isset($horas) && count($horas)>1){
             $horarioDoc1 = $horas[0];
             foreach ($horarioDoc1 as $hora){ // Todas las horas del docente 0
-                for ($i=0; $i<count($horas);$i++){ // horarios de todos los docentes
-                    $horasIguales = false;
-                    $horarioDocs = $horas[$i];
-                    foreach ($horarioDocs as $horaDoc){ // Todas las horas del horario del docente actual en la iteracion
-                        if($hora == $horaDoc){
-                            $horasIguales = true;
+                for ($i=1; $i<count($horas);$i++){ // horarios de todos los docentes
+                    if(in_array($hora, $horas[$i])){
+                        if($i == (count($horas)-1)){
+                            $horasComunes[] = $hora;
                         }
-                    }
-                    if($horasIguales && $i != (count($horas)-1)){
-                        $horasIguales = false;
-                        continue;
-                    } elseif ($horasIguales && $i == (count($horas)-1)) {
-                        $horasComunes[] = $hora;
                     }else{
                         break;
                     }
                 }
             }
-            return $horasComunes;
-        } elseif(count($horas)==1){
-            return $horas[0];
+        } elseif(isset($horas) && count($horas)==1){
+            return current($horas);
         }
-        return null;
+        return $horasComunes;
     }
     
     public static function obtenerDocente($idDocente,$todos_docentes){

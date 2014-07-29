@@ -19,8 +19,7 @@ if (ManejadorSesion::comprobar_sesion() == true){
         }else{
             $materia = new Materia("","","","","","","");
             $carrera = new Carrera($_POST['carrera'],$_POST['plan'],"","");
-            $materia->setCarrera($carrera);
-            $materia->setPlan_estudio($_POST['plan']);
+            $materia->setCarrera($carrera);            
             $materia->setCodigo($_POST['codigo']);
             $materia->setNombre(strtoupper($_POST['nombre']));        
             $materia->setCiclo($_POST['ciclo']);        

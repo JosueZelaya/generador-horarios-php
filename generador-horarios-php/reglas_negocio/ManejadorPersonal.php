@@ -356,7 +356,6 @@ abstract class ManejadorPersonal{
             }else{
                 throw new Exception("No existe el usuario que se quiere modificar");
             }            		
-	}
-        
+	}       
 }
 

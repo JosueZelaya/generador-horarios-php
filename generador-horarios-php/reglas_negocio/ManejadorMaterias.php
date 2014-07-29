@@ -223,10 +223,9 @@ abstract class ManejadorMaterias {
         while ($row = pg_fetch_array($respuesta)){
             $materia = new Materia("","","","","","","");
             $materia->setCodigo($row['cod_materia']);
-            $materia->setNombre($row['nombre_materia']);
-            $materia->setPlan_estudio($row['plan_estudio']);            
-            $materia->setCarrera(new Carrera($row['id_carrera'],"",$row['nombre_carrera'],""));
-            $materia->setDepartamento(new Departamento($row['id_depar'], $row['nombre_depar']));            
+            $materia->setNombre($row['nombre_materia']);            
+            $departamento = new Departamento($row['id_depar'], $row['nombre_depar']);
+            $materia->setCarrera(new Carrera($row['id_carrera'],$row['plan_estudio'],$row['nombre_carrera'],""),$departamento);                    
             $materia->setCiclo($row['ciclo_carrera']);
             $materia->setUnidadesValorativas($row['uv']);
             $materia->setTipo($row['tipo_materia']);
@@ -265,7 +264,9 @@ abstract class ManejadorMaterias {
     }
     
     public static function materiasSonIguales($materia1,$materia2){
-        return ($materia1->getCodigo() == $materia2->getCodigo() && $materia1->getCarrera()->getCodigo() == $materia2->getCarrera()->getCodigo() && $materia1->getPlan_estudio()==$materia2->getPlan_estudio());
+        $carrera1 = $materia1->getCarrera();
+        $carrera2 = $materia2->getCarrera();
+        return ($materia1->getCodigo() == $materia2->getCodigo() && $carrera1->getCodigo() == $carrera2->getCodigo() && $carrera1->getPlanEstudio()==$carrera2->getPlanEstudio());
     }
     
     public static function getTodasMateriasConPaginacion($pagina,$numeroResultados){
@@ -275,15 +276,14 @@ abstract class ManejadorMaterias {
         $respuesta = conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
             $materia = new Materia("","","","","","","");
-            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],"");
+            $departamento = new Departamento($fila['id_depar'], $fila['nombre_depar']);
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],$departamento);
             $materia->setCarrera($carrera);
             $materia->setCodigo($fila['cod_materia']);
             $materia->setNombre($fila['nombre_materia']);
             $materia->setCiclo($fila['ciclo_carrera']);
             $materia->setUnidadesValorativas($fila['uv']);
-            $materia->setTipo($fila['tipo_materia']);
-            $materia->setPlan_estudio($fila['plan_estudio']);   
-            $materia->setDepartamento(new Departamento($fila['id_depar'], $fila['nombre_depar']));
+            $materia->setTipo($fila['tipo_materia']);            
             $materias[] = $materia;
         }                   			
         return $materias;
@@ -295,36 +295,36 @@ abstract class ManejadorMaterias {
         $respuesta = conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
             $materia = new Materia("","","","","","","");
-            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],"");
+            $departamento = new Departamento($fila['id_depar'], $fila['nombre_depar']);
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],$departamento);
             $materia->setCarrera($carrera);
             $materia->setCodigo($fila['cod_materia']);
             $materia->setNombre($fila['nombre_materia']);
             $materia->setCiclo($fila['ciclo_carrera']);
             $materia->setUnidadesValorativas($fila['uv']);
-            $materia->setTipo($fila['tipo_materia']);
-            $materia->setPlan_estudio($fila['plan_estudio']);   
-            $materia->setDepartamento(new Departamento($fila['id_depar'], $fila['nombre_depar']));
+            $materia->setTipo($fila['tipo_materia']);            
             $materias[] = $materia;
         }                   			
         return $materias;
     }
     
     public static function eliminarMateria($materia,$año,$ciclo){
+        $carrera = $materia->getCarrera();
         if(ManejadorAgrupaciones::materiaEstaFusionada($materia, $año, $ciclo)){
-            $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
-            $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+            $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";            
+            $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";
             Conexion::consulta2($consulta);
         }else{
-            $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE cod_materia='MAT535' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+            $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE cod_materia='MAT535' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";
             $respuesta = Conexion::consulta2($consulta);
             $id_agrupacion = $respuesta['id_agrupacion'];
             if($id_agrupacion!=""){
-                $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
-                $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";
+                $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";            
+                $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";
                 $consulta = $consulta." DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."'";
             }else{
-                $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";            
-                $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."';";                
+                $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";            
+                $consulta = $consulta." DELETE FROM materias WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."';";                
             }            
             Conexion::consulta2($consulta);
         }
@@ -351,8 +351,7 @@ abstract class ManejadorMaterias {
         $consulta_update = "UPDATE materias SET $campo='$valor' WHERE cod_materia='$cod' AND plan_estudio='$plan' AND id_carrera='$id_carrera';";
         if($campo=="ciclo_carrera"){
             $carrera = new Carrera($id_carrera,$plan,"","");
-            $materia = new Materia($cod,"","","", $carrera,"","");
-            $materia->setPlan_estudio($plan);            
+            $materia = new Materia($cod,"","","", $carrera,"","");                    
             $consulta = "SELECT ciclo FROM materia_agrupacion WHERE cod_materia='$cod' AND plan_estudio='$plan' AND id_carrera='$id_carrera' AND año='$año';";
             $respuesta = Conexion::consulta2($consulta);
             $ciclo_anterior = $respuesta['ciclo'];

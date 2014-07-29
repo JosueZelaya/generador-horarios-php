@@ -44,11 +44,13 @@ if($fin > count($arrayMaterias)){
 
 for ($i = $inicio; $i < $fin; $i++) {
     $materia = $arrayMaterias[$i];
-    echo    "<tr cod_materia='".$materia->getCodigo()."' cod_carrera='".$materia->getCarrera()->getCodigo()."' id_depar='".$materia->getDepartamento()->getId()."' plan_estudio='".$materia->getPlan_estudio()."' class='arrastrable'>".
+    $carrera = $materia->getCarrera();
+    $departamento = $carrera->getDepartamento();
+    echo    "<tr cod_materia='".$materia->getCodigo()."' cod_carrera='".$carrera->getCodigo()."' id_depar='".$departamento->getId()."' plan_estudio='".$carrera->getPlanEstudio()."' class='arrastrable'>".
             "<td>".$materia->getCodigo()."</td>".
             "<td>".$materia->getNombre()."</td>".
-            "<td>".$materia->getCarrera()->getNombre()."</td>".
-            "<td>".$materia->getPlan_estudio()."</td>".
-            "<td>".$materia->getDepartamento()->getNombre()."</td>".            
+            "<td>".$carrera->getNombre()."</td>".
+            "<td>".$carrera->getPlanEstudio()."</td>".
+            "<td>".$departamento->getNombre()."</td>".            
             "</tr>";
 }

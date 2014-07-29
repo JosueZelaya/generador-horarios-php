@@ -29,7 +29,7 @@ class MateriaAgrupacion {
     private $num_horas_laboratorio;
     private $num_horas_discusion;
     private $discuciones_labs_alternados;
-    private $unidadesValorativas;    
+    private $unidadesValorativas;
     
     public function __construct() {
         $this->codigo = "";

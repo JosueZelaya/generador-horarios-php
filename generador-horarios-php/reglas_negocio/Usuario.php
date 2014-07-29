@@ -124,5 +124,3 @@ class Usuario{
         conexion::consulta($consulta);
     }
 }
-
-?>

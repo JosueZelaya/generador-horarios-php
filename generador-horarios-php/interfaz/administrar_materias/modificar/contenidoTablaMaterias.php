@@ -59,13 +59,14 @@ $tipos_string = "[{value: 'Optativa', text: 'Optativa'},{value: 'Obligatoria', t
 
 for ($i = $inicio; $i < $fin; $i++) {
     $materia = $materias[$i];    
-    $pk = $materia->getCodigo().",".$materia->getPlan_estudio().",".$materia->getCarrera()->getCodigo();
+    $carrea = $materia->getCarrera();
+    $pk = $materia->getCodigo().",".$carrera->getPlanEstudio().",".$carrera->getCodigo();
     
     echo    "<tr>".            
             "<td class='text-left'>".$materia->getCodigo()."</div></td>".
             "<td class='text-left'><div style='cursor: pointer;' id='nombre' class='campoModificable' data-type='text' data-placement='bottom' data-pk='$pk' data-url='mMaterias.php' data-title='Ingrese Nombre'>".$materia->getNombre()."</div></td>".
-            "<td class='text-left'>".$materia->getPlan_estudio()."</div></td>".
-            "<td class='text-left'>".$materia->getCarrera()->getNombre()."</div></td>".            
+            "<td class='text-left'>".$carrera->getPlanEstudio()."</div></td>".
+            "<td class='text-left'>".$carrera->getNombre()."</div></td>".            
             "<td class='text-left'><div style='cursor: pointer;' id='ciclo' class='campoSeleccionable' data-type='select' data-placement='bottom' data-pk='$pk' data-url='mMaterias.php' data-title='Ciclo' data-source=\"".$ciclos_string."\">".$materia->getCiclo()."</div></td>".
             "<td class='text-left'><div style='cursor: pointer;' id='uv' class='campoModificable' data-type='text' data-placement='bottom' data-pk='$pk' data-url='mMaterias.php' data-title='Unidades Valorativas'>".$materia->getUnidadesValorativas()."</div></td>".
             "<td class='text-left'><div style='cursor: pointer;' id='tipo' class='campoSeleccionable' data-type='select' data-placement='bottom' data-pk='$pk' data-url='mMaterias.php' data-title='Tipo' data-source=\"".$tipos_string."\">".$materia->getTipo()."</div></td>".             

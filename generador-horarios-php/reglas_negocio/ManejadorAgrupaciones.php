@@ -215,7 +215,8 @@ abstract class ManejadorAgrupaciones {
     public static function fusionarMaterias($materias,$año,$ciclo){                
         foreach ($materias as $materia) {
             if(self::materiaEstaFusionada($materia, $año, $ciclo)){
-                throw new Exception("Error: Ya está fusionada la materia: ".$materia->getNombre()." codigo: ".$materia->getCodigo()." carrera: ".$materia->getCarrera()->getCodigo()." plan: ".$materia->getPlan_estudio()." Debe liberar esa materia antes de fusionarla con otras.");
+                $carrera = $materia->getCarrera();
+                throw new Exception("Error: Ya está fusionada la materia: ".$materia->getNombre()." codigo: ".$materia->getCodigo()." carrera: ".$carrera->getCodigo()." plan: ".$carrera->getPlanEstudio()." Debe liberar esa materia antes de fusionarla con otras.");
             }                
         }   
         //Si ninguna de las materias está fusionada entonces se procede a eliminar su agrupación por defecto para
@@ -240,11 +241,12 @@ abstract class ManejadorAgrupaciones {
      * Elimina la agrupación.
      */
     public static function eliminarAgrupacion($materia,$año,$ciclo){
-        $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";         
+        $carrera = $materia->getCarrera();
+        $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";         
         $respuesta = conexion::consulta2($consulta);
         if($respuesta['id_agrupacion']!=""){
             $consulta = "DELETE FROM agrupacion WHERE id_agrupacion='".$respuesta['id_agrupacion']."';";
-            $consulta = $consulta." DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
+            $consulta = $consulta." DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
             conexion::consulta($consulta);
         }        
     }
@@ -358,7 +360,8 @@ abstract class ManejadorAgrupaciones {
      * Verifica si alguna materia está fusionada con otras.     
      */
     public static function materiaEstaFusionada($materia,$año,$ciclo){
-        $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";         
+        $carrera = $materia->getCarrera();
+        $consulta = "SELECT id_agrupacion FROM materia_agrupacion WHERE plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";         
         $respuesta = conexion::consulta2($consulta);
         if($respuesta['id_agrupacion']==""){
             return false;
@@ -373,7 +376,8 @@ abstract class ManejadorAgrupaciones {
     }
     
     public static function materiaYaEstaAgrupada($materia,$año,$ciclo){
-        $consulta = "SELECT count(*) FROM materia_agrupacion WHERE plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";
+        $carrera = $materia->getCarrera();
+        $consulta = "SELECT count(*) FROM materia_agrupacion WHERE plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND cod_materia='".$materia->getCodigo()."'  AND año='".$año."' AND ciclo='".$ciclo."';";
         $respuesta = conexion::consulta2($consulta);
         if($respuesta['count']>0){
             return true;
@@ -383,11 +387,12 @@ abstract class ManejadorAgrupaciones {
     }
     
     public static function crearAgrupacionParaMateria($materia,$año,$ciclo){
+        $carrera = $materia->getCarrera();
         if(!self::materiaYaEstaAgrupada($materia, $año, $ciclo)){
             $consulta = "INSERT INTO agrupacion(alumnos_nuevos,otros_alumnos,alumnos_grupo,año,ciclo) VALUES (0,0,0,$año,$ciclo) RETURNING id_agrupacion";
             $respuesta = conexion::consulta2($consulta);
             $id_agrupacion = $respuesta['id_agrupacion']; 
-            $consulta = "INSERT INTO materia_agrupacion(cod_materia,plan_estudio,id_carrera,año,ciclo,id_agrupacion) VALUES ('".$materia->getCodigo()."',".$materia->getPlan_estudio().",'".$materia->getCarrera()->getCodigo()."',$año,$ciclo,$id_agrupacion);";
+            $consulta = "INSERT INTO materia_agrupacion(cod_materia,plan_estudio,id_carrera,año,ciclo,id_agrupacion) VALUES ('".$materia->getCodigo()."',".$carrera->getPlanEstudio().",'".$carrera->getCodigo()."',$año,$ciclo,$id_agrupacion);";
             conexion::consulta($consulta);   
         }else{
             throw new Exception("esta materia ya existe");
@@ -466,7 +471,8 @@ abstract class ManejadorAgrupaciones {
     public static function agregarMateriasAgrupacion($materias,$año,$ciclo,$agrupacion){        
         $consulta = "";
         foreach ($materias as $materia) {
-            $consulta = $consulta." UPDATE materia_agrupacion SET id_agrupacion='$agrupacion' WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
+            $carrera = $materia->getCarrera();
+            $consulta = $consulta." UPDATE materia_agrupacion SET id_agrupacion='$agrupacion' WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
         }        
         conexion::consulta($consulta);   
     }
@@ -481,7 +487,8 @@ abstract class ManejadorAgrupaciones {
             if(self::materiaEstaFusionada($materia, $año, $ciclo)){
                 //Si la materia está fusionada debe verificarse que pertenezca a esta agrupación donde se quiere agregar.                
                 if(!self::materiaPerteneceAgrupacion($materia, $id_agrupacion)){
-                    throw new Exception("Error: Ya está fusionada la materia: ".$materia->getNombre()." codigo: ".$materia->getCodigo()." carrera: ".$materia->getCarrera()->getCodigo()." plan: ".$materia->getPlan_estudio()." Debe liberar esa materia antes de fusionarla con otras.");
+                    $carrera = $materia->getCarrera();
+                    throw new Exception("Error: Ya está fusionada la materia: ".$materia->getNombre()." codigo: ".$materia->getCodigo()." carrera: ".$carrera->getCodigo()." plan: ".$carrera->getPlanEstudio()." Debe liberar esa materia antes de fusionarla con otras.");
                 }
             }                
         }   
@@ -526,7 +533,8 @@ abstract class ManejadorAgrupaciones {
      * Devuelve TRUE si la materia pertenece a la agrupación indicada.
      */
     public static function materiaPerteneceAgrupacion($materia,$id_agrupacion){
-        $consulta = "SELECT COUNT(*) FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_agrupacion='$id_agrupacion'";
+        $carrera = $materia->getCarrera();
+        $consulta = "SELECT COUNT(*) FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND id_carrera='".$carrera->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_agrupacion='$id_agrupacion'";
         $respuesta = Conexion::consulta2($consulta);
         if($respuesta['count']>0){
             return true;
@@ -539,7 +547,8 @@ abstract class ManejadorAgrupaciones {
      * Sirve para que una materia ya no pertenezca a ninguna agrupación y esté disponible para agregarse a otra.     
      */
     public static function liberarMateria($materia,$año,$ciclo){
-        $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$materia->getPlan_estudio()."' AND id_carrera='".$materia->getCarrera()->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";            
+        $carrera = $materia->getCarrera();
+        $consulta = "DELETE FROM materia_agrupacion WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";            
         conexion::consulta($consulta);
     }
     

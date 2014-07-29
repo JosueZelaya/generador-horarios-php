@@ -89,21 +89,4 @@ class Materia {
     public function setTipo($tipo) {
         $this->tipo = $tipo;
     }
-
-    public function getPlan_estudio() {
-        return $this->plan_estudio;
-    }
-
-    public function setPlan_estudio($plan_estudio) {
-        $this->plan_estudio = $plan_estudio;
-    }
-    
-    public function getDepartamento() {
-        return $this->departamento;
-    }
-
-    public function setDepartamento($departamento) {
-        $this->departamento = $departamento;
-    }
-    
 }
