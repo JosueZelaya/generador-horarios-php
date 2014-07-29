@@ -123,13 +123,22 @@ chdir(dirname(__FILE__));
                       </a>                    
                     <p><a href="#admin_materias_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
                   </div><!-- /.col-lg-4 -->
+                  <div class="admin-users col-lg-3">
+                      <a href="#admin_aulas_modal" data-toggle="modal">
+                          <img width="140px" height="140px" src="../imagenes/aula.jpg" class="img-circle">
+                            <h2>Administrar Aulas</h2>
+                            <p>Agregar, modificar y eliminar Aulas</p>
+                      </a>                    
+                    <p><a href="#admin_aulas_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
+                  </div><!-- /.col-lg-4 -->
                 </div>
               </div>
         </div>
     </div>
  </div>
  <?php include_once 'admin_users_modal.php'; ?> 
- <?php include_once './admin_materias_modal.php'; ?> 
+ <?php include_once './admin_materias_modal.php'; ?>
+ <?php include_once './admin_aulas_modal.php'; ?>
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.
