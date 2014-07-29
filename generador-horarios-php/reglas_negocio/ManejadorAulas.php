@@ -489,4 +489,19 @@ abstract class ManejadorAulas {
         Conexion::consulta2($consulta);
     }
     
+    public static function modificarAula($aula,$campo,$valor){
+        if($campo=="capacidad" || $campo=="exclusiva"){
+            if($campo=="capacidad" && !is_numeric($valor)){
+                throw new Exception("La capacidad del aula debe ser un valor numérico.");
+            }else if($campo=="exclusiva" && !($valor=="t" || $valor=="f")){
+                throw new Exception("Valores no permitidos para la propiedad EXCLUSIVA del aula");
+            }else{
+                $consulta = "UPDATE aulas SET $campo='$valor' WHERE cod_aula='".$aula."'";
+                Conexion::consulta2($consulta);
+            }            
+        }else{
+            throw new Exception("No se permite modificar ese campo.");
+        }
+    }
+    
 }
