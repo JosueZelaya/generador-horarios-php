@@ -13,6 +13,7 @@ include_once 'Aula.php';
 include_once 'Grupo.php';
 include_once 'Materia.php';
 include_once 'Carrera.php';
+include_once 'Departamento.php';
 include_once 'ManejadorAgrupaciones.php';
 include_once 'ManejadorCarreras.php';
 include_once 'ManejadorGrupos.php';
@@ -225,7 +226,8 @@ abstract class ManejadorMaterias {
             $materia->setCodigo($row['cod_materia']);
             $materia->setNombre($row['nombre_materia']);            
             $departamento = new Departamento($row['id_depar'], $row['nombre_depar']);
-            $materia->setCarrera(new Carrera($row['id_carrera'],$row['plan_estudio'],$row['nombre_carrera'],""),$departamento);                    
+            $carrera = new Carrera($row['id_carrera'],$row['plan_estudio'],$row['nombre_carrera'],$departamento);
+            $materia->setCarrera($carrera);                    
             $materia->setCiclo($row['ciclo_carrera']);
             $materia->setUnidadesValorativas($row['uv']);
             $materia->setTipo($row['tipo_materia']);

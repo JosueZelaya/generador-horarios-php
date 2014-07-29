@@ -5,6 +5,12 @@ include 'config.php';
 require_once '../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
+require_once '../../reglas_negocio/Materia.php';
+require_once '../../reglas_negocio/Carrera.php';
+require_once '../../reglas_negocio/Departamento.php';
+chdir(dirname(__FILE__));
+
 
 if($ciclo==1){
     $ciclo = "impar";

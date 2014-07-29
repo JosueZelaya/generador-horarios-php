@@ -59,7 +59,7 @@ $tipos_string = "[{value: 'Optativa', text: 'Optativa'},{value: 'Obligatoria', t
 
 for ($i = $inicio; $i < $fin; $i++) {
     $materia = $materias[$i];    
-    $carrea = $materia->getCarrera();
+    $carrera = $materia->getCarrera();
     $pk = $materia->getCodigo().",".$carrera->getPlanEstudio().",".$carrera->getCodigo();
     
     echo    "<tr>".            
