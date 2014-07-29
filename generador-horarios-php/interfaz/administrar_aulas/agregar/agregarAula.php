@@ -2,10 +2,6 @@
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
-require_once '../../../reglas_negocio/ManejadorCarreras.php';
-chdir(dirname(__FILE__));
-require_once '../../../reglas_negocio/ManejadorCargos.php';
-chdir(dirname(__FILE__));
 
 if(session_status()!=PHP_SESSION_ACTIVE){
     ManejadorSesion::sec_session_start();
