@@ -15,6 +15,7 @@ class Departamento {
     
     private $id;
     private $nombre;
+    private $activo;
     
     function __construct($id, $nombre) {
         $this->id = $id;
@@ -36,4 +37,17 @@ class Departamento {
     public function setNombre($nombre) {
         $this->nombre = $nombre;
     }
+    
+    public function setActivo($activo) {
+        $this->activo = $activo;
+    }
+
+    public function estaActivo() {
+        if($this->activo=="t"){
+            return TRUE;
+        }else{
+            return FALSE;
+        }
+    }
+    
 }
