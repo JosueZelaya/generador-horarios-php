@@ -1,6 +1,7 @@
 <div class="col-sm-2">
     <div class="btn-group-vertical" id="barraVertical">
         <a href="#" id="generarHorario" class="btn btn-default" role="button"> Generar Horario</a>
+        <a href="#" id="verFiltro" class="btn btn-default" role="button"> Filtro </a>
         <div class="btn-group">
             <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" role="button">
                 Gestion
