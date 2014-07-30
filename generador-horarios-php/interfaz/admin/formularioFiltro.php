@@ -74,16 +74,7 @@ if(isset($_GET['criterio'])){
         <li id='filtroMateria'><a href='#'>Materia</a></li>
         </ul> 
         <br/>    
-        <form class='form-inline' role='form'>
-         <label for="aula">Aulas:</label>
-        <select id='aula' class='aula form-control'>
-        <?php 
-        $aulas = $facultad->getAulas();
-        for ($index = 0; $index < count($aulas); $index++) {    
-            echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
-        }
-        ?>
-        </select>  
+        <form class='form-inline' role='form'>         
         <label for="departamento">Departamentos:</label>
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
@@ -98,6 +89,15 @@ if(isset($_GET['criterio'])){
         <select id='carrera' class='carrera form-control'>
             <option value='todos'>TODAS</option>    
         </select>
+        <label for="aula">Aulas:</label>
+        <select id='aula' class='aula form-control'>
+        <?php 
+        $aulas = $facultad->getAulas();
+        for ($index = 0; $index < count($aulas); $index++) {    
+            echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
+        }
+        ?>
+        </select>  
         <input type='button' name='mostrarHorario' id='mostrarHorario' class='btn btn-primary' value='Filtrar' tabindex='4'>    
         </form>
         <br/>
@@ -110,16 +110,7 @@ if(isset($_GET['criterio'])){
     <li id='filtroMateria'><a href='#'>Materia</a></li>
     </ul>    
     <br/>    
-    <form class='form-inline' role='form'>    
-     <label for="aula">Aulas:</label>
-    <select id='aula' class='aula form-control'>
-    <?php 
-    $aulas = $facultad->getAulas();
-    for ($index = 0; $index < count($aulas); $index++) {    
-        echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
-    }
-    ?>
-    </select>      
+    <form class='form-inline' role='form'>          
     <label for="departamento">Departamentos:</label>
     <select id='departamento' class='departamento form-control'>
         <option value='todos'>TODOS</option>    
@@ -133,6 +124,15 @@ if(isset($_GET['criterio'])){
     <label for="carrera">Carreras:</label>
     <select id='carrera' class='carrera form-control'>
         <option value='todos'>TODAS</option>    
+    </select>
+    <label for="aula">Aulas:</label>
+    <select id='aula' class='aula form-control'>
+    <?php 
+    $aulas = $facultad->getAulas();
+    for ($index = 0; $index < count($aulas); $index++) {    
+        echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
+    }
+    ?>
     </select>
     <input type='button' name='mostrarHorario' id='mostrarHorario' class='btn btn-primary' value='Filtrar' tabindex='4'>    
     </form>
