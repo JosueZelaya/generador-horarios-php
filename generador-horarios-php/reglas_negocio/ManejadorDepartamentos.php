@@ -28,6 +28,22 @@ abstract class ManejadorDepartamentos {
         conexion::consulta2($consulta);
     }
     
+    public static function modificarDepartamento($id,$campo,$valor){
+        $consulta = "";
+        if($campo=="nombre"){
+            $consulta = "UPDATE departamentos SET nombre_depar='".$valor."' WHERE id_depar='".$id."'";
+        }else if($campo=="activo"){
+            if($valor=='t' || $valor=='f'){
+                $consulta = "UPDATE departamentos SET activo='".$valor."' WHERE id_depar='".$id."'";
+            }else{
+                throw new Exception("El valor ingresado no es válido.");
+            }            
+        }else{
+            throw new Exception("No se permite modificar ese campo.");
+        }
+        conexion::consulta2($consulta);
+    }
+    
     public static function existe($departamento){
         $consulta = "SELECT COUNT(*) FROM departamentos WHERE nombre_depar='".$departamento->getNombre()."'";
         $respuesta = conexion::consulta2($consulta);
@@ -53,28 +69,46 @@ abstract class ManejadorDepartamentos {
         $respuesta = Conexion::consulta("SELECT * FROM departamentos ORDER BY nombre_depar;");
         while ($fila = pg_fetch_array($respuesta)){
             $depar = new Departamento($fila[0], $fila[1]);
+            $depar->setActivo($fila['activo']);
             $depars[] = $depar;
         }
         return $depars;
     }
     
-    public static function getDepartamentosConPaginacion($pagina,$numeroResultados){
+    public static function getDepartamentosConPaginacion($pagina,$numeroResultados,$activos){
         $depars = array();
         $pagina = ($pagina-1)*$numeroResultados;
-        $sql_consulta = "SELECT * FROM departamentos WHERE activo='t' ORDER BY nombre_depar ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
-        $respuesta = conexion::consulta($sql_consulta);
+        $consulta = "";
+        if($activos=="activos"){
+            $consulta = "SELECT * FROM departamentos WHERE activo='t' ORDER BY nombre_depar ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        }else if($activos=="desactivados"){
+            $consulta = "SELECT * FROM departamentos WHERE activo='f' ORDER BY nombre_depar ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;    
+        }else{
+            $consulta = "SELECT * FROM departamentos ORDER BY nombre_depar ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        }
+        $respuesta = conexion::consulta($consulta);
         while ($fila = pg_fetch_array($respuesta)){
-            $depars[] = new Departamento($fila['id_depar'],$fila['nombre_depar']);
+            $depar = new Departamento($fila['id_depar'],$fila['nombre_depar']);
+            $depar->setActivo($fila['activo']);
+            $depars[] = $depar;
         }
         return $depars;
     }
     
-    public static function buscarDepartamento($buscarComo){
+    public static function buscarDepartamento($buscarComo,$activos){
         $departamentos = array();
-        $consulta = "SELECT * FROM departamentos WHERE nombre_depar iLIKE '%$buscarComo%' AND activo='t' ORDER BY nombre_depar;";
+        if($activos=="activos"){
+            $consulta = "SELECT * FROM departamentos WHERE nombre_depar iLIKE '%$buscarComo%' AND activo='t' ORDER BY nombre_depar;";
+        }else if($activos=="desactivados"){
+            $consulta = "SELECT * FROM departamentos WHERE nombre_depar iLIKE '%$buscarComo%' AND activo='f' ORDER BY nombre_depar;";
+        }else{
+            $consulta = "SELECT * FROM departamentos WHERE nombre_depar iLIKE '%$buscarComo%' ORDER BY nombre_depar;";
+        }        
         $respuesta = Conexion::consulta($consulta);
         while ($fila = pg_fetch_array($respuesta)){
-            $departamentos[] = new Departamento($fila['id_depar'],$fila['nombre_depar']);
+            $depar = new Departamento($fila['id_depar'],$fila['nombre_depar']);
+            $depar->setActivo($fila['activo']);
+            $departamentos[] = $depar;
         }
         return $departamentos;
     }
