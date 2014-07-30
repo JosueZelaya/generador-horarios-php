@@ -18,7 +18,7 @@ if($_GET){
     }   
 }
 
-$departamentos = ManejadorDepartamentos::getDepartamentosConPaginacion($pagina, $numeroResultados);
+$departamentos = ManejadorDepartamentos::getDepartamentosConPaginacion($pagina, $numeroResultados,"activos");
 
 $pagina = ($pagina-1)*$numeroResultados;    
 $indice = $pagina;
