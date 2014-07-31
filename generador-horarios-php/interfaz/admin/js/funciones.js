@@ -88,7 +88,8 @@ $(function (){
         }else{
             var carrera = $('#carrera').val(); 
             var materia = $('#materia').val();
-            var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia;     
+            var ciclo = $('#ciclo').val();
+            var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia+"&ciclo="+ciclo;     
             dibujarHorario(dataString);        
         }        
     });
@@ -110,7 +111,7 @@ $(function (){
             success: function(data){                
                 $('#aula').html(data);
             }
-        });
+        }); 
         dataString = dataString+"&carrera="+$('#carrera').val();
         $.ajax({            
             type: "GET",
@@ -144,7 +145,7 @@ $(function (){
             });            
         }        
     });
-    
+        
     $(document).on("click","#filtroMateria",function(){          
        var dataString = 'criterio=materia';
        $.ajax({            

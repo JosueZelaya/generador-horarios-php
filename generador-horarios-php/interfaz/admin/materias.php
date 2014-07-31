@@ -17,7 +17,8 @@ if(isset($_GET['carrera'])  && isset($_GET['departamento'])){
     $carrera = $_GET['carrera'];
     $departamento = $_GET['departamento'];
     if($carrera=='todos'){
-        $materias = ManejadorMaterias::obtenerMateriasDeDepartamento($facultad->getMaterias(),$departamento);        
+        echo "<option value='todos'>TODAS</option>";
+        $materias = ManejadorMaterias::obtenerMateriasDeDepartamento($facultad->getMaterias(),$departamento,"");        
         foreach ($materias as $materia) {
             echo "<option value='".$materia->getCodigo()."'>".$materia->getNombre()."</option>";
         }

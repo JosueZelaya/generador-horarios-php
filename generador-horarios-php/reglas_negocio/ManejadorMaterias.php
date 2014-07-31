@@ -92,12 +92,18 @@ abstract class ManejadorMaterias {
         return $materiasCarrera;
     }
     
-    public static function obtenerMateriasDeDepartamento($materias, $idDepar){
+    public static function obtenerMateriasDeDepartamento($materias,$idDepar,$ciclo){
         $materiasDepar = array();
         foreach($materias as $materia){
-            if(strcmp($materia->getCarrera()->getDepartamento()->getId(), $idDepar)==0){
-                $materiasDepar[] = $materia;
-            }
+            if($ciclo=="" || $ciclo=="todos"){
+                if(strcmp($materia->getCarrera()->getDepartamento()->getId(), $idDepar)==0){
+                    $materiasDepar[] = $materia;
+                }
+            }else{
+                if(strcmp($materia->getCarrera()->getDepartamento()->getId(), $idDepar)==0 && $materia->getCiclo()==$ciclo){
+                    $materiasDepar[] = $materia;
+                }                
+            }            
         }        
         $materiasSinRepetir = ManejadorMaterias::quitarMateriasRepetidas($materiasDepar);
         return $materiasSinRepetir;

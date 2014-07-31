@@ -1,4 +1,5 @@
 <?php
+include_once 'config.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
@@ -15,7 +16,7 @@ if(isset($_GET['criterio'])){
     <?php    
     if($criterio=='departamento'){ //Muestra el filtro para los departamentos?>
         <li id='filtroTODO'><a href='#'>TODO</a></li>        
-        <li id='filtroMateria'><a href='#'>Materia</a></li>
+        <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
         </ul> 
         <br/>
         <form class='form-inline' role='form'>
@@ -41,7 +42,7 @@ if(isset($_GET['criterio'])){
     <?php    
     }else if($criterio=='materia'){?>        
         <li id='filtroTODO'><a href='#'>TODO</a></li>          
-        <li id='filtroMateria' class='active'><a href='#'>Materia</a></li>
+        <li id='filtroMateria' class='active'><a href='#'>Carrera/Materia</a></li>
         </ul>
         <br/>
         <form class='form-inline' role='form'>
@@ -64,13 +65,28 @@ if(isset($_GET['criterio'])){
         <select id='materia' class='materia form-control'>
             <option value='todos'>TODAS</option>    
         </select>
+        <label for="ciclo">Ciclo:</label>
+        <select id='ciclo' class='ciclo form-control'>
+            <option value='todos'></option>            
+            <?php
+                $inicio = 2;
+                $fin = 14;
+                if($ciclo=="1"){
+                    $inicio = 1;
+                    $fin = 13;
+                }        
+                for ($i = $inicio; $i <= $fin;$i=$i+2) {
+                    echo "<option value='".$i."'>$i</option>";
+                }
+            ?>
+        </select>
         <input type='button' name='mostrarHorarioMateria' id='mostrarHorarioMateria' class='btn btn-primary' value='Filtrar' tabindex='4'>    
         </form>
         <br/>
         <?php
     }else{ //Muestra el filtro por defecto?>
         <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>              
-        <li id='filtroMateria'><a href='#'>Materia</a></li>
+        <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
         </ul> 
         <br/>    
         <form class='form-inline' role='form'>
@@ -105,7 +121,7 @@ if(isset($_GET['criterio'])){
 }else{ //Muestra el filtro por defecto?>
     <ul class='nav nav-tabs'>   
     <li id='filtroTODO' class='active'><a href='#'>TODO</a></li>     
-    <li id='filtroMateria'><a href='#'>Materia</a></li>
+    <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
     </ul>    
     <br/>    
     <form class='form-inline' role='form'>    
