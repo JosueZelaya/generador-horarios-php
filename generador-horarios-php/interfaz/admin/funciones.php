@@ -1,18 +1,27 @@
 <?php
 //Se ordena por id de grupo en orden ascendente
 function ordenarHorarioMateria($horario){
-    foreach ($horario as $tipoGrupo){
-        for ($i = 0; $i < count($tipoGrupo)-1; $i++) {
-            for ($j = $i+1; $j < count($tipoGrupo); $j++) {
-                if($tipoGrupo[$i]['grupo']>$tipoGrupo[$j]['grupo']){
-                    $aux = $tipoGrupo[$i];
-                    $tipoGrupo[$i] = $tipoGrupo[$j];
-                    $tipoGrupo[$j] = $aux;
-                }
+    $horario["TEORICO"] = ordenarGrupos($horario["TEORICO"]);
+    if(isset($horario["LABORATORIO"])){
+        $horario["LABORATORIO"] = ordenarGrupos($horario["LABORATORIO"]);
+    }
+    if(isset($horario["DISCUSION"])){
+        $horario["DISCUSION"] = ordenarGrupos($horario["DISCUSION"]);
+    }
+    return $horario;
+}
+
+function ordenarGrupos($grupos){
+    for ($i = 0; $i < count($grupos)-1; $i++) {
+        for ($j = $i+1; $j < count($grupos); $j++) {
+            if($grupos[$i]["grupo"] > $grupos[$j]["grupo"]){
+                $aux = $grupos[$i];
+                $grupos[$i] = $grupos[$j];
+                $grupos[$j] = $aux;
             }
         }
     }
-    return $horario;
+    return $grupos;
 }
 
 function imprimirMalla($tabla){

@@ -82,10 +82,10 @@ abstract class ManejadorMaterias {
         return false;
     }
     
-    public static function getMateriasDeCarrera($materias, $carrera){
+    public static function getMateriasDeCarrera($materias, $nombre_carrera){
         $materiasCarrera = array();
-        foreach($materias as $materia){
-            if(strcmp($materia->getCarrera()->getNombre(), $carrera)==0){
+        foreach($materias as $materia){            
+            if(strcmp($materia->getCarrera()->getNombre(),$nombre_carrera)==0){                
                 $materiasCarrera[] = $materia;
             }
         }

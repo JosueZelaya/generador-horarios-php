@@ -13,8 +13,6 @@ class Materia {
     private $agrupacion;
     private $incompleta;
     private $tipo;
-    private $plan_estudio;
-    private $departamento;
     
     function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $carrera, $agrupacion,$incompleta) {
         $this->codigo = $codigo;
