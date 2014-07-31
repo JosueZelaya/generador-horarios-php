@@ -123,8 +123,7 @@ $(function (){
     });
     
     $(document).on("change","#carrera",function(){
-        var dataString = 'carrera='+$(this).val()+"&departamento="+$('#departamento').val();              
-        alert("carrera: "+$(this).val()+" departamento: "+$('#departamento').val());
+        var dataString = 'carrera='+$(this).val()+"&departamento="+$('#departamento').val();        
         if($(this).attr('data-tipo')==='materia'){
             $.ajax({            
                 type: "GET",
