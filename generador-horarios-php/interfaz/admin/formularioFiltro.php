@@ -14,8 +14,7 @@ if(isset($_GET['criterio'])){
     <ul class='nav nav-tabs'>
     <?php    
     if($criterio=='departamento'){ //Muestra el filtro para los departamentos?>
-        <li id='filtroTODO'><a href='#'>TODO</a></li>
-        <!--<li  id='filtroDepartamento' class='active'><a href='#'>Departamento</a></li>-->        
+        <li id='filtroTODO'><a href='#'>TODO</a></li>        
         <li id='filtroMateria'><a href='#'>Materia</a></li>
         </ul> 
         <br/>
@@ -41,8 +40,7 @@ if(isset($_GET['criterio'])){
         <br/>
     <?php    
     }else if($criterio=='materia'){?>        
-        <li id='filtroTODO'><a href='#'>TODO</a></li>
-        <!--<li id='filtroDepartamento'><a href='#'>Departamento</a></li>-->    
+        <li id='filtroTODO'><a href='#'>TODO</a></li>          
         <li id='filtroMateria' class='active'><a href='#'>Materia</a></li>
         </ul>
         <br/>
@@ -71,8 +69,7 @@ if(isset($_GET['criterio'])){
         <br/>
         <?php
     }else{ //Muestra el filtro por defecto?>
-        <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>
-        <!--<li id='filtroDepartamento'><a href='#'>Departamento</a></li>-->        
+        <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>              
         <li id='filtroMateria'><a href='#'>Materia</a></li>
         </ul> 
         <br/>    
@@ -107,8 +104,7 @@ if(isset($_GET['criterio'])){
     }     
 }else{ //Muestra el filtro por defecto?>
     <ul class='nav nav-tabs'>   
-    <li id='filtroTODO' class='active'><a href='#'>TODO</a></li>
-    <!--<li id='filtroDepartamento'><a href='#'>Departamento</a></li>-->    
+    <li id='filtroTODO' class='active'><a href='#'>TODO</a></li>     
     <li id='filtroMateria'><a href='#'>Materia</a></li>
     </ul>    
     <br/>    

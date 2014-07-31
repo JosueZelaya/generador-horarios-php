@@ -32,10 +32,20 @@
     } elseif(isset($_GET['departamento']) && isset($_GET['carrera']) && isset($_GET['materia'])){
         $aulas = $facultad->getAulas();
         $cod_materia = $_GET['materia'];
-        $id_depar = $_GET['departamento'];
-        $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar);
-        $horario = ordenarHorarioMateria($horario);
-        imprimirMallaMateria($horario);
+        $id_depar = $_GET['departamento'];        
+        if($_GET['materia']=="todos"){            
+            $materias = ManejadorMaterias::getMateriasDeCarrera($facultad->getMaterias(),$_GET['carrera']);
+            foreach ($materias as $materia) {
+                echo "<h3>".$materia->getNombre()."</h3>";
+                $horario = ManejadorMaterias::getHorarioMateria($aulas,$materia->getCodigo(), $id_depar);
+                $horario = ordenarHorarioMateria($horario);
+                imprimirMallaMateria($horario);
+            }
+        }else{
+            $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar);
+            $horario = ordenarHorarioMateria($horario);
+            imprimirMallaMateria($horario);
+        }       
     }elseif (isset($_GET['aula'])) {
         $aula = $_GET['aula'];
         $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);

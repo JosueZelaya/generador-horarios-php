@@ -1,6 +1,6 @@
 <?php
-
 include_once '../../reglas_negocio/Facultad.php';
+chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 ManejadorSesion::sec_session_start();
