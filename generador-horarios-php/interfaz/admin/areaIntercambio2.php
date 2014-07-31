@@ -1,8 +1,9 @@
 <?php
 
 include_once '../../reglas_negocio/Facultad.php';
-
-session_start();
+include_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
+ManejadorSesion::sec_session_start();
 $facultad = $_SESSION['facultad'];
 $modelo = create_model($facultad);
 

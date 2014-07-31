@@ -1,6 +1,7 @@
 <?php
-
-session_start();
+include_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
+ManejadorSesion::sec_session_start();
 
 if(isset($_SESSION['facultad'])){
     $respuesta = "si";

@@ -14,6 +14,8 @@ include_once '../../reglas_negocio/Dia.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Hora.php';
 chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorGrupos.php';
@@ -36,7 +38,7 @@ include_once '../../reglas_negocio/ManejadorCarreras.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorGrupos.php';
 chdir(dirname(__FILE__));
-session_start();
+ManejadorSesion::sec_session_start();
 
 if(isset($_SESSION['facultad'])){
     $facultad = $_SESSION['facultad'];

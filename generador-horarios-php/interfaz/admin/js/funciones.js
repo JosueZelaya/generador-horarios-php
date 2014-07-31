@@ -39,6 +39,27 @@ $(function (){
             }
         });        
     });
+    
+    $(document).on("click","#verFiltro",function(){
+        $.ajax({            
+            type: "GET",
+            url: "./hayHorarioGenerado.php",
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);
+                if(datos==="si"){
+                    limpiarMain();
+                    addFiltro();
+                    addContent();
+                    $('#filtro').load("./formularioFiltro.php");
+                }else{
+                    bootbox.alert("¡Aun no ha generado o cargado ningún horario!");
+                }
+            },
+            error: function(datos){
+                bootbox.alert("error: "+datos,function(){});
+            }
+        });    
+    });
    
     $(document).on("click","#mostrarHorario",function(){        
         var aula = $("#aula").val();
@@ -103,6 +124,7 @@ $(function (){
     
     $(document).on("change","#carrera",function(){
         var dataString = 'carrera='+$(this).val()+"&departamento="+$('#departamento').val();              
+        alert("carrera: "+$(this).val()+" departamento: "+$('#departamento').val());
         if($(this).attr('data-tipo')==='materia'){
             $.ajax({            
                 type: "GET",

@@ -3,8 +3,10 @@ chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Departamento.php';
+include_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
+ManejadorSesion::sec_session_start();
 
-session_start();
 $facultad = $_SESSION['facultad'];
 
 if(isset($_GET['criterio'])){
@@ -13,7 +15,7 @@ if(isset($_GET['criterio'])){
     <?php    
     if($criterio=='departamento'){ //Muestra el filtro para los departamentos?>
         <li id='filtroTODO'><a href='#'>TODO</a></li>
-        <li  id='filtroDepartamento' class='active'><a href='#'>Departamento</a></li>        
+        <!--<li  id='filtroDepartamento' class='active'><a href='#'>Departamento</a></li>-->        
         <li id='filtroMateria'><a href='#'>Materia</a></li>
         </ul> 
         <br/>
@@ -40,7 +42,7 @@ if(isset($_GET['criterio'])){
     <?php    
     }else if($criterio=='materia'){?>        
         <li id='filtroTODO'><a href='#'>TODO</a></li>
-        <li id='filtroDepartamento'><a href='#'>Departamento</a></li>    
+        <!--<li id='filtroDepartamento'><a href='#'>Departamento</a></li>-->    
         <li id='filtroMateria' class='active'><a href='#'>Materia</a></li>
         </ul>
         <br/>
@@ -70,11 +72,11 @@ if(isset($_GET['criterio'])){
         <?php
     }else{ //Muestra el filtro por defecto?>
         <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>
-        <li id='filtroDepartamento'><a href='#'>Departamento</a></li>        
+        <!--<li id='filtroDepartamento'><a href='#'>Departamento</a></li>-->        
         <li id='filtroMateria'><a href='#'>Materia</a></li>
         </ul> 
         <br/>    
-        <form class='form-inline' role='form'>         
+        <form class='form-inline' role='form'>
         <label for="departamento">Departamentos:</label>
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
@@ -97,7 +99,7 @@ if(isset($_GET['criterio'])){
             echo "<option value='".$aulas[$index]->getNombre()."'>".$aulas[$index]->getNombre()."</option>";    
         }
         ?>
-        </select>  
+        </select>
         <input type='button' name='mostrarHorario' id='mostrarHorario' class='btn btn-primary' value='Filtrar' tabindex='4'>    
         </form>
         <br/>
@@ -106,11 +108,11 @@ if(isset($_GET['criterio'])){
 }else{ //Muestra el filtro por defecto?>
     <ul class='nav nav-tabs'>   
     <li id='filtroTODO' class='active'><a href='#'>TODO</a></li>
-    <li id='filtroDepartamento'><a href='#'>Departamento</a></li>    
+    <!--<li id='filtroDepartamento'><a href='#'>Departamento</a></li>-->    
     <li id='filtroMateria'><a href='#'>Materia</a></li>
     </ul>    
     <br/>    
-    <form class='form-inline' role='form'>          
+    <form class='form-inline' role='form'>    
     <label for="departamento">Departamentos:</label>
     <select id='departamento' class='departamento form-control'>
         <option value='todos'>TODOS</option>    
