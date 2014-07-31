@@ -23,7 +23,7 @@ if (ManejadorSesion::comprobar_sesion() == true) : ?>
                 <div class="col-lg-4">
                     <select id="carrera" name="carrera" class="form-control">
                     <?php
-                        $departamentos = ManejadorDepartamentos::getDepartamentos();
+                        $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
                         $carreras = ManejadorCarreras::getTodasCarreras($departamentos);
                         $cont=1;
                         foreach ($carreras as $carrera) {

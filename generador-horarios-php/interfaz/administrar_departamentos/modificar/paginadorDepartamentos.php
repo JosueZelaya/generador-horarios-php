@@ -10,7 +10,7 @@ chdir(dirname(__FILE__));
 if(session_status()==PHP_SESSION_NONE){
     ManejadorSesion::sec_session_start();
 }
-$departamentos = ManejadorDepartamentos::getDepartamentos();
+$departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
 $cantidadDepartamentos = count($departamentos);
 $paginasNecesarias = ceil($cantidadDepartamentos/$numeroResultados); //Redondea al número mayor con la función ceil()
 $css_class = 'paginaDepartamentos';

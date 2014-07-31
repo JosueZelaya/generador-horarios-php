@@ -50,7 +50,7 @@ if (ManejadorSesion::comprobar_sesion() == true) : ?>
                 <div class="col-lg-4">
                     <select id="departamento" name="departamento" class="form-control">
                     <?php
-                        $departamentos = ManejadorDepartamentos::getDepartamentos();
+                        $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
                         foreach ($departamentos as $departamento) {
                             echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
                         }
