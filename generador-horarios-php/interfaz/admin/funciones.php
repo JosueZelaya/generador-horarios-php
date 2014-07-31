@@ -1,7 +1,9 @@
 <?php
 //Se ordena por id de grupo en orden ascendente
 function ordenarHorarioMateria($horario){
-    $horario["TEORICO"] = ordenarGrupos($horario["TEORICO"]);
+    if(isset($horario["TEORICO"])){
+        $horario["TEORICO"] = ordenarGrupos($horario["TEORICO"]);
+    }    
     if(isset($horario["LABORATORIO"])){
         $horario["LABORATORIO"] = ordenarGrupos($horario["LABORATORIO"]);
     }
