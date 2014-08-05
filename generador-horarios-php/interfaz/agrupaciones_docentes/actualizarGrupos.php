@@ -28,6 +28,7 @@ if(isset($_GET)){
                             $grupo->setId_grupo($arrayGrupos[$i]["id"]);
                             $grupo->setTipo($arrayGrupos[$i]["tipo"]);
                             $grupos[]=$grupo;                    
+
                         }                    
                     }                
                     ManejadorGrupos::actualizarGrupos($grupos, $año, $ciclo);                    

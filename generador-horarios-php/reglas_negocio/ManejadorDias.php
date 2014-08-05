@@ -55,4 +55,29 @@ abstract class ManejadorDias {
         }
         return $horas;
     }
+    
+    /** Reemplaza los grupos asignados en un bloque de horas de un dia especifico
+     * @param int[] $indices Posiciones en array de horas
+     * @param Dia $dia dia donde se hara el reemplazo
+     * @param Grupo[] $grupos grupos que reemplazaran a grupos asignados
+     */
+    public static function reemplazarAsignaciones($indices,$dia,$grupos){
+        $grupos = array_reverse($grupos);
+        foreach ($indices as $indice){
+            $grupo = array_pop($grupos);
+            $dia->getHoras()[$indice]->setGrupo($grupo);
+            if($grupo->getId_grupo()==0){
+                $dia->getHoras()[$indice]->setDisponible(true);
+            } elseif($dia->getHoras()[$indice]->estaDisponible()){
+                $dia->getHoras()[$indice]->setDisponible(false);
+            }
+        }
+    }
+    
+    public static function borrarAsignaciones($indices,$dia){
+        foreach ($indices as $indice){
+            $dia->getHoras()[$indice]->getGrupo()->setId_grupo(0);
+            $dia->getHoras()[$indice]->setDisponible(true);
+        }
+    }
 }

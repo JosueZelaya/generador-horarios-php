@@ -1,5 +1,7 @@
 <?php
 chdir(dirname(__FILE__));
+require_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorCarreras.php';
@@ -7,7 +9,7 @@ chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
 
-session_start();
+ManejadorSesion::sec_session_start();
 
 $facultad = $_SESSION['facultad'];
 
@@ -19,7 +21,8 @@ if(isset($_GET['carrera'])  && isset($_GET['departamento'])){
         foreach ($materias as $materia) {
             echo "<option value='".$materia->getCodigo()."'>".$materia->getNombre()."</option>";
         }
-    }else{
+    }else{        
+        echo "<option value='todos'>TODAS</option>";
         $materias = ManejadorMaterias::getMateriasDeCarrera($facultad->getMaterias(), $carrera);
         foreach ($materias as $materia) {
             echo "<option value='".$materia->getCodigo()."'>".$materia->getNombre()."</option>";

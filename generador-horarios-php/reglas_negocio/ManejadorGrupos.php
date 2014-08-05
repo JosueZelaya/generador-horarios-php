@@ -102,7 +102,8 @@ abstract class ManejadorGrupos {
             while($fila = pg_fetch_array($respuesta)){
                 if(self::yaSeCreoGrupo($fila['id_grupo'], $fila['tipo_grupo'], $grupos)){
                     $docente = new Docente($fila["id_docente"],"");
-                    $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
+                    $docente->setNombres($fila["nombres"]);
+                    $docente->setApellidos($fila["apellidos"]);
                     self::agregar_docente_a_grupo($docente, $fila['id_grupo'], $fila['tipo_grupo'], $grupos);
                 }else{
                     $grupo = new Grupo();
@@ -110,8 +111,9 @@ abstract class ManejadorGrupos {
                     $grupo->setId_grupo($fila['id_grupo']);
                     $grupo->setTipo($fila['tipo_grupo']);
                     $docentes = array();
-                    $docente = new Docente($fila["id_docente"],"");
-                    $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
+                    $docente = new Docente($fila["id_docente"],"","");
+                    $docente->setNombres($fila["nombres"]);
+                    $docente->setApellidos($fila["apellidos"]);
                     $docentes[] = $docente;
                     $grupo->setDocentes($docentes);
                     $grupos[] = $grupo;
@@ -253,4 +255,26 @@ abstract class ManejadorGrupos {
         conexion::consulta($consulta);
     }
     
+    /** Extraer los docentes de cada grupo pasado en array de grupos
+     * 
+     * @param Grupo[] $grupos = grupos de donde se extraeran los docentes
+     */
+    public static function extraerDocentesDeGrupos($grupos){
+        $docentes = array();
+        foreach ($grupos as $grupo){
+            if($grupo->getId_grupo() != 0){
+                $docentes[] = $grupo->getDocentes();
+            } else{
+                $docentes[] = array();
+            }
+        }
+        return $docentes;
+    }
+    
+    public static function getGruposEnRangoHoras($desde,$hasta,$aulas,$aula,$dia){
+        for($i=$desde;$i<=$hasta;$i++){
+            $grupos[] = ManejadorGrupos::getGrupoEnHora($aulas, $aula, $dia, $i);
+        }
+        return $grupos;
+    }
 }

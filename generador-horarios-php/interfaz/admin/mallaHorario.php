@@ -9,8 +9,10 @@
     include_once '../../reglas_negocio/Facultad.php';
     chdir(dirname(__FILE__));
     include_once 'funciones.php';
-
-    session_start();
+    chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/ManejadorSesion.php';
+    chdir(dirname(__FILE__));
+    ManejadorSesion::sec_session_start();
     $facultad = $_SESSION['facultad'];
     $modelo = create_model($facultad);
 
@@ -21,19 +23,31 @@
         if($carrera!='todos'){                        
             $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
             $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(),$aula,$ids_agrupaciones,$modelo);
-        }else if($departamento!='todos'){
-            $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
-        }else{
+        }
+//        else if($departamento!='todos'){
+//            $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
+//        }
+        else{
             $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
         }
         echo imprimirMalla($tabla);
     } elseif(isset($_GET['departamento']) && isset($_GET['carrera']) && isset($_GET['materia'])){
         $aulas = $facultad->getAulas();
         $cod_materia = $_GET['materia'];
-        $id_depar = $_GET['departamento'];
-        $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar);
-        $horario = ordenarHorarioMateria($horario);
-        imprimirMallaMateria($horario);
+        $id_depar = $_GET['departamento'];        
+        if($_GET['materia']=="todos"){            
+            $materias = ManejadorMaterias::getMateriasDeCarrera($facultad->getMaterias(),$_GET['carrera']);
+            foreach ($materias as $materia) {
+                echo "<h3>".$materia->getNombre()."</h3>";
+                $horario = ManejadorMaterias::getHorarioMateria($aulas,$materia->getCodigo(), $id_depar);
+                $horario = ordenarHorarioMateria($horario);
+                imprimirMallaMateria($horario);
+            }
+        }else{
+            $horario = ManejadorMaterias::getHorarioMateria($aulas, $cod_materia, $id_depar);
+            $horario = ordenarHorarioMateria($horario);
+            imprimirMallaMateria($horario);
+        }       
     }elseif (isset($_GET['aula'])) {
         $aula = $_GET['aula'];
         $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);

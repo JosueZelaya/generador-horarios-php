@@ -39,7 +39,7 @@ class ManejadorHoras {
                 if(!$hora->estaDisponible() && $hora->getGrupo()->getId_grupo() != 0){
                     $grupo = $hora->getGrupo();
                     if($agrupacion === $grupo->getAgrup() || ManejadorMaterias::materiasMismoNivel($agrupacion->getMaterias(), $grupo->getAgrup()->getMaterias())){
-/*>>>>>>>>>>>>>>*/      error_log("Agrupacion ".$agrupacion->getId()." en conflicto con agrupacion ".$grupo->getAgrup()->getId()." en hora ".$hora->getIdHora()." del dia ".$dia->getNombre()." en aula ".$aula->getNombre(),0);
+                        error_log("Agrupacion ".$agrupacion->getId()." en conflicto con agrupacion ".$grupo->getAgrup()->getId()." en hora ".$hora->getIdHora()." del dia ".$dia->getNombre()." en aula ".$aula->getNombre(),0);
                         return true;
                     }
                 }
@@ -54,7 +54,12 @@ class ManejadorHoras {
             for($h=$desde; $h<$hasta; $h++){
                 $hora = $dia->getHoras()[$h];
                 if(!$hora->estaDisponible() && $hora->getGrupo()->getId_grupo() != 0){
-                    if(ManejadorDocentes::docenteTrabajaHora($docentes, $hora)){
+                    $retorno = ManejadorDocentes::docenteTrabajaHora($docentes, $hora);
+                    if(count($retorno)!=0){
+                        foreach ($retorno as $docente) {
+                            $ids[] = $docente->getIdDocente();
+                        }
+                        error_log("Docente ".implode(',', $ids)." ya trabaja en hora ".$hora->getIdHora()." del dia ".$dia->getNombre(),0);
                         return true;
                     }
                 }
@@ -63,8 +68,31 @@ class ManejadorHoras {
         return false;
     }
     
+    public static function chocaDocenteIntercambio($docentesGrupos, $desde, $hasta, $aulas, $nombre_dia){
+        $msgs = array();
+        foreach ($aulas as $aula) {
+            $dia = $aula->getDia($nombre_dia);
+            for($i=$desde;$i<$hasta;$i++){
+                list($key,$docentes) = each($docentesGrupos);
+                $hora = $dia->getHoras()[$i];
+                if(!$hora->estaDisponible() && $hora->getGrupo()->getId_grupo() != 0){
+                    $retorno = ManejadorDocentes::docenteTrabajaHora($docentes, $hora);
+                    if(count($retorno)!=0){
+                        foreach ($retorno as $docente) {
+                            $nombres[] = "$docente";
+                        }
+                        $msgs[] = "Docente ".implode(',', $nombres)." ya trabaja en hora ".$hora->getInicio()." del dia ".$dia->getNombre()." en aula ".$aula->getNombre()." en grupo ".$hora->getGrupo()->getTipo()." ".$hora->getGrupo()->getId_grupo()." de la agrupacion que contiene a ".$hora->getGrupo()->getAgrup()->getMaterias()[0]->getNombre();
+                        $nombres = null;
+                    }
+                }
+            }
+            reset($docentesGrupos);
+        }
+        return $msgs;
+    }
+    
     /** Aprobar la asignacion de un grupo en un bloque de horas especifico solo si a esas horas esta asignada una agrupacion que posee mas de 1 grupo del
-     *  mismo tipo que el grupo que esta asignado en esas horas y si el grupo asignado es del mismo nivel que el grupo a asignar
+     *  mismo tipo que el grupo que se esta tratando de asignar y si el grupo asignado es del mismo nivel que el grupo a asignar
      * @param String $nombre_dia = nombre del dia en el que se quiere realizar la asignacion
      * @param int $desde = limite superior del bloque de horas para la asignacion
      * @param int $hasta = limite inferior del bloque de horas para la asignacion
@@ -81,7 +109,7 @@ class ManejadorHoras {
                     $grupoHora = $hora->getGrupo();
                     $agrupHora = $grupoHora->getAgrup();
                     if($agrupHora->getNumGrupos($grupoHora->getTipo())==1 && ManejadorMaterias::materiasMismoNivel($agrupHora->getMaterias(), $agrupacion->getMaterias())){
-/*>>>>>>>>>>>>>>*/      error_log ("Grupo: ".$grupoHora->getId_grupo()." de la Agrupacion ".$agrupHora->getId()." en hora: $h del dia $nombre_dia es unico, choque no aprobado",0);
+                        error_log ("Grupo: ".$grupoHora->getId_grupo()." de la Agrupacion ".$agrupHora->getId()." en hora: $h del dia $nombre_dia es unico, choque no aprobado",0);
                         return false;
                     }
                 }
@@ -90,6 +118,28 @@ class ManejadorHoras {
         return true;
     }
     
+    public static function choqueIntercambios($nombre_dia,$desde,$hasta,$aulas,$agrupaciones,$docentesGrupos){
+        $msgs = array();
+        foreach ($agrupaciones as $agrupacion){
+            foreach ($aulas as $aula) {
+                $dia = $aula->getDia($nombre_dia);
+                for($h=$desde; $h<$hasta; $h++){
+                    $hora = $dia->getHoras()[$h];
+                    if(!$hora->estaDisponible() && $hora->getGrupo()->getId_grupo() != 0){
+                        $grupoHora = $hora->getGrupo();
+                        $agrupHora = $grupoHora->getAgrup();
+                        if($agrupHora->getNumGrupos($grupoHora->getTipo())==1 && ManejadorMaterias::materiasMismoNivel($agrupHora->getMaterias(), $agrupacion->getMaterias())){
+                            $msgs[] = "Choque entre agrupacion que contiene a ".$agrupHora->getMaterias()[0]->getNombre()." y agrupacion que contiene a ".$agrupacion->getMaterias()[0]->getNombre()." a las ".$hora->getInicio()." en aula ".$aula->getNombre().". Choque no es factible porque existe un grupo único.";
+                        } elseif($agrupHora->getNumGrupos($grupoHora->getTipo())!=1 && ManejadorMaterias::materiasMismoNivel($agrupHora->getMaterias(), $agrupacion->getMaterias())){
+                            $msgs[] = "Choque entre agrupacion que contiene a ".$agrupHora->getMaterias()[0]->getNombre()." y agrupacion que contiene a ".$agrupacion->getMaterias()[0]->getNombre()." a las ".$hora->getInicio()." en aula ".$aula->getNombre().". Choque es factible porque no existe un grupo único.";
+                        }
+                    }
+                }
+            }
+        }
+        return array_merge($msgs,self::chocaDocenteIntercambio($docentesGrupos, $desde, $hasta, $aulas, $nombre_dia));
+    }
+
     private static function comprobacionesDeHorasDisponibles($objetos,$choque,$nombreDia,$aulas,$desde,$hasta){
         $chocaDocente = false;
         if(!ManejadorDocentes::existeDocRespaldo($objetos[0])){
@@ -292,120 +342,6 @@ class ManejadorHoras {
             }
         }
         return $horasNivel;
-    }
-    
-    public static function bloqueCompleto($desde,$hasta,$horas,$grupos){
-        if($desde != 1 && $hasta != 15){
-            $grupoAnterior = $horas[$desde-2]->getGrupo();
-            $grupoPosterior = $horas[$hasta]->getGrupo();
-            $grupoEnDesde = $horas[$desde-1]->getGrupo();
-            $grupoEnHasta = $horas[$hasta-1]->getGrupo();
-        } elseif ($desde == 1) {
-            $grupoAnterior = null;
-            $grupoPosterior = $horas[$hasta]->getGrupo();
-            $grupoEnDesde = $horas[$desde-1]->getGrupo();
-            $grupoEnHasta = $horas[$hasta-1]->getGrupo();
-        } elseif ($hasta == 15) {
-            $grupoAnterior = $horas[$desde-2]->getGrupo();
-            $grupoPosterior = null;
-            $grupoEnDesde = $horas[$desde-1]->getGrupo();
-            $grupoEnHasta = $horas[$hasta-1]->getGrupo();
-        }
-        if(count($grupos) == 1 && $grupoAnterior == $grupoEnDesde && $grupoEnHasta == $grupoPosterior){
-            echo 'incorrecto';
-            return false;
-        } elseif (count($grupos) > 1){
-            if(is_a($grupoAnterior, "Grupo") && $grupoAnterior == $grupoEnDesde && $grupoAnterior->getId_grupo() != 0){
-                echo 'incorrecto1';
-                return false;
-            } elseif(is_a($grupoPosterior, "Grupo") && $grupoPosterior == $grupoEnHasta && $grupoPosterior->getId_grupo() != 0){
-                echo 'incorrecto2';
-                return false;
-            } elseif(!ManejadorGrupos::gruposIgualesEnBloque($grupos)){
-                echo 'incorrecto3';
-                return false;
-            }
-        }
-        return true;
-    }
-    
-    public static function grupoHuerfano($horas,$desde,$grupo,$origen){
-        if($grupo->getAgrup() == null){
-            return false;
-        }
-        if($horas[$desde-1]->getGrupo() == $grupo){
-            echo "Grupos iguales en horas origen y destino del intercambio";
-            exit(0);
-        }
-        $contador = 0;
-        $i = ($desde-1);
-        if($i == 14){
-            goto evalUp;
-        }
-        evalDown:{
-            while($i < ($desde+1) && $i < 14){
-                if($horas[$i+1]->getGrupo()->getAgrup() != $grupo->getAgrup() || ($horas[$i+1]->getGrupo()->getAgrup() == $grupo->getAgrup() && $horas[$i+1]->getGrupo()->getId_grupo() != $grupo->getId_grupo()) || ($horas[$i+1]->getGrupo() === $grupo && ($i+1) == ($origen-1))){
-                    $contador++;
-                }
-                $i += 1;
-            }
-            if($contador > 1 && $desde == 1){
-                return true;
-            } elseif($desde == 1 && $contador <= 1){
-                return false;
-            } elseif($desde != 1 && $contador <= 1){
-                $huerfano1 = false;
-            } else {
-                $huerfano1 = true;
-            }
-            $contador = 0;
-            $i = ($desde-1);
-        }
-        evalUp:{
-            while($i > 0 && $i > ($desde-3)){
-                if($horas[$i-1]->getGrupo()->getAgrup() != $grupo->getAgrup() || ($horas[$i-1]->getGrupo()->getAgrup() == $grupo->getAgrup() && $horas[$i-1]->getGrupo()->getId_grupo() != $grupo->getId_grupo()) || ($horas[$i-1]->getGrupo() === $grupo && ($i-1) == ($origen-1))){
-                    $contador++;
-                }
-                $i -= 1;
-            }
-            if($contador > 1 && $desde == 15){
-                return true;
-            } elseif ($contador <= 1 && $desde == 15){ 
-                return false;
-            } elseif ($contador <= 1 && $desde != 15){
-                $huerfano2 = false;
-            } else{
-                $huerfano2 = true;
-            }
-        }
-        endEval:{
-            if($huerfano1 == true && $huerfano2 == true){
-                return true;
-            } else{
-                return false;
-            }
-        }
-    }
-    
-    public static function intercambiar($aula1,$dia1,$desde1,$aula2,$dia2,$desde2,$grupos,$aulas){
-        for ($i = 0; $i < count($grupos[0]); $i++){
-            ManejadorAulas::getAula($aulas, $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setGrupo($grupos[0][$i]);
-            if(ManejadorGrupos::getGrupoEnHora($aulas, $aula2, $dia2, $desde2)->getId_grupo() == 0){
-                ManejadorAulas::getAula($aulas, $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setDisponible(true);
-            } else{
-                ManejadorAulas::getAula($aulas, $aula2)->getDia($dia2)->getHoras()[$desde2-1]->setDisponible(false);
-            }
-            $desde2++;
-        }
-        for($i=0; $i < count($grupos[1]); $i++){
-            ManejadorAulas::getAula($aulas, $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setGrupo($grupos[1][$i]);
-            if(ManejadorGrupos::getGrupoEnHora($aulas, $aula1, $dia1, $desde1)->getId_grupo() == 0){
-                ManejadorAulas::getAula($aulas, $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setDisponible(true);
-            } else {
-                ManejadorAulas::getAula($aulas, $aula1)->getDia($dia1)->getHoras()[$desde1-1]->setDisponible(false);
-            }
-            $desde1++;
-        }
     }
 
     public static function mismoDepartamentoAgrupacionMateria($agrupacion,$materia){

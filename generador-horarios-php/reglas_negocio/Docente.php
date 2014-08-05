@@ -12,12 +12,13 @@ class Docente {
     private $grupos;
     private $horario;
     private $depar;
-    private $nombre_completo;
     private $nombres;
     private $apellidos;
             
-    function __construct($idDocente,$contratacion,$depar) {
+    function __construct($idDocente,$nombres,$apellidos,$contratacion,$depar) {
         $this->idDocente = $idDocente;
+        $this->nombres = $nombres;
+        $this->apellidos = $apellidos;
         $this->cargo = null;
         $this->contratacion = $contratacion;
         $this->grupos = array();
@@ -25,6 +26,10 @@ class Docente {
         $this->depar = $depar;
     }
     
+    function __toString() {
+        return $this->nombres.' '.$this->apellidos;
+    }
+
     public function getIdDocente() {
         return $this->idDocente;
     }
@@ -101,11 +106,7 @@ class Docente {
         $this->depar = $depar;
     }
     public function getNombre_completo() {
-        return $this->nombre_completo;
-    }
-
-    public function setNombre_completo($nombre_completo) {
-        $this->nombre_completo = $nombre_completo;
+        return $this->nombres.' '.$this->apellidos;
     }
     
     public function getNombres() {

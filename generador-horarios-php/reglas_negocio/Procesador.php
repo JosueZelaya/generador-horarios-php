@@ -79,7 +79,7 @@ class Procesador {
         self::asignarAulas();
         $this->prioridad = $prioridad;
         if($this->prioridad){
-            $this->horasAsignables = $this->traducirIdHorasEnIndices(ManejadorDocentes::intersectarHorarios($this->grupo->getDocentes(),false), $this->todasAulas[0]->getDias()[0]->getHoras());
+            $this->horasAsignables = $this->traducirIdHorasEnIndices(ManejadorDocentes::intersectarHorarios($this->grupo->getDocentes(),false), $this->todasAulas[0]->getDias()[0]);
         }
         self::establecerTurno(false);                 //Se establece el turno en franja matutina o vespertina segun ciclo de la materia
         if($this->localizarBloque()){
@@ -422,22 +422,13 @@ class Procesador {
     /** Obtener la posicion correspondiente de cada hora laboral de un docente en el array de horas laborales de la facultad
      * 
      * @param Integer[] $idHoras = array que contiene los id de las horas laborales de un docentes (se asume son continuas)
-     * @param Hora[] $horas = array de horas laborales de la facultad
+     * @param Dia $dia = un dia cualquiera para hacer uso de sus horas y mapear los ids de las horas
      * @return int[]
      */
-    private static function traducirIdHorasEnIndices($idHoras,$horas){
+    private static function traducirIdHorasEnIndices($idHoras,$dia){
         $indices = null;
-        for($i=0;$i<count($horas);$i++){
-            if(count($idHoras)==0){
-                break;
-            }
-            foreach ($idHoras as $key => $idHora) {
-                if($horas[$i]->getIdHora() == $idHora){
-                    $indices[] = $i;
-                    unset($idHoras[$key]);
-                }
-                break;
-            }
+        foreach ($idHoras as $idHora){
+            $indices[] = $dia->getPosEnDiaHora($idHora);
         }
         return $indices;
     }

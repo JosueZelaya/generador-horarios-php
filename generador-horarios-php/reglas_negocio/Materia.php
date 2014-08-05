@@ -12,6 +12,7 @@ class Materia {
     private $carrera;
     private $agrupacion;
     private $incompleta;
+    private $tipo;
     
     function __construct($codigo, $nombre, $ciclo, $unidadesValorativas, $carrera, $agrupacion,$incompleta) {
         $this->codigo = $codigo;
@@ -77,5 +78,13 @@ class Materia {
 
     public function setCarrera($carrera) {
         $this->carrera = $carrera;
+    }
+    
+    public function getTipo() {
+        return $this->tipo;
+    }
+
+    public function setTipo($tipo) {
+        $this->tipo = $tipo;
     }
 }

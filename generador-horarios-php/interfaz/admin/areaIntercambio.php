@@ -1,6 +1,9 @@
 <?php
 include_once '../../reglas_negocio/Facultad.php';
-session_start();
+chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
+ManejadorSesion::sec_session_start();
 $facultad = $_SESSION['facultad'];
 ?>
 <div class="row">
@@ -36,11 +39,15 @@ $facultad = $_SESSION['facultad'];
         <div id="despues-intercambio" style="width:100%; height:300px; overflow: scroll;"></div>
     </div>
 </div>
-<br>
+<br><br><br>
 <div class="row">
-    <div class="col-sm-12" style="text-align: center">
-        <a class="btn btn-lg btn-primary" href="#" id='intercambiarHoras'>
+    <div class="col-sm-12" style="text-align: left">
+        <hr style="background:gray; border:0; height: 1px; width: 100%">
+        <a class="btn btn-md btn-primary" href="#" id='intercambiarHoras'>
             <i class="fa fa-retweet fa-lg"></i> Intercambiar
+        </a>
+        <a class="btn btn-md btn-primary" href="#" id='buscarHoras'>
+            <i class="fa fa-search fa-lg"></i> Busqueda
         </a>
     </div>
 </div>
