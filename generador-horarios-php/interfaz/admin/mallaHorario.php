@@ -4,6 +4,8 @@
     chdir(dirname(__FILE__));
     include_once '../../reglas_negocio/ManejadorMaterias.php';
     chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/ManejadorHoras.php';
+    chdir(dirname(__FILE__));
     include_once '../../reglas_negocio/ManejadorAulas.php';
     chdir(dirname(__FILE__));
     include_once '../../reglas_negocio/Facultad.php';
@@ -15,20 +17,37 @@
     ManejadorSesion::sec_session_start();
     $facultad = $_SESSION['facultad'];
     $modelo = create_model($facultad);
-
+    $tabla = $modelo;
     if(isset($_GET['aula']) && isset($_GET['departamento']) && isset($_GET['carrera'])){
-        $aula = $_GET['aula'];
-        $departamento = $_GET['departamento'];
-        $carrera = $_GET['carrera'];
-        if($carrera!='todos'){                        
-            $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
-            $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(),$aula,$ids_agrupaciones,$modelo);
-        }else if($departamento!='todos'){
-            $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
+        $aula = $_GET['aula'];        
+        if($aula=="todos"){
+            $departamento = $_GET['departamento'];
+            $carrera = $_GET['carrera'];
+//            if($departamento=="todos"){
+//                //Para todos los departamentos
+//                $tabla = ManejadorHoras::getHorarioTodasHoras($departamento, $facultad, $modelo);
+//            }else if($carrera=="todos"){
+//                //Para todas las carreras de un departamento
+//                $tabla = ManejadorHoras::getHorarioTodasHoras($departamento, $facultad, $modelo);
+//            }else{
+//                //Para una carrera específica.
+//                
+//            }
+            $tabla = ManejadorHoras::getHorarioTodasHoras($departamento, $facultad, $modelo);
+            echo imprimirMallaTodasAulas($tabla);
         }else{
-            $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
-        }
-        echo imprimirMalla($tabla);
+            $departamento = $_GET['departamento'];
+            $carrera = $_GET['carrera'];
+            if($carrera!='todos'){                        
+                $ids_agrupaciones = ManejadorAgrupaciones::obtenerAgrupacionesDeCarrera($carrera);
+                $tabla = ManejadorAulas::getHorarioEnAula_Carrera($facultad->getAulas(),$aula,$ids_agrupaciones,$modelo);
+            }else if($departamento!='todos'){
+                $tabla = ManejadorAulas::getHorarioEnAula_Depar($aula,$departamento,$modelo,$facultad);
+            }else{
+                $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
+            }
+            echo imprimirMalla($tabla);
+        }        
     } elseif(isset($_GET['departamento']) && isset($_GET['carrera']) && isset($_GET['materia']) && isset ($_GET['ciclo'])){
         $aulas = $facultad->getAulas();
         $cod_materia = $_GET['materia'];
@@ -83,7 +102,7 @@
                 imprimirMallaMateria($horario);
             }       
         }        
-    }elseif (isset($_GET['aula'])) {
+    }elseif (isset($_GET['aula'])){
         $aula = $_GET['aula'];
         $tabla = ManejadorAulas::getHorarioEnAula($facultad->getAulas(), $aula, $modelo);
         echo imprimirMalla($tabla);

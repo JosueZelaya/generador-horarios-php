@@ -93,6 +93,17 @@ $(function (){
             dibujarHorario(dataString);        
         }        
     });
+    
+    $(document).on("click","#mostrarHorarioHora",function(){        
+        var departamento = $('#departamento').val();       
+//        if(departamento==='todos'){
+//            bootbox.alert("¡Debe seleccionar un departamento para filtrar!",function(){});
+//        }else{
+            var carrera = $('#carrera').val();            
+            var dataString = "aula=todos"+"&departamento="+departamento+"&carrera="+carrera;
+            dibujarHorario(dataString);
+//        }        
+    });
          
     $(document).on("change","#departamento",function(){
         var dataString = 'departamento='+$(this).val(); 
@@ -183,6 +194,39 @@ $(function (){
                     $('#contenido').html("");
                 }
             });
+    });
+    
+    $(document).on("click","#filtroHora",function(){        
+       var dataString = 'criterio=hora';
+       $.ajax({            
+            type: "GET",
+            url: "./formularioFiltro.php",            
+            data: dataString,
+            success: function(data){                                
+                $('#filtro').html(data);
+                $('#contenido').html("");
+            }
+        });
+        dibujarHorario(dataString);
+    });
+    
+    $(document).on("click",".verHora",function(){
+       var dia = $(this).attr("dia"); 
+       var hora = $(this).attr("hora");       
+       var depar = $('#departamento').val();
+       var dataString = "dia="+dia+"&hora="+hora+"&depar="+depar;
+       $.ajax({            
+            type: "GET",
+            url: "./vista_hora.php",            
+            data: dataString,
+            success: function(data){
+                if(depar==="todos"){
+                    $('#contenido').html(data);
+                }else{
+                    bootbox.alert(data); 
+                }                
+            }
+        });
     });
    
     $(document).on("click","#intercambioHorario",function(){
@@ -457,7 +501,7 @@ function intercambiarConfirm(aula1,dia1,desde1,aula2,dia2,desde2){
     });
 }
 
-function dibujarHorario(dataString){         
+function dibujarHorario(dataString){
     $.ajax({
         type: "GET",
         url: "./mallaHorario.php",
