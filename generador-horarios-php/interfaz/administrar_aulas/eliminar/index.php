@@ -61,7 +61,7 @@ ManejadorSesion::sec_session_start();
     <script type="text/javascript" src="../../bootstrap/FooTable-2/js/footable.js?v=2-0-1"></script>
     <script type="text/javascript" src="../../bootstrap/js/bootstrap.js"></script>       
     <script type="text/javascript" src="js/funciones.js"></script>    
-    <script type="text/javascript" src="js/bootbox.min.js"></script>
+    <script type="text/javascript" src="../../js/bootbox.min.js"></script>
   </body>
 </html>
 
