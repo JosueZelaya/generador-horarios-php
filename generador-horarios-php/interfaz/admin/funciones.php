@@ -1,7 +1,9 @@
 <?php
 //Se ordena por id de grupo en orden ascendente
 function ordenarHorarioMateria($horario){
-    $horario["TEORICO"] = ordenarGrupos($horario["TEORICO"]);
+    if(isset($horario["TEORICO"])){
+        $horario["TEORICO"] = ordenarGrupos($horario["TEORICO"]);
+    }
     if(isset($horario["LABORATORIO"])){
         $horario["LABORATORIO"] = ordenarGrupos($horario["LABORATORIO"]);
     }
@@ -22,6 +24,71 @@ function ordenarGrupos($grupos){
         }
     }
     return $grupos;
+}
+
+function imprimirMallaTodasAulas($tabla){
+    for($i=0;$i<count($tabla);$i++){
+        echo "<div class='col'>";
+        for($j=0;$j<count($tabla[$i]);$j++){                
+            if($j==0){
+                echo "<div class='col-header'>".$tabla[$i][$j]."</div>";
+            }else if($i==0){
+                echo "<div class='celda-hora'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
+            }else{
+                $celda = $tabla[$i][$j];
+                if($celda!=""){
+                    if(isset($celda['texto'])){
+                        if($celda['texto']!=""){
+                            echo "<div class='celda-hora verHora' dia='".$celda['idDia']."' hora='".$celda['idHora']."' depar='".$celda['depar']."'><div class='centrar'><a href='#'>Info <span class='glyphicon glyphicon-zoom-in'></span></a></div></div>";
+                        }else{
+                            echo "<div class='celda-hora'><div class='centrar'>Libre</div></div>";
+                        }
+                    }                    
+                }
+            }
+        }
+        echo '</div>';
+    }
+}
+
+function imprimirMallaHora($tabla,$fullInfo){
+    if($fullInfo){
+        echo "<h3>".$tabla[0]['dia']." ".$tabla[0]['horaInicio']." - ".$tabla[0]['horaFin']."</h3>";
+        echo '<table class="table table-striped table-hover">'.
+            '<thead>'.
+                '<th>Materia</th>'.
+                '<th>Departamento</th>'.
+                '<th>Grupo</th>'.
+                '<th>Tipo</th>'.
+                '<th>Aula</th>'.
+            '</thead>';
+        foreach ($tabla as $fila) {
+            echo "<tr>";
+            echo "<td>".$fila['nombre']."</td>";
+            echo "<td>".$fila['nombre_depar']."</td>";
+            echo "<td>".$fila['grupo']."</td>";
+            echo "<td>".$fila['tipo']."</td>";
+            echo "<td>".$fila['aula']."</td>";
+            echo "</tr>";
+        }
+    }else{
+        echo "<h3>".$tabla[0]['dia']." ".$tabla[0]['horaInicio']." - ".$tabla[0]['horaFin']."</h3>";
+        echo '<table class="table table-striped table-hover">'.
+            '<thead>'.
+                '<th>Materia</th>'.
+                '<th>Grupo</th>'.
+                '<th>Tipo</th>'.
+                '<th>Aula</th>'.
+            '</thead>';
+        foreach ($tabla as $fila) {
+            echo "<tr>";
+            echo "<td>".$fila['nombre']."</td>";
+            echo "<td>".$fila['grupo']."</td>";
+            echo "<td>".$fila['tipo']."</td>";
+            echo "<td>".$fila['aula']."</td>";
+            echo "</tr>";
+        }
+    }
 }
 
 function imprimirMalla($tabla){

@@ -2,8 +2,7 @@
 chdir(dirname(__FILE__));
 include 'config.php';
 require_once '../../reglas_negocio/ManejadorAgrupaciones.php';
-chdir(dirname(__FILE__));
-require_once '../../reglas_negocio/ManejadorSesion.php';
+require_once 'ManejadorSesion.php';
 
 if (isset($_GET)){
     ManejadorSesion::sec_session_start();
@@ -18,5 +17,3 @@ if (isset($_GET)){
         }        
     }       
 }
-
-

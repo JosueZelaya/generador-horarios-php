@@ -31,7 +31,7 @@
                             <span><i class="fa fa-minus-square fa-lg"></i></span>
                             <h2>Eliminar</h2>
                             <p>Eliminar Docentes y/o Usuarios
-                            </p>    
+                            </p>
                       </a>                                          
                   </div>                  
                 </div>                  

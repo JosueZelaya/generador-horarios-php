@@ -1,8 +1,7 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorSesion.php';
-chdir(dirname(__FILE__));
-require_once '../../../reglas_negocio/ManejadorDepartamentos.php';
+require_once 'ManejadorDepartamentos.php';
 chdir(dirname(__FILE__));
 include 'paginacionConfig.php';
 chdir(dirname(__FILE__));
@@ -10,7 +9,7 @@ chdir(dirname(__FILE__));
 if(session_status()==PHP_SESSION_NONE){
     ManejadorSesion::sec_session_start();
 }
-$departamentos = ManejadorDepartamentos::getDepartamentos();
+$departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
 $cantidadDepartamentos = count($departamentos);
 $paginasNecesarias = ceil($cantidadDepartamentos/$numeroResultados); //Redondea al número mayor con la función ceil()
 $css_class = 'paginaDepartamentos';
@@ -78,7 +77,3 @@ if($paginasNecesarias>5){
     echo "<li class='next'><a href='#'> → </a></li>"
     . "</ul>";    
 }
-
-
-
-

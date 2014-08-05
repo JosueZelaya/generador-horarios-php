@@ -362,4 +362,139 @@ class ManejadorHoras {
         }
         return null;
     }
+            
+    public static function getHorarioTodasHoras($id_depar,$facultad,$tabla){
+        $array = array();
+        for ($i = 0; $i < count($facultad->getAulas()); $i++) {
+                $dias = $facultad->getAulas()[$i]->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $horas = $dias[$x]->getHoras();
+                    for ($y = 0; $y < count($horas); $y++) {
+                        $hora = $horas[$y];                        
+                        $grupo = $hora->getGrupo();
+                        if(!$hora->estaDisponible() && $grupo->getAgrup() != null){
+                            if(ManejadorGrupos::mismoDepartamento($grupo->getAgrup(), $id_depar) || $id_depar=="todos"){
+                                $depar = $grupo->getAgrup()->getMaterias()[0]->getCarrera()->getDepartamento();
+                                $array = [
+                                "texto" => "ver",                                
+                                "idHora" => $hora->getIdHora(),
+                                "depar" => $depar->getId(),
+                                "nombre_depar" => $depar->getNombre(),    
+                                "dia" => $dias[$x]->getNombre(),
+                                "idDia" => $dias[$x]->getId()];
+                            }else{
+                                $array = self::getInfoHoraVacia($x, $dias, $hora);
+                            }
+                        }else{
+                            $array = self::getInfoHoraVacia($x, $dias, $hora);
+                        }                        
+                        if($tabla[$x+1][$y+1]==""){                           
+                           $tabla[$x+1][$y+1] = $array;
+                        }else{
+                            if($tabla[$x+1][$y+1]['texto']!="ver"){                                
+                                $tabla[$x+1][$y+1] = $array;
+                            }
+                        }
+                    }
+                }
+        }
+        return $tabla;
+    }
+    
+    public static function getHorarioHora_depar($idDia,$idHora,$idDepar,$facultad){
+        $tabla = array();
+        for ($i = 0; $i < count($facultad->getAulas()); $i++) {
+                $aula = $facultad->getAulas()[$i];
+                $dias = $aula->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $dia = $dias[$x];
+                    $horas = $dia->getHoras();
+                    for ($y = 0; $y < count($horas); $y++) {
+                        $hora = $horas[$y];                        
+                        $grupo = $hora->getGrupo();
+                        if(!$hora->estaDisponible() && $grupo->getAgrup() != null && $dia->getId()==$idDia && $hora->getIdHora()==$idHora){
+                            if(ManejadorGrupos::mismoDepartamento($grupo->getAgrup(), $idDepar) || $idDepar=="todos"){
+                                $departamento = $grupo->getAgrup()->getMaterias()[0]->getCarrera()->getDepartamento();
+                                $nombre_depar = $departamento->getNombre();
+                                $nombres = ManejadorGrupos::obtenerNombrePropietario($grupo->getAgrup()->getMaterias());
+                                $nombre = $nombres[0];
+                                $array = [
+                                    "aula" => $aula->getNombre(),
+                                    "dia" => $dia->getNombre(),
+                                    "nombre" => $nombre,
+                                    "nombre_depar" => $nombre_depar,
+                                    "horaInicio" => $hora->getInicio(),                                
+                                    "horaFin" => $hora->getFin(),
+                                    "grupo" => $grupo->getId_grupo(),
+                                    "tipo" => $grupo->getTipo(),
+                                    "more" => false,
+                                    "cloned" => false];
+                                $tabla[] = $array;
+                            }
+                        }                       
+                    }
+                }
+        }
+        return $tabla;
+    }
+    
+//    public static function getHorarioEnHora_depar($idDia,$idHora,$idDepar,$aulas){
+//        $horario = array();
+//        foreach ($aulas as $aula){
+//            $dias = $aula->getDias();                  
+//            foreach ($dias as $dia){
+//                $horas = $dia->getHoras();
+//                $grupoAnterior=null;
+//                foreach ($horas as $hora){
+//                    $grupo = $hora->getGrupo();
+//                    if(!$hora->estaDisponible() && $grupo->getAgrup() != null){
+//                        $materias = $grupo->getAgrup()->getMaterias();
+//                        foreach ($materias as $materia){
+//                            if($dia->getId()==$idDia && $hora->getIdHora()==$idHora && $materia->getCarrera()->getDepartamento()->getId() == $idDepar){                                                        
+//                                if($grupoAnterior!=null && $grupoAnterior===$grupo){
+//                                    $indiceUltimaHora = count($horario[$grupo->getTipo()])-1;
+//                                    $horario[$grupo->getTipo()][$indiceUltimaHora]['horaFin'] = $hora->getFin();                                    
+//                                }else{
+//                                    $arrayGrupo = [
+//                                    "aula" => $aula->getNombre(),
+//                                    "dia" => $dia->getNombre(),
+//                                    "horaInicio" => $hora->getInicio(),                                
+//                                    "horaFin" => $hora->getFin(),
+//                                    "grupo" => $grupo->getId_grupo(),
+//                                    "nombre" => $materia->getNombre(),   
+//                                    "tipo" => $grupo->getTipo(),
+//                                    "more" => false,
+//                                    "cloned" => false];
+//                                    $propietarios = ManejadorGrupos::obtenerCodigoPropietario($grupo->getAgrup()->getMaterias());
+//                                    if(count(array_unique($propietarios))>1){
+//                                        $arrayGrupo['cloned']=true;
+//                                    } elseif(count($propietarios)>1){
+//                                        $arrayGrupo['more']=true;
+//                                    }
+//                                    $horario[$grupo->getTipo()][] = $arrayGrupo;
+//                                    $grupoAnterior = $hora->getGrupo();
+//                                }
+//                                break;
+//                            }
+//                        }
+//                    }
+//                }
+//            }            
+//        }
+//        return $horario;
+//    }
+    
+    
+    private static function getInfoHoraVacia($index,$dias,$hora){
+        return ["texto" => "",                
+                "idHora" => $hora->getIdHora(),
+                "dia" => $dias[$index]->getNombre()];        
+    }
+    
+    private static function getInfoHoraReservada($index,$dias,$hora){
+        return ["texto" => "reservada",                
+                "idHora" => $hora->getIdHora(),
+                "dia" => $dias[$index]->getNombre()];
+    }
+    
 }

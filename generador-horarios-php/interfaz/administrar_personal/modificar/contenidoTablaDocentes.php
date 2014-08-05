@@ -1,10 +1,8 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorPersonal.php';
-chdir(dirname(__FILE__));
-require_once '../../../reglas_negocio/ManejadorDepartamentos.php';
-chdir(dirname(__FILE__));
-require_once '../../../reglas_negocio/ManejadorCargos.php';
+require_once 'ManejadorDepartamentos.php';
+require_once 'ManejadorCargos.php';
 chdir(dirname(__FILE__));
 include 'paginacionConfig.php';
 chdir(dirname(__FILE__));
@@ -22,7 +20,7 @@ $usuarios = ManejadorPersonal::getTodosDocentesConPaginacion($pagina, $numeroRes
 $contrataciones = "[{value: 'ADHO', text: 'ADHO'}, {value: 'EVHC',text: 'EVHC'},{value: 'EVMT',text: 'EVMT'},{value: 'EVCT',text: 'EVCT'},{value: 'HC',text: 'HC'},{value: 'CT',text: 'CT'},{value: 'TC',text: 'TC'},{value: 'MC',text: 'MT'}]";
 $departamentos_string="[";
 $cont=1;
-$departamentos = ManejadorDepartamentos::getDepartamentos();
+$departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
 foreach ($departamentos as $departamento) {
     if(count($departamentos)==$cont){
         $departamentos_string = $departamentos_string."{value: '".$departamento->getId()."', text: '".$departamento->getNombre()."'}";

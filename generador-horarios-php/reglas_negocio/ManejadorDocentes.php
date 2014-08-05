@@ -177,7 +177,6 @@ abstract class ManejadorDocentes{
     
     public static function buscarDocentes($buscarComo,$idDepartamento){
         $datos = array();
-        $materias = array();
         if($idDepartamento=="todos"){
 //            $consulta = "SELECT * FROM docentes WHERE (nombres iLIKE '%$buscarComo%' OR apellidos iLIKE '%$buscarComo%') LIMIT 15";
             $consulta = "SELECT * FROM docentes WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND activo='t' LIMIT 50;";

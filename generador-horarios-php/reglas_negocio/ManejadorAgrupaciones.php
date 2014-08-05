@@ -573,5 +573,4 @@ abstract class ManejadorAgrupaciones {
         }
         return $final;
     }
-    
 }

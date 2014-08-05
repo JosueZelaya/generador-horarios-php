@@ -72,7 +72,3 @@ if($paginasNecesarias>5){
     echo "<li class='next'><a href='#'> → </a></li>"
     . "</ul>";    
 }
-
-
-
-

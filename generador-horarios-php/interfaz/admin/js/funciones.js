@@ -64,7 +64,7 @@ $(function (){
             }
         });    
     });
-   
+    
     $(document).on("click","#mostrarHorario",function(){        
         var aula = $("#aula").val();
         var departamento = $('#departamento').val();       
@@ -92,9 +92,21 @@ $(function (){
         }else{
             var carrera = $('#carrera').val(); 
             var materia = $('#materia').val();
-            var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia;     
+            var ciclo = $('#ciclo').val();
+            var dataString = "departamento="+departamento+"&carrera="+carrera+"&materia="+materia+"&ciclo="+ciclo;     
             dibujarHorario(dataString);        
         }        
+    });
+    
+    $(document).on("click","#mostrarHorarioHora",function(){        
+        var departamento = $('#departamento').val();       
+//        if(departamento==='todos'){
+//            bootbox.alert("¡Debe seleccionar un departamento para filtrar!",function(){});
+//        }else{
+            var carrera = $('#carrera').val();            
+            var dataString = "aula=todos"+"&departamento="+departamento+"&carrera="+carrera;
+            dibujarHorario(dataString);
+//        }        
     });
          
     $(document).on("change","#departamento",function(){
@@ -114,7 +126,7 @@ $(function (){
             success: function(data){                
                 $('#aula').html(data);
             }
-        });
+        }); 
         dataString = dataString+"&carrera="+$('#carrera').val();
         $.ajax({            
             type: "GET",
@@ -148,7 +160,7 @@ $(function (){
             });            
         }        
     });
-    
+        
     $(document).on("click","#filtroMateria",function(){          
        var dataString = 'criterio=materia';
        $.ajax({            
@@ -186,6 +198,39 @@ $(function (){
                     $('#contenido').html("");
                 }
             });
+    });
+    
+    $(document).on("click","#filtroHora",function(){        
+       var dataString = 'criterio=hora';
+       $.ajax({            
+            type: "GET",
+            url: "./formularioFiltro.php",            
+            data: dataString,
+            success: function(data){                                
+                $('#filtro').html(data);
+                $('#contenido').html("");
+            }
+        });
+        dibujarHorario(dataString);
+    });
+    
+    $(document).on("click",".verHora",function(){
+       var dia = $(this).attr("dia"); 
+       var hora = $(this).attr("hora");       
+       var depar = $('#departamento').val();
+       var dataString = "dia="+dia+"&hora="+hora+"&depar="+depar;
+       $.ajax({            
+            type: "GET",
+            url: "./vista_hora.php",            
+            data: dataString,
+            success: function(data){
+                if(depar==="todos"){
+                    $('#contenido').html(data);
+                }else{
+                    bootbox.alert(data); 
+                }                
+            }
+        });
     });
    
     $(document).on("click","#intercambioHorario",function(){
@@ -442,6 +487,7 @@ function generarHorario(){
                 } else{
                     limpiarMain();
                     addFiltro();
+                    addContent();
                     $('#filtro').load("./formularioFiltro.php");
                 }
             }
@@ -449,7 +495,7 @@ function generarHorario(){
     },1000);
 }
 
-function dibujarHorario(dataString){         
+function dibujarHorario(dataString){
     $.ajax({
         type: "GET",
         url: "./mallaHorario.php",

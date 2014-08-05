@@ -1,8 +1,7 @@
 <?php
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Facultad.php';
-chdir(dirname(__FILE__));
-include_once '../../reglas_negocio/ManejadorSesion.php';
+include_once 'ManejadorSesion.php';
 chdir(dirname(__FILE__));
 ManejadorSesion::sec_session_start();
 $facultad = $_SESSION['facultad'];

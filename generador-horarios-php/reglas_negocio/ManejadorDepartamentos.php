@@ -28,6 +28,16 @@ abstract class ManejadorDepartamentos {
         conexion::consulta2($consulta);
     }
     
+    public static function quitarDepartamentosEspeciales($departamentos){
+        $departamentosFiltrados=array();
+        foreach ($departamentos as $dpt) {
+            if($dpt->getNombre()!="PLAN ESPECIAL" && $dpt->getNombre()!="DOCENTES DE RESPALDO" && $dpt->getNombre()!="POSTGRADO"){
+                $departamentosFiltrados[] = $dpt;
+            }
+        }
+        return $departamentosFiltrados;
+    }
+    
     public static function modificarDepartamento($id,$campo,$valor){
         $consulta = "";
         if($campo=="nombre"){

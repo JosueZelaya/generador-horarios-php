@@ -1,8 +1,7 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorSesion.php';
-chdir(dirname(__FILE__));
-require_once '../../../reglas_negocio/ManejadorMaterias.php';
+require_once 'ManejadorMaterias.php';
 chdir(dirname(__FILE__));
 include 'paginacionConfig.php';
 chdir(dirname(__FILE__));
@@ -82,7 +81,3 @@ if($paginasNecesarias>5){
     echo "<li class='next'><a href='#'> → </a></li>"
     . "</ul>";    
 }
-
-
-
-

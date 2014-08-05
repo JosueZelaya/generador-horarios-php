@@ -18,7 +18,7 @@ if (ManejadorSesion::comprobar_sesion() == true){
             
             $departamentos_string="[";
             $cont=1;
-            $departamentos = ManejadorDepartamentos::getDepartamentos();
+            $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
             foreach ($departamentos as $departamento) {
                 if(count($departamentos)==$cont){
                     $departamentos_string = $departamentos_string."{value: '".$departamento->getId()."', text: '".$departamento->getNombre()."'}";

@@ -48,7 +48,7 @@ chdir(dirname(__FILE__));
 <?php //include 'mensajesMarketing.php';?>
     
     <!-- Footer -->
-    <?php include "footer.php";?>
+    <?php // include "footer.php";?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script type="text/javascript" src="js/jquery-ui/jquery-1.10.2.js"></script>

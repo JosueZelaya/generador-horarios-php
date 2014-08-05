@@ -258,63 +258,63 @@ abstract class ManejadorAulas {
      * @param type $materias = las materias
      * @return type = una tabla que representa al horario de la semana
      */
-//    public static function getHorarioEnAula_Depar($aula,$id_depar,$tabla,$facultad){
-//        for ($i = 0; $i < count($facultad->getAulas()); $i++) {
-//            if(strcmp($facultad->getAulas()[$i]->getNombre(), $aula)==0){
-//                $dias = $facultad->getAulas()[$i]->getDias();
-//                for ($x = 0; $x < count($dias); $x++) {
-//                    $horas = $dias[$x]->getHoras();
-//                    for ($y = 0; $y < count($horas); $y++) {
-//                        $hora = $horas[$y];                        
-//                        $grupo = $hora->getGrupo();
-//                        if(!$hora->estaDisponible() && $grupo->getAgrup() != null){
-//                            if(ManejadorGrupos::mismoDepartamento($grupo->getAgrup(), $id_depar)){
-//                                $cod_materia = ManejadorGrupos::obtenerCodigoPropietario($grupo->getAgrup()->getMaterias());
-//                                $nombres = ManejadorGrupos::obtenerNombrePropietario($grupo->getAgrup()->getMaterias());
-//                                $nombre = $nombres[0];
-//                                $departamento = ManejadorGrupos::getNombreDepartamento($grupo->getAgrup()->getMaterias());
-//                                if(count(array_unique($cod_materia))>1){
-//                                    $nombre .= ' (Clonada)';
-//                                }
-//                                if($grupo->getTipo()=='TEORICO'){
-//                                    $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
-//                                } elseif($grupo->getTipo()=='DISCUSION'){
-//                                    $texto = $cod_materia[0]."<br/> GD: ".$grupo->getId_grupo();
-//                                } elseif($grupo->getTipo()=='LABORATORIO'){
-//                                    $texto = $cod_materia[0]."<br/> GL: ".$grupo->getId_grupo();
-//                                }
-//                                $rango = ManejadorAulas::getRangoHoras($horas, $grupo);
-//                                $array = [
-//                                "texto" => $texto,
-//                                "nombre" => $nombre,
-//                                "codigo" => implode("-", $cod_materia),
-//                                "grupo" => $grupo->getId_grupo(),
-//                                "tipo" => $grupo->getTipo(),
-//                                "departamento" => $departamento[0],
-//                                "inicioBloque" => $rango['inicio'],
-//                                "finBloque" => $rango['fin'],
-//                                "idHora" => $hora->getIdHora(),
-//                                "dia" => $dias[$x]->getNombre(),
-//                                "more" => false];
-//                                if(count($cod_materia)>1){
-//                                    $array['more']=true;
-//                                }
-//                            }else{
-//                                $array = self::getInfoHoraVacia($x, $dias, $hora);
-//                            }
-//                        }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
-//                            $array = self::getInfoHoraReservada($x, $dias, $hora);
-//                        }else{
-//                            $array = self::getInfoHoraVacia($x, $dias, $hora);
-//                        }
-//                        $tabla[$x+1][$y+1] = $array;
-//                    }
-//                }
-//                break;
-//            }
-//        }
-//        return $tabla;
-//    }
+    public static function getHorarioEnAula_Depar($aula,$id_depar,$tabla,$facultad){
+        for ($i = 0; $i < count($facultad->getAulas()); $i++) {
+            if(strcmp($facultad->getAulas()[$i]->getNombre(), $aula)==0){
+                $dias = $facultad->getAulas()[$i]->getDias();
+                for ($x = 0; $x < count($dias); $x++) {
+                    $horas = $dias[$x]->getHoras();
+                    for ($y = 0; $y < count($horas); $y++) {
+                        $hora = $horas[$y];                        
+                        $grupo = $hora->getGrupo();
+                        if(!$hora->estaDisponible() && $grupo->getAgrup() != null){
+                            if(ManejadorGrupos::mismoDepartamento($grupo->getAgrup(), $id_depar)){
+                                $cod_materia = ManejadorGrupos::obtenerCodigoPropietario($grupo->getAgrup()->getMaterias());
+                                $nombres = ManejadorGrupos::obtenerNombrePropietario($grupo->getAgrup()->getMaterias());
+                                $nombre = $nombres[0];
+                                $departamento = ManejadorGrupos::getNombreDepartamento($grupo->getAgrup()->getMaterias());
+                                if(count(array_unique($cod_materia))>1){
+                                    $nombre .= ' (Clonada)';
+                                }
+                                if($grupo->getTipo()=='TEORICO'){
+                                    $texto = $cod_materia[0]."<br/> GT: ".$grupo->getId_grupo();
+                                } elseif($grupo->getTipo()=='DISCUSION'){
+                                    $texto = $cod_materia[0]."<br/> GD: ".$grupo->getId_grupo();
+                                } elseif($grupo->getTipo()=='LABORATORIO'){
+                                    $texto = $cod_materia[0]."<br/> GL: ".$grupo->getId_grupo();
+                                }
+                                $rango = ManejadorAulas::getRangoHoras($horas, $grupo);
+                                $array = [
+                                "texto" => $texto,
+                                "nombre" => $nombre,
+                                "codigo" => implode("-", $cod_materia),
+                                "grupo" => $grupo->getId_grupo(),
+                                "tipo" => $grupo->getTipo(),
+                                "departamento" => $departamento[0],
+                                "inicioBloque" => $rango['inicio'],
+                                "finBloque" => $rango['fin'],
+                                "idHora" => $hora->getIdHora(),
+                                "dia" => $dias[$x]->getNombre(),
+                                "more" => false];
+                                if(count($cod_materia)>1){
+                                    $array['more']=true;
+                                }
+                            }else{
+                                $array = self::getInfoHoraVacia($x, $dias, $hora);
+                            }
+                        }else if(!$hora->estaDisponible() && $grupo->getId_grupo() == 0){
+                            $array = self::getInfoHoraReservada($x, $dias, $hora);
+                        }else{
+                            $array = self::getInfoHoraVacia($x, $dias, $hora);
+                        }
+                        $tabla[$x+1][$y+1] = $array;
+                    }
+                }
+                break;
+            }
+        }
+        return $tabla;
+    }
     
     /**
      * Devuelve el horario para un aula filtrado por carrera

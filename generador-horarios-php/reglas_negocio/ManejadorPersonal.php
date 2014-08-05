@@ -65,7 +65,7 @@ abstract class ManejadorPersonal{
         $docente = new Docente("","","");
         $docente->setIdDocente($fila['id_docente']);
         $docente->setNombres($fila['nombres']);
-        $docente->setApellidos($fila['apellidos']);     
+        $docente->setApellidos($fila['apellidos']);
         $docente->setContratacion($fila['contratacion']);
         $docente->setDepar($fila['nombre_depar']);
         $cargo = $fila['cargo'];
@@ -91,7 +91,7 @@ abstract class ManejadorPersonal{
             $docente = new Docente("","","");
             $docente->setIdDocente($fila['id_docente']);
             $docente->setNombres($fila['nombres']);
-            $docente->setApellidos($fila['apellidos']);           
+            $docente->setApellidos($fila['apellidos']);
             $docente->setContratacion($fila['contratacion']);
             $docente->setDepar($fila['nombre_depar']);
             $cargo = $fila['cargo'];
@@ -354,4 +354,3 @@ abstract class ManejadorPersonal{
             }            		
 	}       
 }
-

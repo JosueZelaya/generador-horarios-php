@@ -1,4 +1,5 @@
 <?php
+include_once 'config.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Facultad.php';
 include_once 'Departamento.php';
@@ -7,25 +8,26 @@ chdir(dirname(__FILE__));
 ManejadorSesion::sec_session_start();
 
 $facultad = $_SESSION['facultad'];
+$departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales($facultad->getDepartamentos());
 
 if(isset($_GET['criterio'])){
     $criterio = $_GET['criterio'];?>    
     <ul class='nav nav-tabs'>
     <?php    
     if($criterio=='departamento'){ //Muestra el filtro para los departamentos?>
-        <li id='filtroTODO'><a href='#'>TODO</a></li>        
-        <li id='filtroMateria'><a href='#'>Materia</a></li>
+        <li id='filtroTODO'><a href='#'>TODO</a></li>
+        <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
+        <li id='filtroHora'><a href='#'>Por Hora</a></li>
         </ul> 
         <br/>
         <form class='form-inline' role='form'>
             <label for="departamento">Departamentos:</label>
             <select id='departamento' class='departamento form-control'>
                 <option value='todos'>Ninguno</option>    
-                <?php
-                $usuarios = $facultad->getDepartamentos();
-                for ($index = 0; $index < count($usuarios); $index++) {    
-                    echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
-                }
+                <?php      
+                    foreach ($departamentos as $departamento) {
+                        echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";    
+                    }
                 ?>
             </select>
             <label for="carrera">Carreras:</label>
@@ -40,7 +42,8 @@ if(isset($_GET['criterio'])){
     <?php    
     }else if($criterio=='materia'){?>        
         <li id='filtroTODO'><a href='#'>TODO</a></li>          
-        <li id='filtroMateria' class='active'><a href='#'>Materia</a></li>
+        <li id='filtroMateria' class='active'><a href='#'>Carrera/Materia</a></li>
+        <li id='filtroHora'><a href='#'>Por Hora</a></li>
         </ul>
         <br/>
         <form class='form-inline' role='form'>
@@ -48,9 +51,8 @@ if(isset($_GET['criterio'])){
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
             <?php
-            $usuarios = $facultad->getDepartamentos();
-            for ($index = 0; $index < count($usuarios); $index++) {    
-                echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
+            foreach ($departamentos as $departamento) {
+                echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
             }
             ?>
         </select>
@@ -63,13 +65,53 @@ if(isset($_GET['criterio'])){
         <select id='materia' class='materia form-control'>
             <option value='todos'>TODAS</option>    
         </select>
+        <label for="ciclo">Ciclo:</label>
+        <select id='ciclo' class='ciclo form-control'>
+            <option value='todos'></option>            
+            <?php
+                $inicio = 2;
+                $fin = 14;
+                if($ciclo=="1"){
+                    $inicio = 1;
+                    $fin = 13;
+                }        
+                for ($i = $inicio; $i <= $fin;$i=$i+2) {
+                    echo "<option value='".$i."'>$i</option>";
+                }
+            ?>
+        </select>
         <input type='button' name='mostrarHorarioMateria' id='mostrarHorarioMateria' class='btn btn-primary' value='Filtrar' tabindex='4'>    
         </form>
         <br/>
         <?php
+    }else if($criterio=='hora'){?>        
+        <li id='filtroTODO'><a href='#'>TODO</a></li>          
+        <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
+        <li id='filtroHora' class='active'><a href='#'>Por Hora</a></li>
+        </ul>
+        <br/>
+        <form class='form-inline' role='form'>
+        <label for="departamento">Departamentos:</label>
+        <select id='departamento' class='departamento form-control'>
+            <option value='todos'>TODOS</option>    
+        <?php
+        foreach ($departamentos as $departamento) {
+            echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";    
+        }
+        ?>
+        </select>
+<!--        <label for="carrera">Carreras:</label>
+        <select id='carrera' class='carrera form-control'>
+            <option value='todos'>TODAS</option>    
+        </select>        -->
+        <input type='button' name='mostrarHorarioHora' id='mostrarHorarioHora' class='btn btn-primary' value='Filtrar' tabindex='4'>    
+        </form>
+        <br/>
+        <?php
     }else{ //Muestra el filtro por defecto?>
-        <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>              
-        <li id='filtroMateria'><a href='#'>Materia</a></li>
+        <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>
+        <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
+        <li id='filtroHora'><a href='#'>Por Hora</a></li>
         </ul> 
         <br/>    
         <form class='form-inline' role='form'>
@@ -77,9 +119,8 @@ if(isset($_GET['criterio'])){
         <select id='departamento' class='departamento form-control'>
             <option value='todos'>TODOS</option>    
         <?php
-        $usuarios = $facultad->getDepartamentos();
-        for ($index = 0; $index < count($usuarios); $index++) {    
-            echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
+        foreach ($departamentos as $departamento) {
+            echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
         }
         ?>
         </select>
@@ -104,7 +145,8 @@ if(isset($_GET['criterio'])){
 }else{ //Muestra el filtro por defecto?>
     <ul class='nav nav-tabs'>   
     <li id='filtroTODO' class='active'><a href='#'>TODO</a></li>     
-    <li id='filtroMateria'><a href='#'>Materia</a></li>
+    <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
+    <li id='filtroHora'><a href='#'>Por Hora</a></li>
     </ul>    
     <br/>    
     <form class='form-inline' role='form'>    
@@ -112,9 +154,8 @@ if(isset($_GET['criterio'])){
     <select id='departamento' class='departamento form-control'>
         <option value='todos'>TODOS</option>    
     <?php
-    $usuarios = $facultad->getDepartamentos();
-    for ($index = 0; $index < count($usuarios); $index++) {    
-        echo "<option value='".$usuarios[$index]->getId()."'>".$usuarios[$index]->getNombre()."</option>";    
+    foreach ($departamentos as $departamento) {
+        echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
     }
     ?>
     </select>    
