@@ -43,17 +43,10 @@ if(isset($_GET['op'])){
         $desde2 = htmlentities($_GET['desde2'], ENT_QUOTES, "UTF-8");
         $hasta1 = htmlentities($_GET['hasta1'], ENT_QUOTES, "UTF-8");
         $hasta2 = htmlentities($_GET['hasta2'], ENT_QUOTES, "UTF-8");
+        if($dia1==null || $dia2==null){ exit(json_encode(10)); }
         if($op == 'intercambio'){inicioIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);}
         elseif($op == 'intercambio2'){segundaFaseIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);}
         elseif($op == 'intercambio3'){realizarIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);}
-    } elseif ($op == 'confirm') {
-        $aula1 = htmlentities($_GET['aula1'], ENT_QUOTES, "UTF-8");
-        $aula2 = htmlentities($_GET['aula2'], ENT_QUOTES, "UTF-8");
-        $dia1 = htmlentities($_GET['dia1'], ENT_QUOTES, "UTF-8");
-        $dia2 = htmlentities($_GET['dia2'], ENT_QUOTES, "UTF-8");
-        $desde1 = htmlentities($_GET['desde1'], ENT_QUOTES, "UTF-8");
-        $desde2 = htmlentities($_GET['desde2'], ENT_QUOTES, "UTF-8");
-        realizarIntercambio($aula1, $dia1, $desde1, $aula2, $dia2, $desde2);
     } elseif ($op == 'moreInfo') {
         $aula = htmlentities($_GET['aula'], ENT_QUOTES, "UTF-8");
         $dia = htmlentities($_GET['dia'], ENT_QUOTES, "UTF-8");

@@ -331,6 +331,8 @@ $(function (){
                     bootbox.alert("Eliga numero de horas iguales en cada bloque de intercambio");
                 else if(msj === 0)
                     segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
+                else if(msj === 10)
+                    bootbox.alert("Debe seleccionar al menos 1 hora en cada area de intercambio");
                 else{
                     bootbox.confirm(msj,function(resultado){
                         if(resultado===true){
@@ -340,6 +342,10 @@ $(function (){
                 }
             }
         });        
+    });
+    
+    $(document).on("click","#buscarHoras",function(){
+        
     });
     
     $(document).on("click",".grupo",function(){  
