@@ -250,6 +250,16 @@ abstract class ManejadorAgrupaciones {
             conexion::consulta($consulta);
         }        
     }
+    
+    public static function eliminarAgrupacionPorId($id_agrupacion,$año,$ciclo){
+        $materias = ManejadorMaterias::getMateriasDeAgrupacion($id_agrupacion, $año, $ciclo);
+        $consulta = "DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."';";
+        $consulta = $consulta." DELETE FROM materia_agrupacion WHERE id_agrupacion='".$id_agrupacion."' AND año='$año' AND ciclo='$ciclo';";
+        conexion::consulta($consulta);
+        foreach ($materias as $materia) {
+            self::crearAgrupacionParaMateria($materia, $año, $ciclo);
+        }
+    }
         
     public static function buscarAgrupacionSoloNombre($buscarComo,$idDepartamento,$año,$ciclo){
         $datos = array();   
