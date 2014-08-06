@@ -381,5 +381,15 @@ abstract class ManejadorMaterias {
             
         }
         Conexion::consulta2($consulta_update);
-    }   
+    }
+    
+    public static function mismoDepartamentoAgrupacionMateria($agrupacion,$materia){
+        $materiasAgrup = $agrupacion->getMaterias();
+        foreach ($materiasAgrup as $materiaAgrup){
+            if($materiaAgrup->getCarrera()->getDepartamento() == $materia->getCarrera()->getDepartamento()){
+                return true;
+            }
+        }
+        return false;
+    }
 }

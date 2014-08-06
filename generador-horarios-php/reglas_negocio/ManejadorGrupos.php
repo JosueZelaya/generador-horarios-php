@@ -86,7 +86,7 @@ abstract class ManejadorGrupos {
         return FALSE;
     }
     
-    public static function agregar_docente_a_grupo($docente,$id_grupo,$tipo,$grupos){
+    private static function agregar_docente_a_grupo($docente,$id_grupo,$tipo,$grupos){
         foreach ($grupos as $grupo) {
             if($grupo->getId_grupo()==$id_grupo && $grupo->getTipo()==$tipo){
                 $grupo->addDocente($docente);
@@ -152,21 +152,12 @@ abstract class ManejadorGrupos {
     }
     
     public static function gruposIgualesEnBloque($grupos){
-        if($grupos[0]->getId_grupo() != 0){
-            $base = $grupos[0];
+        $array = array_unique($grupos);
+        if(count($array)==1){
+            return true;
         } else{
-            $base = $grupos[1];
+            return false;
         }
-        for ($i=1;$i<count($grupos);$i++){
-            if($base->getAgrup()->getId() != $grupos[$i]->getAgrup()->getId() || $base->getId_grupo() != $grupos[$i]->getId_grupo()){
-                if ($i == count($grupos)-1 && $grupos[$i]->getAgrup() == NULL){
-                    break;
-                } else{
-                    return false;
-                }
-            }
-        }
-        return true;
     }
     
     public static function mismoDepartamento($agrup,$id_depar){

@@ -52,6 +52,13 @@ if(isset($_GET['op'])){
         $dia = htmlentities($_GET['dia'], ENT_QUOTES, "UTF-8");
         $hora = htmlentities($_GET['hora'], ENT_QUOTES, "UTF-8");
         getMoreInfo($aula,$dia,$hora);
+    } elseif ($op == "buscar"){
+        $aula = htmlentities($_GET['aula'], ENT_QUOTES, "UTF-8");
+        $dia = htmlentities($_GET['dia'], ENT_QUOTES, "UTF-8");
+        $desde = htmlentities($_GET['desde'], ENT_QUOTES, "UTF-8");
+        $hasta = htmlentities($_GET['hasta'], ENT_QUOTES, "UTF-8");
+        if($dia==null){exit(json_encode(10));}
+        busquedaHoras($aula,$dia,$desde,$hasta);
     }
 }
 
@@ -144,7 +151,7 @@ function getDatosHorasIntercambio($desde1,$hasta1,$desde2,$hasta2){
 }
 
 function testIntercambio($gruposReemplazo,$gruposInsercion,$nombreDiaReemplazo,$nombreDiaInsercion,$aulas,$nombreAulaReemplazo,$nombreAulaInsercion,$desdeReemplazo,$hastaReemplazo,$desdeInsercion,$hastaInsercion){
-    $aulasPrueba = arrayCopy($aulas);
+    $aulasPrueba = arrayCopy($aulas); ///Se clonan las aulas para trabajar con informacion duplicada y no con la original
     $agrupaciones = ManejadorAgrupaciones::extraerAgrupacionesDeGrupos($gruposInsercion);
     if(count($agrupaciones)==0){
         return array();
@@ -206,4 +213,19 @@ function getMoreInfo($nombreAula,$nombreDia,$hora){
         echo '<tr><td>'.$codigos[$i].'</td><td>'.$nombresMaterias[$i].'</td><td>'.$carreras[$i].'</td><td>'.$nombresDeptos[$i].'</td></tr>';
     }
     echo '</table></div>';
+}
+
+function busquedaHoras($aula,$dia,$desde,$hasta){
+    global $facultad;
+    $grupos = ManejadorGrupos::getGruposEnRangoHoras($desde, $hasta, $facultad->getAulas(), $aula, $dia);
+    $agrupaciones = ManejadorAgrupaciones::extraerAgrupacionesDeGrupos($grupos);
+    if(count($agrupaciones)!=1 || !ManejadorGrupos::gruposIgualesEnBloque($grupos)){
+        exit(json_encode(1));
+    }
+    $cantidadHoras = ($hasta - $desde) + 1;
+    $bloques = ManejadorHoras::buscarHorasParaIntercambio($facultad->getAulas(), $agrupaciones[0], $grupos[0], $cantidadHoras);
+    if(count($bloques)!=0){
+        exit(json_encode(imprimirResultadoBusqueda($bloques)));
+    }
+    exit(2);
 }

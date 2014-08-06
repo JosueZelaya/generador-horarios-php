@@ -302,3 +302,19 @@ function imprimirMensajesAulas($msgs){
     $retorno .= '</ul></div>¿Desea continuar?';
     return $retorno;
 }
+
+function imprimirResultadoBusqueda($bloques){
+    $retorno = '<div id="search">';
+    $retorno .= '<h3>Resultados de la busqueda</h3>';
+    $retorno .= '<table class="table table-striped table-hover">'.
+            '<thead><th>Aula</th><th>Dia</th><th>Hora Disponible</th></thead>';
+    foreach ($bloques as $bloqueAulaDia){
+        $horasDia = $bloqueAulaDia['horas'];
+        $retorno .= '<tr><td>'.$bloqueAulaDia['aula'].'</td><td>'.$bloqueAulaDia['dia'].'</td><td>'.$horasDia[0]['inicio'].' - '.$horasDia[0]['fin'].'</td></tr>';
+        for ($i=1;$i<count($horasDia);$i++){
+            $retorno .= '<tr><td></td><td></td><td>'.$horasDia[$i]['inicio'].' - '.$horasDia[$i]['fin'].'</td></tr>';
+        }
+    }
+    $retorno .= '</table></div>';
+    return $retorno;
+}
