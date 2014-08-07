@@ -26,7 +26,7 @@ function paginar($numeroPagina){
     global $resultadosXPagina;
     global $bloques;
     $cadenaBotonInter = '<a class="btn btn-success" href="#" id="intercambiarHoraBusqueda"><i class="fa fa-retweet fa-1x"></i></a>';
-    $retorno .= '<table class="table table-striped table-hover table-condensed">'.
+    $retorno = '<table class="table table-striped table-hover table-condensed">'.
             '<thead><th>Aula</th><th>Dia</th><th>Hora Disponible</th><th>Operación</th></thead>';
     $inicio = ($numeroPagina * $resultadosXPagina) - $resultadosXPagina;
     $final = ($numeroPagina * $resultadosXPagina) - 1;

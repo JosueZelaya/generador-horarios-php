@@ -327,6 +327,15 @@ class ManejadorHoras {
         }
         return null;
     }
+    
+    public static function getIdHoraSegunFin($finHora,$horas){
+        foreach ($horas as $hora){
+            if(strcmp($hora->getFin(),$finHora)==0){
+                return $hora->getIdHora();
+            }
+        }
+        return null;
+    }
             
     public static function getHorarioTodasHoras($id_depar,$facultad,$tabla){
         $array = array();

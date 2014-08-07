@@ -59,6 +59,10 @@ if(isset($_GET['op'])){
         $hasta = htmlentities($_GET['hasta'], ENT_QUOTES, "UTF-8");
         if($dia==null){exit(json_encode(10));}
         busquedaHoras($aula,$dia,$desde,$hasta);
+    } elseif ($op == "id"){
+        $hora = htmlentities($_GET['valor'], ENT_QUOTES, "UTF-8");
+        $tipo = htmlentities($_GET['tipo'], ENT_QUOTES, "UTF-8");
+        obtenerIdHora($hora,$tipo);
     }
 }
 
@@ -229,4 +233,17 @@ function busquedaHoras($aula,$dia,$desde,$hasta){
         exit(json_encode(imprimirResultadoBusqueda()));
     }
     exit(2);
+}
+
+function obtenerIdHora($hora,$tipo){
+    global $facultad;
+    if($tipo == "inicio"){
+        $idHora = ManejadorHoras::getIdHoraSegunInicio($hora, $facultad->getAulas()[0]->getDias()[0]->getHoras());
+    } else{
+        $idHora = ManejadorHoras::getIdHoraSegunFin($hora, $facultad->getAulas()[0]->getDias()[0]->getHoras());
+    }
+    if($idHora == null){
+        exit("null");
+    }
+    exit(json_encode($idHora));
 }

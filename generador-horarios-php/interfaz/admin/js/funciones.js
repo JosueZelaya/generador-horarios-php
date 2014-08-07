@@ -318,9 +318,12 @@ $(function (){
         resetearDiasHorasArea("Intercambio2");
     });
     
-    $(document).on("click","#intercambiarHoras",function(){
+    $(document).on("click","#intercambiarHoras",function(event, aula){
         var aula1 = $('#aula-intercambio1').val();
-        var aula2 = $('#aula-intercambio2').val();
+        if($('#aula-intercambio2').length)
+            var aula2 = $('#aula-intercambio2').val();
+        else
+            var aula2 = aula;
         var dia1 = diaAntes;
         var dia2 = diaDespues;
         var desde1 = inicioAntes;
@@ -362,7 +365,28 @@ $(function (){
     });
     
     $(document).on("click","#intercambiarHoraBusqueda",function(){
-        
+        var contenedorDatos = $(this).parent().parent();
+        var aula = $(contenedorDatos).attr("data-aula");
+        var dia = $(contenedorDatos).attr("data-dia");
+        var inicio = $(contenedorDatos).attr("data-inicio");
+        var fin = $(contenedorDatos).attr("data-fin");
+        diaDespues = dia;
+        obtenerIdHora(inicio,"inicio").done(function(response){
+            var msj = jQuery.parseJSON(response);
+            if(msj === "null")
+                bootbox.alert("Hora no encontrada");
+            else{
+                inicioDespues = msj;
+                obtenerIdHora(fin,"fin").done(function(response){
+                    var msj = jQuery.parseJSON(response);
+                    if(msj === "null")
+                        bootbox.alert("Hora no encontrada");
+                    else
+                        finDespues = msj;
+                    $('#intercambiarHoras').trigger('click', aula);
+                });
+            }
+        });
     });
     
     $(document).on("click","#buscarHoras",function(){
@@ -664,9 +688,16 @@ function realizarIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2){
             if(msj !== 0){
                 bootbox.alert(msj);
             } else{
-                mostrarAreaIntercambio1(aula1);
-                mostrarAreaIntercambio2(aula2);
-                resetearDiasHoras();
+                if($("#search").length){
+                    mostrarAreaIntercambio1(aula2);
+                    resetearDiasHoras();
+                    $("div.row:eq(3)").html('');
+                    bootbox.alert("Intercambio realizado");
+                } else{
+                    mostrarAreaIntercambio1(aula1);
+                    mostrarAreaIntercambio2(aula2);
+                    resetearDiasHoras();
+                }
             }
         }
     });
@@ -701,5 +732,14 @@ function paginarBusqueda(){
             var msj = jQuery.parseJSON(data);
             paginacion(msj);
         }
+    });
+}
+
+function obtenerIdHora(valor,tipo){
+    var dataString = "op=id&tipo="+tipo+"&valor="+valor;
+    return $.ajax({
+        type: "GET",
+        url: './administracionHorario.php',
+        data: dataString
     });
 }
