@@ -63,4 +63,5 @@ chdir(dirname(__FILE__));
     <script type="text/javascript" src="../bootstrap/FooTable-2/js/footable.js?v=2-0-1"></script>
     <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>        
     <script type="text/javascript" src="js/funciones.js"></script>    
+    <script type="text/javascript" src="js/bootbox.min.js"></script>
 </html>

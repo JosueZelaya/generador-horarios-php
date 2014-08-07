@@ -260,12 +260,10 @@ abstract class ManejadorMaterias {
         $consulta = "SELECT * FROM agrupacion NATURAL JOIN materia_agrupacion NATURAL JOIN materias NATURAL JOIN carreras NATURAL JOIN departamentos WHERE id_agrupacion='$id_agrupacion' AND año='$año' AND ciclo='$ciclo';";
         $respuesta = conexion::consulta($consulta);
         while ($row = pg_fetch_array($respuesta)){
-            $materia = new MateriaAgrupacion();
+            $materia = new Materia("","","","","","","");
             $materia->setCodigo($row['cod_materia']);
-            $materia->setNombre($row['nombre_materia']);
-            $materia->setPlan_estudio($row['plan_estudio']);
-            $materia->setCarrera(new Carrera($row['id_carrera'],"",$row['nombre_carrera'],""));
-            $materia->setDepartamento(new Departamento($row['id_depar'], $row['nombre_depar']));            
+            $materia->setNombre($row['nombre_materia']);                   
+            $materia->setCarrera(new Carrera($row['id_carrera'],$row['plan_estudio'],$row['nombre_carrera'],new Departamento($row['id_depar'], $row['nombre_depar'])));
             $materias[] = $materia;
         }                   			
         return $materias;
