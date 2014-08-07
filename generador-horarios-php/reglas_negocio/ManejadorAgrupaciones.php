@@ -568,4 +568,25 @@ abstract class ManejadorAgrupaciones {
         conexion::consulta($consulta);
     }
     
+    /** Obtener las agrupaciones de los grupos
+     * 
+     * @param Grupo[] $grupos = grupos de los que se obtendran las agrupaciones
+     */
+    public static function extraerAgrupacionesDeGrupos($grupos){
+        $final = array();
+        foreach ($grupos as $grupo){
+            if($grupo->getAgrup()!=null){
+                $agrupaciones[] = $grupo->getAgrup();
+            }
+        }
+        if(!isset($agrupaciones)){
+            return $final;
+        }
+        foreach ($agrupaciones as $current) {  // Eliminar agrupaciones duplicadas
+            if (!in_array($current, $final,TRUE)) {
+                $final[] = $current;
+            }
+        }
+        return $final;
+    }
 }
