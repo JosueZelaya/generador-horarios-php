@@ -11,12 +11,12 @@ $facultad = $_SESSION['facultad'];
         <a class="btn btn-md btn-primary" href="#" id='intercambiarHoras'>
             <i class="fa fa-retweet fa-lg"></i> Intercambiar
         </a>
-        <a class="btn btn-md btn-primary disabled" href="#" id='buscarHoras'>
+        <a class="btn btn-md btn-primary" href="#" id='buscarHoras' data-loading-text="Buscando...">
             <i class="fa fa-search fa-lg"></i> Busqueda
         </a>
         <div class="btn-group pull-right" data-toggle="buttons">
             <label class="btn btn-primary active">
-              <input type="radio" name="options" id="simSearch" checked> Simple
+              <input type="radio" name="options" id="simSearch" checked> Básico
             </label>
             <label class="btn btn-primary">
               <input type="radio" name="options" id="advSearch"> Avanzado

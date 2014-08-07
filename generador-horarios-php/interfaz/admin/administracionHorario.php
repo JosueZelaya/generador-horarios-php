@@ -28,7 +28,7 @@ if(isset($_SESSION['facultad'])){
 }
 
 if(isset($_GET['op'])){
-    $op = $_GET['op'];
+    $op = htmlentities($_GET['op'], ENT_QUOTES, "UTF-8");
     if($op == 'generar'){
         ini_set('max_execution_time', 300);
         $ciclo = 1;
@@ -225,7 +225,8 @@ function busquedaHoras($aula,$dia,$desde,$hasta){
     $cantidadHoras = ($hasta - $desde) + 1;
     $bloques = ManejadorHoras::buscarHorasParaIntercambio($facultad->getAulas(), $agrupaciones[0], $grupos[0], $cantidadHoras);
     if(count($bloques)!=0){
-        exit(json_encode(imprimirResultadoBusqueda($bloques)));
+        $_SESSION['bloquesBusqueda'] = $bloques;
+        exit(json_encode(imprimirResultadoBusqueda()));
     }
     exit(2);
 }

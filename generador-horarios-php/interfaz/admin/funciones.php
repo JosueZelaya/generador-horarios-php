@@ -303,18 +303,26 @@ function imprimirMensajesAulas($msgs){
     return $retorno;
 }
 
-function imprimirResultadoBusqueda($bloques){
+function imprimirResultadoBusqueda(){
+//    $cadenaBotonInter = '<a class="btn btn-success" href="#" id="intercambiarHoraBusqueda"><i class="fa fa-retweet fa-1x"></i></a>';
+//    $retorno = '<div id="search">';
+//    $retorno .= '<h3>Resultados de la busqueda</h3>';
+//    $retorno .= '<table class="table table-striped table-hover table-condensed">'.
+//            '<thead><th>Aula</th><th>Dia</th><th>Hora Disponible</th><th>Operación</th></thead>';
+//    foreach ($bloques as $bloqueAulaDia){
+//        $horasDia = $bloqueAulaDia['horas'];
+//        $aula = $bloqueAulaDia['aula'];
+//        $dia = $bloqueAulaDia['dia'];
+//        $retorno .= '<tr data-aula='.$aula.' data-dia='.$dia.' data-inicio='.$horasDia[0]['inicio'].' data-fin='.$horasDia[0]['fin'].'><td>'.$bloqueAulaDia['aula'].'</td><td>'.$bloqueAulaDia['dia'].'</td><td>'.$horasDia[0]['inicio'].' - '.$horasDia[0]['fin'].'</td><td>'.$cadenaBotonInter.'</td></tr>';
+//        for ($i=1;$i<count($horasDia);$i++){
+//            $retorno .= '<tr data-aula='.$aula.' data-dia='.$dia.' data-inicio='.$horasDia[$i]['inicio'].' data-fin='.$horasDia[$i]['fin'].'><td></td><td></td><td>'.$horasDia[$i]['inicio'].' - '.$horasDia[$i]['fin'].'</td><td>'.$cadenaBotonInter.'</td></tr>';
+//        }
+//    }
+//    $retorno .= '</table></div>';
+//    return $retorno;
     $retorno = '<div id="search">';
     $retorno .= '<h3>Resultados de la busqueda</h3>';
-    $retorno .= '<table class="table table-striped table-hover">'.
-            '<thead><th>Aula</th><th>Dia</th><th>Hora Disponible</th></thead>';
-    foreach ($bloques as $bloqueAulaDia){
-        $horasDia = $bloqueAulaDia['horas'];
-        $retorno .= '<tr><td>'.$bloqueAulaDia['aula'].'</td><td>'.$bloqueAulaDia['dia'].'</td><td>'.$horasDia[0]['inicio'].' - '.$horasDia[0]['fin'].'</td></tr>';
-        for ($i=1;$i<count($horasDia);$i++){
-            $retorno .= '<tr><td></td><td></td><td>'.$horasDia[$i]['inicio'].' - '.$horasDia[$i]['fin'].'</td></tr>';
-        }
-    }
-    $retorno .= '</table></div>';
+    $retorno .= '<div id="contentResul"></div><center>';
+    $retorno .= '<div id="page-selection"></div></center>';
     return $retorno;
 }
