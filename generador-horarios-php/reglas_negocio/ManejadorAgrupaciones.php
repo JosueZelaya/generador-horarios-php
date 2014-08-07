@@ -253,7 +253,8 @@ abstract class ManejadorAgrupaciones {
     
     public static function eliminarAgrupacionPorId($id_agrupacion,$año,$ciclo){
         $materias = ManejadorMaterias::getMateriasDeAgrupacion($id_agrupacion, $año, $ciclo);
-        $consulta = "DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."';";
+        $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id_agrupacion."' AND año='$año' AND ciclo='$ciclo';";
+        $consulta = $consulta." DELETE FROM agrupacion WHERE id_agrupacion='".$id_agrupacion."';";
         $consulta = $consulta." DELETE FROM materia_agrupacion WHERE id_agrupacion='".$id_agrupacion."' AND año='$año' AND ciclo='$ciclo';";
         conexion::consulta($consulta);
         foreach ($materias as $materia) {
@@ -481,8 +482,13 @@ abstract class ManejadorAgrupaciones {
     public static function agregarMateriasAgrupacion($materias,$año,$ciclo,$agrupacion){        
         $consulta = "";
         foreach ($materias as $materia) {
-            $carrera = $materia->getCarrera();
-            $consulta = $consulta." UPDATE materia_agrupacion SET id_agrupacion='$agrupacion' WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
+            if(self::materiaYaEstaAgrupada($materia, $año, $ciclo)){
+                $carrera = $materia->getCarrera();
+                $consulta = $consulta." UPDATE materia_agrupacion SET id_agrupacion='$agrupacion' WHERE cod_materia='".$materia->getCodigo()."' AND plan_estudio='".$carrera->getPlanEstudio()."' AND id_carrera='".$carrera->getCodigo()."' AND año='$año' AND ciclo='$ciclo';";
+            }else{
+                $carrera = $materia->getCarrera();
+                $consulta = $consulta."INSERT INTO materia_agrupacion(plan_estudio,id_carrera,cod_materia,id_agrupacion,año,ciclo) VALUES ('".$carrera->getPlanEstudio()."','".$carrera->getCodigo()."','".$materia->getCodigo()."',$agrupacion,$año,$ciclo);";
+            }            
         }        
         conexion::consulta($consulta);   
     }
