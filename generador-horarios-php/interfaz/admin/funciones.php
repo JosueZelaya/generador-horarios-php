@@ -102,12 +102,12 @@ function imprimirMalla($tabla){
             }else{
                 $celda = $tabla[$i][$j];
                 if($celda!=""){
-                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
+                    $contenido = "Materia: ".$celda['nombre']."<br/>"."Grupo: ".$celda['tipo']." ".$celda['grupo']."<br/> Departamento: ".$celda['departamento'];
                     if($celda['more']){
                         $contenido .= '<br><a id="moreInfo" href="#">Mas</a>';
                     }
                     if(!strcmp($celda['grupo'],"")==0){                   
-                        echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
+                        echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$celda['tipo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$celda['tipo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
                         if($j<3){
                             echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                         }else{
@@ -119,7 +119,8 @@ function imprimirMalla($tabla){
                             echo "<div class='centrar'>".$celda['texto'].'</div></div>';
                         }else{
                             echo "<div class='celda-hora grupoVacio ".$celda['dia'].$celda['idHora']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
-                            echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
+                            //echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
+                            echo '</div>';
                         }                    
                     }                                        
                 }else{
@@ -255,4 +256,57 @@ function getDia($indice){
         case 7:
             return "domingo";            
     }
+}
+
+function arrayCopy( array $array ) {
+        $result = array();
+        foreach( $array as $key => $val ) {
+            if( is_array( $val ) ) {
+                $result[$key] = arrayCopy( $val );
+            } elseif ( is_object( $val ) ) {
+                $result[$key] = clone $val;
+            } else {
+                $result[$key] = $val;
+            }
+        }
+        return $result;
+}
+
+function imprimirMensajesChoquesIntercambios($msgs){
+    $retorno = '';
+    $retorno.= '<div class="panel panel-danger">'.
+            '<div class="panel-heading">Conflictos</div>'.
+            '<table class="table">'.
+            '<tr><th>'.$msgs[2]['dia2'].', '.$msgs[1]['inicio1'].'-'.$msgs[1]['fin1'].'</th><th>'.$msgs[2]['dia1'].', '.$msgs[1]['inicio2'].'-'.$msgs[1]['fin2'].'</th></tr><tr>';
+    foreach ($msgs[0] as $msgsIntercambio){
+        $retorno.= '<td><ul class="list-group">';
+        foreach ($msgsIntercambio as $msgConflict){
+            $retorno.= '<li class="list-group-item">'.$msgConflict.'</li>';
+        }
+        $retorno .= '</ul></td>';
+    }
+    $retorno.= '</tr></table></div>¿Desea continuar?';
+    return $retorno;
+}
+
+function imprimirMensajesAulas($msgs){
+    $retorno = '';
+    $retorno.= '<div class="panel panel-danger">'.
+            '<div class="panel-heading">Conflictos</div>'.
+            '<ul class="list-group">';
+    foreach ($msgs as $msgsIntercambio) {
+        foreach ($msgsIntercambio as $msgConflict){
+            $retorno.= '<li class="list-group-item">'.$msgConflict.'</li>';
+        }
+    }
+    $retorno .= '</ul></div>¿Desea continuar?';
+    return $retorno;
+}
+
+function imprimirResultadoBusqueda(){
+    $retorno = '<div id="search">';
+    $retorno .= '<h3>Resultados de la busqueda</h3>';
+    $retorno .= '<div id="contentResul"></div><center>';
+    $retorno .= '<div id="page-selection"></div></center>';
+    return $retorno;
 }

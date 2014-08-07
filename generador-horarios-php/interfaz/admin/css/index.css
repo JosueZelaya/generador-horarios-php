@@ -49,3 +49,23 @@
 #barraVertical{
     padding-left: 10px;
 }
+
+#main-content span.index_icon{
+    font-size: 100px;
+}
+
+#admin_aulas_modal span{
+    font-size: 80px;
+}
+
+#admin_departamentos_modal span{
+    font-size: 80px;
+}
+
+#admin_materias_modal span{
+    font-size: 80px;
+}
+
+#admin_users_modal span{
+    font-size: 80px;
+}

@@ -31,8 +31,8 @@ $aulas="";
 $aula="";
 if($_GET){
     ManejadorSesion::sec_session_start();
-    if(isset($_SESSION['facultad'])){
-        $facultad = $_SESSION['facultad'];
+    if(isset($_SESSION['reservaciones_facultad'])){
+        $facultad = $_SESSION['reservaciones_facultad'];
         $aulas = $facultad->getAulas();
     }
     if(isset($_GET['aula'])){
@@ -51,7 +51,7 @@ if($_GET){
     }
     $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
     ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
-    $_SESSION['facultad'] = $facultad;
+    $_SESSION['reservaciones_facultad'] = $facultad;
     $aulas = $facultad->getAulas();
     $aula = $aulas[0]->getNombre();
 }

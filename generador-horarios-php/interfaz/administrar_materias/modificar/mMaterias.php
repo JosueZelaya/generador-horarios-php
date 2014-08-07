@@ -27,9 +27,6 @@ if($_POST){
             print json_encode($respuesta);            
         }       
 
-    }    
-    
+    }
 }
 
-
-?>

@@ -59,3 +59,4 @@ if (ManejadorSesion::comprobar_sesion() == true){
 }else{
     echo "No está autorizado para ver esta página";
 }
+

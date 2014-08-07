@@ -30,5 +30,5 @@ if (isset($_GET)){
             $cont++;
         }
         echo json_encode($arrayGrupos);
-    }       
+    }
 }

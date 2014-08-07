@@ -4,6 +4,7 @@ chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Departamento.php';
+chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 ManejadorSesion::sec_session_start();
@@ -109,6 +110,30 @@ if(isset($_GET['criterio'])){
         </form>
         <br/>
         <?php
+    }else if($criterio=='hora'){?>        
+        <li id='filtroTODO'><a href='#'>TODO</a></li>          
+        <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
+        <li id='filtroHora' class='active'><a href='#'>Por Hora</a></li>
+        </ul>
+        <br/>
+        <form class='form-inline' role='form'>
+        <label for="departamento">Departamentos:</label>
+        <select id='departamento' class='departamento form-control'>
+            <option value='todos'>TODOS</option>    
+        <?php
+        foreach ($departamentos as $departamento) {
+            echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";    
+        }
+        ?>
+        </select>
+<!--        <label for="carrera">Carreras:</label>
+        <select id='carrera' class='carrera form-control'>
+            <option value='todos'>TODAS</option>    
+        </select>        -->
+        <input type='button' name='mostrarHorarioHora' id='mostrarHorarioHora' class='btn btn-primary' value='Filtrar' tabindex='4'>    
+        </form>
+        <br/>
+        <?php
     }else{ //Muestra el filtro por defecto?>
         <li  id='filtroTODO' class='active'><a href='#'>TODO</a></li>              
         <li id='filtroMateria'><a href='#'>Carrera/Materia</a></li>
@@ -156,7 +181,7 @@ if(isset($_GET['criterio'])){
         <option value='todos'>TODOS</option>    
     <?php
     foreach ($departamentos as $departamento) {
-        echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";    
+        echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
     }
     ?>
     </select>    

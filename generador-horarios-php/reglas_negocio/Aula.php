@@ -20,6 +20,14 @@ class Aula {
         $this->exclusiva = false;
     }
     
+    function __clone() {
+        foreach ($this->dias as $dia){
+            $dias[] = clone $dia;
+        }
+        $this->dias = $dias;
+    }
+
+
     public function getNombre() {
         return $this->nombre;
     }

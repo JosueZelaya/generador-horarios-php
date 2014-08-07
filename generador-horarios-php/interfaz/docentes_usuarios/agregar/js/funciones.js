@@ -75,9 +75,4 @@ $(function(){
         $("#agregar_usuarios").addClass("active");
         $("#contenido").load("agregarUsuario.php");
     });
-    
-    
 });
-
-
-

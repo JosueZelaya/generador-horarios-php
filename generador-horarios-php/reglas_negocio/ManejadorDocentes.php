@@ -17,10 +17,10 @@ abstract class ManejadorDocentes{
      * @return Docente[] $docentes
      */
     public static function obtenerTodosDocentes($todos_cargos,$año,$ciclo,$todos_depars){
-        $sql_consulta = "SELECT id_docente,contratacion,id_depar,cargo FROM docentes where activo=TRUE";
+        $sql_consulta = "SELECT id_docente,nombres,apellidos,contratacion,id_depar,cargo FROM docentes where activo=TRUE";
         $respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
-            $docente = new Docente($fila['id_docente'],$fila['contratacion'], ManejadorDepartamentos::obtenerDepartamento($fila['id_depar'], $todos_depars));
+            $docente = new Docente($fila['id_docente'],$fila['nombres'],$fila['apellidos'],$fila['contratacion'], ManejadorDepartamentos::obtenerDepartamento($fila['id_depar'], $todos_depars));
             if(isset($fila['cargo'])){
                 $docente->setCargo(ManejadorCargos::obtenerCargo($fila['cargo'], $todos_cargos));
             }
@@ -76,6 +76,7 @@ abstract class ManejadorDocentes{
             }
         }
         if(isset($horas) && count($horas)>1){
+            $horas = array_values($horas);
             $horarioDoc1 = $horas[0];
             foreach ($horarioDoc1 as $hora){ // Todas las horas del docente 0
                 for ($i=1; $i<count($horas);$i++){ // horarios de todos los docentes
@@ -160,23 +161,22 @@ abstract class ManejadorDocentes{
     
     /** Determina si el docente o los docentes de un grupo ya estan ocupados en una hora específica de un día especifico
      * 
-     * @param type $docentes
-     * @param type $hora
+     * @param Docente[] $docentes
+     * @param Hora $hora
      */
     public static function docenteTrabajaHora($docentes,$hora){
+        $docentesConflict = array();
         $grupo = $hora->getGrupo();
-        $docentesGrupo = $grupo->getDocentes();
         foreach ($docentes as $docente){
             if(in_array($docente, $grupo->getDocentes(),TRUE)){
-                error_log ("El docente: ".$docente->getIdDocente()." atiende ya el grupo: ".$grupo->getTipo()." ".$grupo->getId_grupo()." de la agrupacion: ".$grupo->getAgrup()->getId()." a la hora: ".$hora->getIdHora(),0);
-                return true;
+                $docentesConflict[] = $docente;
             }
         }
+        return $docentesConflict;
     }
     
     public static function buscarDocentes($buscarComo,$idDepartamento){
         $datos = array();
-        $materias = array();
         if($idDepartamento=="todos"){
 //            $consulta = "SELECT * FROM docentes WHERE (nombres iLIKE '%$buscarComo%' OR apellidos iLIKE '%$buscarComo%') LIMIT 15";
             $consulta = "SELECT * FROM docentes WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND activo='t' LIMIT 50;";

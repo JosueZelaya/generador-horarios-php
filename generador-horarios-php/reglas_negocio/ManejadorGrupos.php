@@ -86,7 +86,7 @@ abstract class ManejadorGrupos {
         return FALSE;
     }
     
-    public static function agregar_docente_a_grupo($docente,$id_grupo,$tipo,$grupos){
+    private static function agregar_docente_a_grupo($docente,$id_grupo,$tipo,$grupos){
         foreach ($grupos as $grupo) {
             if($grupo->getId_grupo()==$id_grupo && $grupo->getTipo()==$tipo){
                 $grupo->addDocente($docente);
@@ -102,7 +102,8 @@ abstract class ManejadorGrupos {
             while($fila = pg_fetch_array($respuesta)){
                 if(self::yaSeCreoGrupo($fila['id_grupo'], $fila['tipo_grupo'], $grupos)){
                     $docente = new Docente($fila["id_docente"],"");
-                    $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
+                    $docente->setNombres($fila["nombres"]);
+                    $docente->setApellidos($fila["apellidos"]);
                     self::agregar_docente_a_grupo($docente, $fila['id_grupo'], $fila['tipo_grupo'], $grupos);
                 }else{
                     $grupo = new Grupo();
@@ -111,7 +112,8 @@ abstract class ManejadorGrupos {
                     $grupo->setTipo($fila['tipo_grupo']);
                     $docentes = array();
                     $docente = new Docente($fila["id_docente"],"","");
-                    $docente->setNombre_completo($fila["nombres"]." ".$fila["apellidos"]);
+                    $docente->setNombres($fila["nombres"]);
+                    $docente->setApellidos($fila["apellidos"]);
                     $docentes[] = $docente;
                     $grupo->setDocentes($docentes);
                     $grupos[] = $grupo;
@@ -150,21 +152,12 @@ abstract class ManejadorGrupos {
     }
     
     public static function gruposIgualesEnBloque($grupos){
-        if($grupos[0]->getId_grupo() != 0){
-            $base = $grupos[0];
+        $array = array_unique($grupos);
+        if(count($array)==1){
+            return true;
         } else{
-            $base = $grupos[1];
+            return false;
         }
-        for ($i=1;$i<count($grupos);$i++){
-            if($base->getAgrup()->getId() != $grupos[$i]->getAgrup()->getId() || $base->getId_grupo() != $grupos[$i]->getId_grupo()){
-                if ($i == count($grupos)-1 && $grupos[$i]->getAgrup() == NULL){
-                    break;
-                } else{
-                    return false;
-                }
-            }
-        }
-        return true;
     }
     
     public static function mismoDepartamento($agrup,$id_depar){
@@ -253,4 +246,26 @@ abstract class ManejadorGrupos {
         conexion::consulta($consulta);
     }
     
+    /** Extraer los docentes de cada grupo pasado en array de grupos
+     * 
+     * @param Grupo[] $grupos = grupos de donde se extraeran los docentes
+     */
+    public static function extraerDocentesDeGrupos($grupos){
+        $docentes = array();
+        foreach ($grupos as $grupo){
+            if($grupo->getId_grupo() != 0){
+                $docentes[] = $grupo->getDocentes();
+            } else{
+                $docentes[] = array();
+            }
+        }
+        return $docentes;
+    }
+    
+    public static function getGruposEnRangoHoras($desde,$hasta,$aulas,$aula,$dia){
+        for($i=$desde;$i<=$hasta;$i++){
+            $grupos[] = ManejadorGrupos::getGrupoEnHora($aulas, $aula, $dia, $i);
+        }
+        return $grupos;
+    }
 }

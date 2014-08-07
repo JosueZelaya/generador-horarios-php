@@ -1,12 +1,19 @@
+//Exit 10 = cuando no se ha seleccionado nada en las cuadriculas
+//Exit 0 = cuando fue exitoso
+
 var diaAntes="";
 var inicioAntes="";
 var finAntes="";
 var diaDespues="";
 var inicioDespues="";
 var finDespues="";
-var diaSeleccionado="";
-var horaInicioSeleccionada="";
-var horaFinSeleccionada="";
+var diaSeleccionado1="";
+var diaSeleccionado2="";
+var horaInicioSeleccionada1="";
+var horaInicioSeleccionada2="";
+var horaFinSeleccionada1="";
+var horaFinSeleccionada2="";
+var areaHTML="";
 
 $(function (){
     $(document).on("click","#generarHorario",function(){
@@ -26,6 +33,7 @@ $(function (){
                             $('#contenido').load("./cargando.php");
                             generarHorario();
                         }else{
+                            addFiltro();
                             $('#filtro').load("./formularioFiltro.php");
                         }
                     });
@@ -60,7 +68,7 @@ $(function (){
             }
         });    
     });
-   
+
     $(document).on("click","#mostrarHorario",function(){        
         var aula = $("#aula").val();
         var departamento = $('#departamento').val();       
@@ -247,6 +255,7 @@ $(function (){
                             mostrarAreaIntercambio1(aula);
                             mostrarAreaIntercambio2(aula);
                             resetearDiasHoras();
+                            $("#buscarHoras").hide();
                         }
                     });
                 }else{
@@ -300,16 +309,21 @@ $(function (){
     $(document).on("change","#aula-intercambio1",function(){
         var aula = $("#aula-intercambio1").val();
         mostrarAreaIntercambio1(aula);
+        resetearDiasHorasArea("Intercambio1");
     });
     
     $(document).on("change","#aula-intercambio2",function(){
         var aula = $("#aula-intercambio2").val();
         mostrarAreaIntercambio2(aula);
+        resetearDiasHorasArea("Intercambio2");
     });
     
-    $(document).on("click","#intercambiarHoras",function(){
+    $(document).on("click","#intercambiarHoras",function(event, aula){
         var aula1 = $('#aula-intercambio1').val();
-        var aula2 = $('#aula-intercambio2').val();
+        if($('#aula-intercambio2').length)
+            var aula2 = $('#aula-intercambio2').val();
+        else
+            var aula2 = aula;
         var dia1 = diaAntes;
         var dia2 = diaDespues;
         var desde1 = inicioAntes;
@@ -319,25 +333,92 @@ $(function (){
         var dataString = 'op=intercambio&aula1='+aula1+'&aula2='+aula2+'&dia1='+dia1+'&dia2='+dia2+'&desde1='+desde1+"&desde2="+desde2+'&hasta1='+hasta1+'&hasta2='+hasta2;
         $.ajax({
             type: "GET",
-            url: './ManejadorInterfaz.php',
+            url: './administracionHorario.php',
             data: dataString,
             success: function(data){
-                var retorno = data.toString();
-                if(retorno.search("choca") != -1){
-                    bootbox.confirm(data,function(resultado){
+                var msj = jQuery.parseJSON(data);
+                if(msj === 1)
+                    bootbox.alert("Eliga numero de horas iguales en cada bloque de intercambio");
+                else if(msj === 0)
+                    segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
+                else if(msj === 10)
+                    bootbox.alert("Debe seleccionar al menos 1 hora en cada area de intercambio");
+                else{
+                    bootbox.confirm(msj,function(resultado){
                         if(resultado===true){
-                            intercambiarConfirm(aula1,dia1,desde1,aula2,dia2,desde2);                            
+                            segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
                         }
                     });
-                } else{
-                    bootbox.alert(data,function(){
-                        mostrarAreaIntercambio1(aula1);
-                        mostrarAreaIntercambio2(aula2);
-                        resetearDiasHoras();
-                    });                                    
                 }
             }
         });        
+    });
+    
+    $(document).on("change","input:radio[id$='Search']",function(){
+        var msj = $(this).attr("id");
+        if(msj === "advSearch"){
+            $("div.row:eq(3)").html('');
+            $("#buscarHoras").show();
+            $("#intercambiarHoras").hide();
+        } else
+            $("#intercambioHorario").click();
+    });
+    
+    $(document).on("click","#intercambiarHoraBusqueda",function(){
+        var contenedorDatos = $(this).parent().parent();
+        var aula = $(contenedorDatos).attr("data-aula");
+        var dia = $(contenedorDatos).attr("data-dia");
+        var inicio = $(contenedorDatos).attr("data-inicio");
+        var fin = $(contenedorDatos).attr("data-fin");
+        diaDespues = dia;
+        obtenerIdHora(inicio,"inicio").done(function(response){
+            var msj = jQuery.parseJSON(response);
+            if(msj === "null")
+                bootbox.alert("Hora no encontrada");
+            else{
+                inicioDespues = msj;
+                obtenerIdHora(fin,"fin").done(function(response){
+                    var msj = jQuery.parseJSON(response);
+                    if(msj === "null")
+                        bootbox.alert("Hora no encontrada");
+                    else
+                        finDespues = msj;
+                    $('#intercambiarHoras').trigger('click', aula);
+                });
+            }
+        });
+    });
+    
+    $(document).on("click","#buscarHoras",function(){
+        var btn = $(this);
+        btn.button('loading');
+        if($("div#search").length)
+            $("div.row:eq(3)").html('');
+        var aula = $('#aula-intercambio1').val();
+        var dia = diaAntes;
+        var desde = inicioAntes;
+        var hasta = finAntes;
+        var dataString = 'op=buscar&aula='+aula+'&dia='+dia+'&desde='+desde+'&hasta='+hasta;
+        $.ajax({
+            type: "GET",
+            url: './administracionHorario.php',
+            data: dataString,
+            success: function(data){
+                var msj = jQuery.parseJSON(data);
+                if(msj === 10)
+                    bootbox.alert("Debe seleccionar al menos 1 hora en el area de intercambio");
+                else if(msj === 1)
+                    bootbox.alert("Debe seleccionar horas de una misma agrupacion, grupo y tipo de grupo");
+                else if(msj === 2)
+                    bootbox.alert("No se encontro ningun espacio disponible");
+                else{
+                    $("div.row:eq(3)").html(msj);
+                    paginarBusqueda();
+                }
+            }
+        }).always(function(){
+            btn.button('reset');
+        });
     });
     
     $(document).on("click",".grupo",function(){  
@@ -350,7 +431,7 @@ $(function (){
         $('.'+grupo).removeClass("grupo").addClass("grupoSeleccionado");        
     });
     
-    $(document).on("click",".grupoSeleccionado",function(){        
+    $(document).on("click",".grupoSeleccionado",function(){
         $(".grupoSeleccionado").css("background","");
         $(".grupoSeleccionado").removeClass("grupoSeleccionado").addClass("grupo");
         $(this).css("background","#9CEEE6");        
@@ -361,72 +442,22 @@ $(function (){
         $(".grupoSeleccionado").css("background","");
     });
 
-    $(document).on("click",".grupoVacioIntercambio1",function(){                                    
+    $(document).on("click",".intercambio1",function(){                                    
         $(".intercambio1").css("background","");        
         seleccionarCeldas("Intercambio1",$(this));
-        diaAntes = diaSeleccionado;
-        inicioAntes = horaInicioSeleccionada;
-        finAntes = horaFinSeleccionada;        
+        diaAntes = diaSeleccionado1;
+        inicioAntes = horaInicioSeleccionada1;
+        finAntes = horaFinSeleccionada1;        
         iluminarCeldas(diaAntes,inicioAntes,finAntes,"intercambio1");          
-    });    
+    });
     
-    $(document).on("click",".grupoVacioIntercambio2",function(){
+    $(document).on("click",".intercambio2",function(){
         $(".intercambio2").css("background","");        
         seleccionarCeldas("Intercambio2",$(this));
-        diaDespues = diaSeleccionado;
-        inicioDespues = horaInicioSeleccionada;
-        finDespues = horaFinSeleccionada;
-        iluminarCeldas(diaDespues,inicioDespues,finDespues,"intercambio2");        
-    });
-    
-    $(document).on("click",".grupoIntercambio1",function(){  
-        $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
-        $(".grupoIntercambio1").css("background","");                
-        $(".grupoSeleccionadoIntercambio1").css("background","");                
-        $(".grupoVacioIntercambio1").css("background","");
-        var grupo = $(this).attr("data-grupo");
-        $('.intercambio1'+grupo).css("background","#9CEEE6");        
-        diaAntes = $(this).attr("data-dia");
-        inicioAntes = $(this).attr("data-iniciobloque");
-        finAntes = $(this).attr("data-finbloque");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
-        $('.intercambio1'+grupo).removeClass("grupoIntercambio1").addClass("grupoSeleccionadoIntercambio1");        
-    });
-    
-    $(document).on("click",".grupoSeleccionadoIntercambio1",function(){        
-        $(".grupoSeleccionadoIntercambio1").css("background","");
-        $(".grupoSeleccionadoIntercambio1").removeClass("grupoSeleccionadoIntercambio1").addClass("grupoIntercambio1");
-        $(".grupoVacioIntercambio1").css("background","");
-        $(this).css("background","#9CEEE6");        
-        diaAntes = $(this).attr("data-dia");
-        inicioAntes = $(this).attr("data-hora");
-        finAntes = $(this).attr("data-hora");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-hora"),$(this).attr("data-hora"));
-    });
-    
-    $(document).on("click",".grupoIntercambio2",function(){  
-        $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
-        $(".grupoIntercambio2").css("background","");                
-        $(".grupoSeleccionadoIntercambio2").css("background","");                
-        $(".grupoVacioIntercambio2").css("background","");
-        var grupo = $(this).attr("data-grupo");
-        $('.intercambio2'+grupo).css("background","#9CEEE6");
-        diaDespues = $(this).attr("data-dia");
-        inicioDespues = $(this).attr("data-iniciobloque");
-        finDespues = $(this).attr("data-finbloque");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-iniciobloque"),$(this).attr("data-finbloque"));
-        $('.intercambio2'+grupo).removeClass("grupoIntercambio2").addClass("grupoSeleccionadoIntercambio2");        
-    });
-    
-    $(document).on("click",".grupoSeleccionadoIntercambio2",function(){
-        $(".grupoSeleccionadoIntercambio2").css("background","");
-        $(".grupoSeleccionadoIntercambio2").removeClass("grupoSeleccionadoIntercambio2").addClass("grupoIntercambio2");
-        $(".grupoVacioIntercambio2").css("background","");
-        $(this).css("background","#9CEEE6");
-        diaDespues = $(this).attr("data-dia");
-        inicioDespues = $(this).attr("data-hora");
-        finDespues = $(this).attr("data-hora");
-        asignarDiasHoras($(this).attr("data-dia"),$(this).attr("data-hora"),$(this).attr("data-hora"));
+        diaDespues = diaSeleccionado2;
+        inicioDespues = horaInicioSeleccionada2;
+        finDespues = horaFinSeleccionada2;
+        iluminarCeldas(diaDespues,inicioDespues,finDespues,"intercambio2");
     });
     
     $(document).on("click","#moreInfo",function(){
@@ -446,7 +477,7 @@ $(function (){
         var dataString = 'op=moreInfo&aula='+aula+'&dia='+dia+'&hora='+hora;
         $.ajax({
             type: "GET",
-            url: './ManejadorInterfaz.php',
+            url: './administracionHorario.php',
             data: dataString,
             success: function(data){
                 bootbox.alert(data);
@@ -475,11 +506,19 @@ function generarHorario(){
     setTimeout(function(){
         $.ajax({
             type: "GET",
-            url: "./ManejadorInterfaz.php",
+            url: "./administracionHorario.php",
             data: "op=generar",
             success: function(data){
-                $('#contenido').html(data);
-                $('#filtro').load("./formularioFiltro.php");
+                var msj = jQuery.parseJSON(data);
+                if(msj !== 0){
+                    bootbox.alert("Error en generacion de horario: "+data);
+                    limpiarMain();
+                } else{
+                    limpiarMain();
+                    addFiltro();
+                    addContent();
+                    $('#filtro').load("./formularioFiltro.php");
+                }
             }
         });
     },1000);
@@ -545,36 +584,32 @@ function mostrarAreaIntercambio2(aula){
     });    
 }
 
-function seleccionarCeldas(area,celda){    
+function seleccionarCeldas(area,celda){
+    if(area === "Intercambio1"){
+        diaSeleccionado = diaSeleccionado1;
+        horaInicioSeleccionada = horaInicioSeleccionada1;
+        horaFinSeleccionada = horaFinSeleccionada1;
+    } else{
+        diaSeleccionado = diaSeleccionado2;
+        horaInicioSeleccionada = horaInicioSeleccionada2;
+        horaFinSeleccionada = horaFinSeleccionada2;
+    }
     if(diaSeleccionado===""){ //Si aun no se ha elegido ningún día
         celda.css("background","#9CEEE6");
-        asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-hora"),celda.attr("data-hora"));        
+        asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-hora"),celda.attr("data-hora"),area);
     }else{ //Si ya se había elegido alguna celda en algún día
         if(diaSeleccionado===celda.attr("data-dia")){ //Si se desa elegir una celda del mismo día anterior            
-            asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,horaFinSeleccionada);
+            asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,horaFinSeleccionada,area);
             horaActual = celda.attr("data-hora");
             if(esUnaCeldaSeleccionada(horaActual,horaInicioSeleccionada,horaFinSeleccionada)){ //Si se selecciona una celda que ya había sido seleccionada                
-                asignarDiasHoras("","","");                    
+                asignarDiasHoras("","","",area);
             }else if(horaFinSeleccionada > horaActual){ //Cuando se selecciona de abajo hacia arriba                
-                if(horaFinSeleccionada-horaActual<=2){ //Si se seleccionó en una o dos celda anterior
-                    horaInicioSeleccionada = celda.attr("data-hora");
-                }else{ //Si se seleccionó en 3 o más celdas anteriores  
-                    asignarDiasHoras(diaSeleccionado,celda.attr("data-hora"),celda.attr("data-hora"));                        
-                    $(".grupoSeleccionado"+area).css("background","");
-                    $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
-                }
+                asignarDiasHoras(diaSeleccionado,celda.attr("data-hora"),horaFinSeleccionada,area);
             }else if(horaFinSeleccionada < horaActual){ //Cuando se selecciona de arriba hacia abajo    
-                if(horaActual-horaInicioSeleccionada<=2){ //Si se seleccionó en una o dos celdas posteriores                    
-                    //horaFinSeleccionada = celda.attr("data-hora");
-                    asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,celda.attr("data-hora"));                                                
-                }else{ //Si se seleccionó en 3 o más celdas posteriores
-                    asignarDiasHoras(diaSeleccionado,celda.attr("data-hora"),celda.attr("data-hora"));                                                
-                    $(".grupoSeleccionado"+area).css("background","");
-                    $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area);
-                }
+                asignarDiasHoras(diaSeleccionado,horaInicioSeleccionada,celda.attr("data-hora"),area);
             } 
         }else{ //Si se elige una celda en un día distinto al anterior                          
-           asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-hora"),celda.attr("data-hora"));
+           asignarDiasHoras(celda.attr("data-dia"),celda.attr("data-hora"),celda.attr("data-hora"),area);
            celda.css("background","#9CEEE6");               
            $(".grupoSeleccionado"+area).css("background","");
            $(".grupoSeleccionado"+area).removeClass("grupoSeleccionado"+area).addClass("grupo"+area); 
@@ -583,18 +618,38 @@ function seleccionarCeldas(area,celda){
 }
 
 function resetearDiasHoras(){
-    diaAntes="";
-    inicioAntes="";
-    finAntes="";
-    diaDespues="";
-    inicioDespues="";
-    finDespues="";    
+    resetearDiasHorasArea("Intercambio1");
+    resetearDiasHorasArea("Intercambio2");
 }
 
-function asignarDiasHoras(dia,horaInicio,horaFin){    
-    diaSeleccionado=dia;
-    horaInicioSeleccionada=parseInt(horaInicio);
-    horaFinSeleccionada=parseInt(horaFin);    
+function resetearDiasHorasArea(area){
+    if(area=="Intercambio1"){
+        diaAntes="";
+        inicioAntes="";
+        finAntes="";
+        diaSeleccionado1="";
+        horaInicioSeleccionada1="";
+        horaFinSeleccionada1="";
+    } else{
+        diaDespues="";
+        inicioDespues="";
+        finDespues="";
+        diaSeleccionado2="";
+        horaInicioSeleccionada2="";
+        horaFinSeleccionada2="";
+    }
+}
+
+function asignarDiasHoras(dia,horaInicio,horaFin,area){    
+    if(area === "Intercambio1"){
+        diaSeleccionado1=dia;
+        horaInicioSeleccionada1=parseInt(horaInicio);
+        horaFinSeleccionada1=parseInt(horaFin);
+    } else{
+        diaSeleccionado2=dia;
+        horaInicioSeleccionada2=parseInt(horaInicio);
+        horaFinSeleccionada2=parseInt(horaFin);
+    }
 }
 
 function esUnaCeldaSeleccionada(horaActual,horaInicio,horaFin){    
@@ -611,14 +666,96 @@ function esUnaCeldaSeleccionada(horaActual,horaInicio,horaFin){
 
 function iluminarCeldas(dia,horaInicio,horaFin,div){    
     if(horaInicio !== "" && horaFin !==""){
-        if(horaInicio < horaFin){
-        horaInicio = parseInt(horaInicio);
-        intermedio = horaInicio+1;
-        }else{
-            intermedio = horaInicio;
-        }    
-        $("."+div+dia+horaInicio).css("background","#9CEEE6"); 
-        $("."+div+dia+intermedio).css("background","#9CEEE6"); 
-        $("."+div+dia+horaFin).css("background","#9CEEE6"); 
+        for(i=horaInicio; i<=horaFin; i++){
+            $("."+div+dia+i).css("background","#9CEEE6"); 
+        }
     }    
+}
+
+function segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2){
+    var dataString = 'op=intercambio2&aula1='+aula1+'&aula2='+aula2+'&dia1='+dia1+'&dia2='+dia2+'&desde1='+desde1+"&desde2="+desde2+'&hasta1='+hasta1+'&hasta2='+hasta2;
+    $.ajax({
+        type: "GET",
+        url: './administracionHorario.php',
+        data: dataString,
+        success: function(data){
+            var msj = jQuery.parseJSON(data);
+            if(msj !== 0){
+                bootbox.confirm(msj,function(resultado){
+                    if(resultado===true){
+                        realizarIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
+                    }
+                });
+            } else{
+                realizarIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
+            }
+        }
+    });
+}
+
+function realizarIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2){
+    var dataString = 'op=intercambio3&aula1='+aula1+'&aula2='+aula2+'&dia1='+dia1+'&dia2='+dia2+'&desde1='+desde1+"&desde2="+desde2+'&hasta1='+hasta1+'&hasta2='+hasta2;
+    $.ajax({
+        type: "GET",
+        url: './administracionHorario.php',
+        data: dataString,
+        success: function(data){
+            var msj = jQuery.parseJSON(data);
+            if(msj !== 0){
+                bootbox.alert(msj);
+            } else{
+                if($("#search").length){
+                    mostrarAreaIntercambio1(aula2);
+                    resetearDiasHoras();
+                    $("div.row:eq(3)").html('');
+                    bootbox.alert("Intercambio realizado");
+                } else{
+                    mostrarAreaIntercambio1(aula1);
+                    mostrarAreaIntercambio2(aula2);
+                    resetearDiasHoras();
+                }
+            }
+        }
+    });
+}
+
+function paginacion(numPags){
+    $('#page-selection').bootpag({
+        total: numPags,
+        page: 1
+    }).on("page", function(event, num){
+        var dataString="op=page&pagina="+num;
+        $.ajax({
+            type: "GET",
+            url: './paginarIntercambios.php',
+            data: dataString,
+            success: function(data){
+                var msj = jQuery.parseJSON(data);
+                $("#contentResul").html(msj);
+            }
+        });
+    });
+    $('#page-selection').trigger('page', 1);
+}
+
+function paginarBusqueda(){
+    var dataString = "op=calcular";
+    $.ajax({
+        type: "GET",
+        url: './paginarIntercambios.php',
+        data: dataString,
+        success: function(data){
+            var msj = jQuery.parseJSON(data);
+            paginacion(msj);
+        }
+    });
+}
+
+function obtenerIdHora(valor,tipo){
+    var dataString = "op=id&tipo="+tipo+"&valor="+valor;
+    return $.ajax({
+        type: "GET",
+        url: './administracionHorario.php',
+        data: dataString
+    });
 }

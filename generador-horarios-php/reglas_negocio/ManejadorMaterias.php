@@ -262,13 +262,13 @@ abstract class ManejadorMaterias {
         while ($row = pg_fetch_array($respuesta)){
             $materia = new Materia("","","","","","","");
             $materia->setCodigo($row['cod_materia']);
-            $materia->setNombre($row['nombre_materia']);                   
+            $materia->setNombre($row['nombre_materia']);            
             $materia->setCarrera(new Carrera($row['id_carrera'],$row['plan_estudio'],$row['nombre_carrera'],new Departamento($row['id_depar'], $row['nombre_depar'])));
             $materias[] = $materia;
         }                   			
         return $materias;
     }
-    
+
     public static function materiasSonIguales($materia1,$materia2){
         $carrera1 = $materia1->getCarrera();
         $carrera2 = $materia2->getCarrera();
@@ -381,4 +381,13 @@ abstract class ManejadorMaterias {
         Conexion::consulta2($consulta_update);
     }
     
+    public static function mismoDepartamentoAgrupacionMateria($agrupacion,$materia){
+        $materiasAgrup = $agrupacion->getMaterias();
+        foreach ($materiasAgrup as $materiaAgrup){
+            if($materiaAgrup->getCarrera()->getDepartamento() == $materia->getCarrera()->getDepartamento()){
+                return true;
+            }
+        }
+        return false;
+    }
 }

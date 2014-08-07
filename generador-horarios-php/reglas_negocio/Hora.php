@@ -27,6 +27,10 @@ class Hora {
         $this->disponible = true;
     }
     
+    function __clone() {
+        $this->grupo = clone $this->grupo;
+    }
+
     public function getIdHora() {
         return $this->idHora;
     }

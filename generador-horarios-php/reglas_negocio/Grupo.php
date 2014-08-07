@@ -23,6 +23,10 @@ class Grupo {
         $this->tipo = "";
         $this->procesado = false;
     }
+    
+    function __toString() {
+        return $this->tipo.$this->id_grupo;
+    }
 
     public function Grupo($id_grupo, $agrup, $docentes) {
         $this->agrup = $agrup;

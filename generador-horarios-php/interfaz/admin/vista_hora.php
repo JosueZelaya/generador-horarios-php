@@ -22,4 +22,3 @@ if(isset($_GET['dia']) && isset($_GET['hora']) && isset($_GET['depar']) ){
         echo imprimirMallaHora($horario,FALSE);
     }
 }
-

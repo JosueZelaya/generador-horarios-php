@@ -16,6 +16,14 @@ class Dia {
         $this->horas = null;
     }
     
+    function __clone() {
+        foreach ($this->horas as $hora){
+            $horas[] = clone $hora;
+        }
+        $this->horas = $horas;
+    }
+
+
     public function getId() {
         return $this->id;
     }
@@ -42,5 +50,15 @@ class Dia {
     
     public function addHora($hora){
         $this->horas[] = $hora;
+    }
+    
+    public function getPosEnDiaHora($idHora){
+        $index = 0;
+        foreach ($this->horas as $hora) {
+            if($hora->getIdHora() == $idHora){
+                return $index;
+            }
+            $index++;
+        }
     }
 }

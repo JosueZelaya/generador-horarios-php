@@ -9,7 +9,8 @@
                 <div class="row">
                     <div class="col-md-4">
                         <a href="../administrar_materias/agregar/index.php" target="_blank">
-                            <img width="140px" height="140px" src="../imagenes/agregar.png" class="img-circle">
+                          <!--<img width="140px" height="140px" src="../imagenes/agregar.png" class="img-circle">-->
+                          <span><i class="fa fa-plus-square fa-lg"></i></span>
                           <h2>Agregar</h2>
                           <p>Agregar Materias
                           </p>    
@@ -17,7 +18,8 @@
                     </div>
                     <div class="col-md-4">
                         <a href="../administrar_materias/modificar/index.php" target="_blank">
-                            <img width="140px" height="140px" src="../imagenes/editar.jpg" class="img-circle">
+                            <!--<img width="140px" height="140px" src="../imagenes/editar.jpg" class="img-circle">-->
+                            <span><i class="fa fa-pencil-square fa-lg"></i></span>
                             <h2>Modificar</h2>
                             <p>Modificar Materias
                             </p>    
@@ -25,7 +27,8 @@
                     </div>
                     <div class="col-md-4">
                         <a href="../administrar_materias/eliminar/index.php" target="_blank">
-                            <img width="140px" height="140px" src="../imagenes/eliminar.gif" class="img-circle">
+                            <!--<img width="140px" height="140px" src="../imagenes/eliminar.gif" class="img-circle">-->
+                            <span><i class="fa fa-minus-square fa-lg"></i></span>
                             <h2>Eliminar</h2>
                             <p>Eliminar Materias
                             </p>    
