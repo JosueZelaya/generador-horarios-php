@@ -171,5 +171,6 @@ chdir(dirname(__FILE__));
 <script type="text/javascript" src="../js/bootbox.min.js"></script>
 <script type="text/javascript" src="../js/jquery.bootpag.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap.combobox.js"></script>
+<script type="text/javascript" src="../js/funciones.js"></script>
 </body>
 </html>

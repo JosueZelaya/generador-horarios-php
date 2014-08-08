@@ -38,6 +38,8 @@ chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorGrupos.php';
 chdir(dirname(__FILE__));
 include_once 'funciones.php';
+chdir(dirname(__FILE__));
+include_once 'config.php';
 ManejadorSesion::sec_session_start();
 
 if(isset($_SESSION['facultad'])){
@@ -48,8 +50,6 @@ if(isset($_GET['op'])){
     $op = htmlentities($_GET['op'], ENT_QUOTES, "UTF-8");
     if($op == 'generar'){
         ini_set('max_execution_time', 300);
-        $ciclo = 1;
-        $año = 2014;
         generarHorario($año,$ciclo);
     } elseif ($op == 'intercambio' || $op == 'intercambio2' || $op == 'intercambio3') {
         $aula1 = htmlentities($_GET['aula1'], ENT_QUOTES, "UTF-8");
@@ -63,7 +63,7 @@ if(isset($_GET['op'])){
         if($dia1==null || $dia2==null){ exit(json_encode(10)); }
         if($op == 'intercambio'){inicioIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);}
         elseif($op == 'intercambio2'){segundaFaseIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);}
-        elseif($op == 'intercambio3'){realizarIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);}
+        elseif($op == 'intercambio3'){realizarIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2, $año, $ciclo);}
     } elseif ($op == 'moreInfo') {
         $aula = htmlentities($_GET['aula'], ENT_QUOTES, "UTF-8");
         $dia = htmlentities($_GET['dia'], ENT_QUOTES, "UTF-8");
@@ -196,7 +196,7 @@ function testIntercambio($gruposReemplazo,$gruposInsercion,$nombreDiaReemplazo,$
     return array();
 }
 
-function realizarIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2){
+function realizarIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2,$año,$ciclo){
     global $facultad;
     $grupos1 = ManejadorGrupos::getGruposEnRangoHoras($desde1, $hasta1, $facultad->getAulas(), $aula1, $dia1);
     $grupos2 = ManejadorGrupos::getGruposEnRangoHoras($desde2, $hasta2, $facultad->getAulas(), $aula2, $dia2);
@@ -212,7 +212,11 @@ function realizarIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$
     }
     ManejadorDias::reemplazarAsignaciones($indicesInsercion1, $diaInsercion1, $grupos2);
     ManejadorDias::reemplazarAsignaciones($indicesInsercion2, $diaInsercion2, $grupos1);
-    exit(json_encode(0));
+    if($facultad->escribirIntercambio($grupos1,$grupos2,$diaInsercion1,$diaInsercion2,$aula1,$aula2,$idHorasInsercion1,$idHorasInsercion2,$año,$ciclo)){
+        exit(json_encode(0));
+    } else{
+        exit(json_encode("No se pudo guardar la información del intercambio en la base de datos"));
+    }
 }
 
 function getMoreInfo($nombreAula,$nombreDia,$hora){

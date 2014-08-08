@@ -325,6 +325,9 @@ $(function (){
                 var msj = jQuery.parseJSON(data);
                 if (msj === 0)
                     bootbox.alert("Esto puede tardar unos minutos. Haga click en 'OK' para comenzar",function(){
+                        limpiarMain();
+                        addContent();
+                        $("#contenido").load("./cargando.php");
                         construirHorario(anio,ciclo);
                     });
                 else if (msj === 1)
@@ -769,11 +772,6 @@ function obtenerIdHora(valor,tipo){
         url: './administracionHorario.php',
         data: dataString
     });
-}
-
-function activarCombos(){
-    $("#comboAnios").btComboBox();
-    $("#comboCiclos").btComboBox();
 }
 
 function construirHorario(anio,ciclo){

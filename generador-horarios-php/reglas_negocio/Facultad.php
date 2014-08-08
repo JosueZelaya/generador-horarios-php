@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Description of Facultad
+ * Almacena todos los datos de la base de datos necesarios para la generacion de un horario
  *
  * @author arch
  */
@@ -132,5 +132,43 @@ class Facultad {
             }
         }
         return 0;
+    }
+    
+    /** Actualiza la tabla asignaciones dentro de la base de datos con los datos de intercambios
+     * 
+     * @param Grupo[] $grupos1 Grupos que se trasladaran a $dia2
+     * @param Grupo[] $grupos2 Grupos que se trasladaran a $dia1
+     * @param Dia $dia1 Dia de origen de $grupos1 y de destino de $grupos2
+     * @param Dia $dia2 Dia de origen de $grupos2 y de destino de $grupos1
+     * @param String $aula1 Aula de origen de $grupos1 y de destino de $grupos2
+     * @param String $aula2 Aula de origen de $grupos2 y de destino de $grupos1
+     * @param int[] $idHorasInsercion1 
+     * @param int[] $idHorasInsercion2 
+     */
+    public function escribirIntercambio($grupos1,$grupos2,$dia1,$dia2,$aula1,$aula2,$idHorasInsercion1,$idHorasInsercion2,$año,$ciclo){
+        $tipos = ManejadorGrupos::getTipos();
+        foreach ($idHorasInsercion2 as $idHora){
+            list($key,$grupo) = each($grupos1);
+            $query = "DELETE FROM asignaciones WHERE cod_aula='$aula2' AND id_dia=".$dia2->getId()." AND id_hora=$idHora AND año=$año AND ciclo=$ciclo";
+            Conexion::consulta($query);
+            if($grupo->getId_grupo() != 0){
+                foreach ($grupo->getDocentes() as $docente){
+                    $query = "INSERT INTO asignaciones VALUES('$aula2',".$dia2->getId().",$idHora,$año,$ciclo,".$grupo->getId_grupo().",".$grupo->getAgrup()->getId().",".ManejadorGrupos::getIdTipo($grupo->getTipo(), $tipos).",".$docente->getIdDocente().")";
+                    Conexion::consulta($query);
+                }
+            }
+        }
+        foreach ($idHorasInsercion1 as $idHora){
+            list($key,$grupo) = each($grupos2);
+            $query = "DELETE FROM asignaciones WHERE cod_aula='$aula1' AND id_dia=".$dia1->getId()." AND id_hora=$idHora AND año=$año AND ciclo=$ciclo";
+            Conexion::consulta($query);
+            if($grupo->getId_grupo() != 0){
+                foreach ($grupo->getDocentes() as $docente){
+                    $query = "INSERT INTO asignaciones VALUES('$aula1',".$dia1->getId().",$idHora,$año,$ciclo,".$grupo->getId_grupo().",".$grupo->getAgrup()->getId().",".ManejadorGrupos::getIdTipo($grupo->getTipo(), $tipos).",".$docente->getIdDocente().")";
+                    Conexion::consulta($query);
+                }
+            }
+        }
+        return true;
     }
 }
