@@ -1,7 +1,8 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorSesion.php';
-require_once 'ManejadorMaterias.php';
+chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
 include 'paginacionConfig.php';
 chdir(dirname(__FILE__));

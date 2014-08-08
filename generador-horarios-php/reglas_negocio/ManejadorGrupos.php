@@ -47,7 +47,22 @@ abstract class ManejadorGrupos {
         return $grupos;
     }
     
-    /** Comparación de grupos para determinar el grupo con mayor cantidad de alumnos (dato se encuentra en el objeto agrupacion)
+    public static function getTipos(){
+        $consulta = "SELECT * FROM tipos_grupos";
+        $resul = Conexion::consulta($consulta);
+        return pg_fetch_all($resul);
+    }
+    
+    public static function getIdTipo($nombreTipo,$tipos){
+        foreach ($tipos as $tipo){
+            if($tipo['tipo'] == $nombreTipo){
+                return $tipo['id'];
+            }
+        }
+        return null;
+    }
+
+        /** Comparación de grupos para determinar el grupo con mayor cantidad de alumnos (dato se encuentra en el objeto agrupacion)
      * 
      * @param Grupo $a
      * @param Grupo $b
@@ -111,7 +126,7 @@ abstract class ManejadorGrupos {
                     $grupo->setId_grupo($fila['id_grupo']);
                     $grupo->setTipo($fila['tipo_grupo']);
                     $docentes = array();
-                    $docente = new Docente($fila["id_docente"],"","");
+                    $docente = new Docente($fila["id_docente"],"","","","");
                     $docente->setNombres($fila["nombres"]);
                     $docente->setApellidos($fila["apellidos"]);
                     $docentes[] = $docente;

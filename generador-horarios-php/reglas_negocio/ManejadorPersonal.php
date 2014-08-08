@@ -62,7 +62,7 @@ abstract class ManejadorPersonal{
     public static function getDocente($id){        
         $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE d.id_docente='$id' AND d.activo='t' ORDER BY d.nombres ASC;";
 	$fila = Conexion::consulta2($sql_consulta);
-        $docente = new Docente("","","");
+        $docente = new Docente("","","","","");
         $docente->setIdDocente($fila['id_docente']);
         $docente->setNombres($fila['nombres']);
         $docente->setApellidos($fila['apellidos']);
@@ -88,7 +88,7 @@ abstract class ManejadorPersonal{
         $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE d.activo='t' ORDER BY d.nombres ASC;";
 	$respuesta = Conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
-            $docente = new Docente("","","");
+            $docente = new Docente("","","","","");
             $docente->setIdDocente($fila['id_docente']);
             $docente->setNombres($fila['nombres']);
             $docente->setApellidos($fila['apellidos']);
@@ -234,7 +234,7 @@ abstract class ManejadorPersonal{
             $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE d.activo='t' ORDER BY d.nombres ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
             $respuesta = conexion::consulta($sql_consulta);
             while ($fila = pg_fetch_array($respuesta)){
-                $docente = new Docente("","","");
+                $docente = new Docente("","","","","");
                 $docente->setIdDocente($fila['id_docente']);
                 $docente->setNombres($fila['nombres']);
                 $docente->setApellidos($fila['apellidos']);
@@ -282,7 +282,7 @@ abstract class ManejadorPersonal{
                 $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND d.activo='t' ORDER BY d.nombres ASC LIMIT 25;";                    
                 $respuesta = conexion::consulta($sql_consulta);
                 while ($fila = pg_fetch_array($respuesta)){
-                    $docente = new Docente("","","");
+                    $docente = new Docente("","","","","");
                     $docente->setIdDocente($fila['id_docente']);
                     $docente->setNombres($fila['nombres']);
                     $docente->setApellidos($fila['apellidos']);

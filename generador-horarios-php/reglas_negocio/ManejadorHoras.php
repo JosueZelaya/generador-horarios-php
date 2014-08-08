@@ -227,7 +227,7 @@ class ManejadorHoras {
         for($x=0; $x<count($aulasConCapa); $x++){
 /*>>>>>>>>>>>>>>*/error_log ("A probar en aula ".$aulasConCapa[$x]->getNombre(),0);
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
-            $resul = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,$ultimoRecurso,false);
+            $resul = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,$ultimoRecurso,false,false);
             if($resul != null && is_array($resul)){
                 $horasDisponibles = $resul;
                 break;
@@ -254,7 +254,7 @@ class ManejadorHoras {
         for($x=0; $x<count($aulas); $x++){
 /*>>>>>>>>>>>>>>*/error_log ("A probar con choque en aula ".$aulas[$x]->getNombre(),0);
             $dia = $aulas[$x]->getDia($nombre_dia);
-            $horasDisponibles = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,false,true);
+            $horasDisponibles = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,false,true,false);
             if($horasDisponibles != null){
                 break;
             }

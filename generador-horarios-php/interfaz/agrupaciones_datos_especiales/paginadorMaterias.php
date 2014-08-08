@@ -3,7 +3,8 @@
 chdir(dirname(__FILE__));
 require_once 'paginacionConfig.php';
 require_once '../../reglas_negocio/ManejadorMaterias.php';
-require_once 'ManejadorSesion.php';
+chdir(dirname(__FILE__));
+require_once '../../reglas_negocio/ManejadorSesion.php';
 
 if($_GET){
     if($_GET['pagina']){

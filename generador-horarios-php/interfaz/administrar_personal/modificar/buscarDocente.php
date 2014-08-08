@@ -1,9 +1,12 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorSesion.php';
-require_once 'ManejadorPersonal.php';
-require_once 'ManejadorDepartamentos.php';
-require_once 'ManejadorCargos.php';
+chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorPersonal.php';
+chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorDepartamentos.php';
+chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorCargos.php';
 chdir(dirname(__FILE__));
 
 ManejadorSesion::sec_session_start();

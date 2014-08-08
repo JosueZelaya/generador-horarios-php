@@ -2,7 +2,8 @@
 chdir(dirname(__FILE__));
 include 'config.php';
 require_once '../../reglas_negocio/ManejadorAgrupaciones.php';
-require_once 'ManejadorSesion.php';
+chdir(dirname(__FILE__));
+require_once '../../reglas_negocio/ManejadorSesion.php';
 
 if (isset($_GET)){
     ManejadorSesion::sec_session_start();

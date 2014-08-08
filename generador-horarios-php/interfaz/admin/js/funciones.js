@@ -270,16 +270,42 @@ $(function (){
     });
     
     $(document).on("click","#guardarHorario",function(){
+        limpiarMain();
+        addContent();
+        $("#contenido").load("./cargando.php");
+        setTimeout(function(){
+            $.ajax({
+                type: "GET",
+                url: "save.php",
+                success: function(datos){
+                    datos = jQuery.parseJSON(datos);            
+                    if(datos===0){
+                        bootbox.alert("¡Horario guardado!",function(){
+                            window.location.href = 'index.php';
+                        });
+                    }else{
+                        bootbox.alert("¡Error al guardar el horario!",function(){});
+                    } 
+                },
+                error: function(datos){
+                    bootbox.alert("error"+datos,function(){});
+                }
+            });
+        },1000);
+    });
+    
+    $(document).on("click","#abrirHorario",function(){
+        limpiarMain();
+        addContent();
+        var dataString = "op=inicio";
         $.ajax({
             type: "GET",
-            url: "save.php",
+            url: "open.php",
+            data: dataString,
             success: function(datos){
                 datos = jQuery.parseJSON(datos);            
-                if(datos==="exito"){
-                    bootbox.alert("¡Horario guardado!",function(){});
-                }else{
-                    bootbox.alert("¡Error al guardar el horario!",function(){});
-                } 
+                $("#contenido").html(datos);
+                activarCombos();
             },
             error: function(datos){
                 bootbox.alert("error"+datos,function(){});
@@ -287,21 +313,22 @@ $(function (){
         });
     });
     
-    $(document).on("click","#abrirHorario",function(){
-        limpiarMain();
-        $.ajax({
+    $(document).on("click","#openSch",function(){
+        var anio = $("#comboAnios").btComboBox('value');
+        var ciclo = $("#comboCiclos").btComboBox('value');
+        var dataString = "op=abrir&anio="+anio+"&ciclo="+ciclo;
+        $.ajax({            
             type: "GET",
-            url: "open.php",
-            success: function(datos){
-                datos = jQuery.parseJSON(datos);            
-                if(datos==="exito"){
-                    bootbox.alert("¡Horario cargado!",function(){});
-                }else{
-                    bootbox.alert("¡Error al cargar el horario!",function(){});
-                }                
-            },
-            error: function(datos){
-                bootbox.alert("error"+datos,function(){});
+            url: "./open.php",            
+            data: dataString,
+            success: function(data){
+                var msj = jQuery.parseJSON(data);
+                if (msj === 0)
+                    bootbox.alert("Horario cargado");
+                else if (msj === 1)
+                    bootbox.alert("No existe un horario para el año y ciclo especificado");
+                else
+                    bootbox.alert(msj);
             }
         });
     });
@@ -742,4 +769,9 @@ function obtenerIdHora(valor,tipo){
         url: './administracionHorario.php',
         data: dataString
     });
+}
+
+function activarCombos(){
+    $("#comboAnios").btComboBox();
+    $("#comboCiclos").btComboBox();
 }

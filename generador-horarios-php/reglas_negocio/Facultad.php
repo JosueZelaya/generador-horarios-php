@@ -8,7 +8,12 @@
 
 chdir(dirname(__FILE__));
 require_once 'ManejadorAulas.php';
+chdir(dirname(__FILE__));
 require_once 'ManejadorDias.php';
+chdir(dirname(__FILE__));
+require_once 'ManejadorGrupos.php';
+chdir(dirname(__FILE__));
+require_once '../acceso_datos/Conexion.php';
 
 class Facultad {
     private $aulas;
@@ -106,5 +111,26 @@ class Facultad {
 
     public function setGrupos($grupos) {
         $this->grupos = $grupos;
+    }
+    
+    public function guardarHorario($año,$ciclo){
+        $tipos = ManejadorGrupos::getTipos();
+        foreach ($this->aulas as $aula){
+            $dias = $aula->getDias();
+            foreach ($dias as $dia){
+                $horas = $dia->getHoras();
+                foreach ($horas as $hora){
+                    $grupo = $hora->getGrupo();
+                    if($grupo->getId_grupo()!=0){
+                        $tipo = ManejadorGrupos::getIdTipo($grupo->getTipo(), $tipos);
+                        foreach ($grupo->getDocentes() as $docente){
+                            $insert = "INSERT INTO asignaciones VALUES('".$aula->getNombre()."',".$dia->getId().",".$hora->getIdHora().",$año,$ciclo,".$grupo->getId_grupo().",".$grupo->getAgrup()->getId().",".$tipo.",".$docente->getIdDocente().")";
+                            conexion::consulta($insert);
+                        }
+                    }
+                }
+            }
+        }
+        return 0;
     }
 }

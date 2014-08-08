@@ -1,13 +1,18 @@
 <?php
     chdir(dirname(__FILE__));
     include_once '../../reglas_negocio/ManejadorAgrupaciones.php';
-    include_once 'ManejadorMaterias.php';
-    include_once 'ManejadorHoras.php';
-    include_once 'ManejadorAulas.php';
-    include_once 'Facultad.php';
-    include_once 'ManejadorSesion.php';
+    chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/ManejadorMaterias.php';
+    chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/ManejadorHoras.php';
+    chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/ManejadorAulas.php';
+    chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/Facultad.php';
     chdir(dirname(__FILE__));
     include_once 'funciones.php';
+    chdir(dirname(__FILE__));
+    include_once '../../reglas_negocio/ManejadorSesion.php';
     chdir(dirname(__FILE__));
     ManejadorSesion::sec_session_start();
     $facultad = $_SESSION['facultad'];

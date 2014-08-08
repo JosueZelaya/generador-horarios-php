@@ -1,7 +1,8 @@
 <?php
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorDocentes.php';
-require_once 'ManejadorSesion.php';
+chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorSesion.php';
 
 ManejadorSesion::sec_session_start();
 
