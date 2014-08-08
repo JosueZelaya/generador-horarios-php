@@ -101,7 +101,7 @@ abstract class ManejadorGrupos {
         if(pg_num_rows($respuesta)!=0){            
             while($fila = pg_fetch_array($respuesta)){
                 if(self::yaSeCreoGrupo($fila['id_grupo'], $fila['tipo_grupo'], $grupos)){
-                    $docente = new Docente($fila["id_docente"],"");
+                    $docente = new Docente($fila["id_docente"],"","","","");
                     $docente->setNombres($fila["nombres"]);
                     $docente->setApellidos($fila["apellidos"]);
                     self::agregar_docente_a_grupo($docente, $fila['id_grupo'], $fila['tipo_grupo'], $grupos);
@@ -111,7 +111,7 @@ abstract class ManejadorGrupos {
                     $grupo->setId_grupo($fila['id_grupo']);
                     $grupo->setTipo($fila['tipo_grupo']);
                     $docentes = array();
-                    $docente = new Docente($fila["id_docente"],"","");
+                    $docente = new Docente($fila["id_docente"],"","","","");
                     $docente->setNombres($fila["nombres"]);
                     $docente->setApellidos($fila["apellidos"]);
                     $docentes[] = $docente;

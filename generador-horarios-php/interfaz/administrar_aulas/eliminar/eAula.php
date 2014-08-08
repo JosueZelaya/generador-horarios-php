@@ -1,6 +1,5 @@
 <?php
 chdir(dirname(__FILE__));
-require_once 'config.php';
 require_once '../../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorAulas.php';

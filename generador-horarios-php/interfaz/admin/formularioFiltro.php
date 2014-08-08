@@ -1,5 +1,4 @@
 <?php
-include_once 'config.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
@@ -11,6 +10,10 @@ ManejadorSesion::sec_session_start();
 
 $facultad = $_SESSION['facultad'];
 $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales($facultad->getDepartamentos());
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if(isset($_GET['criterio'])){
     $criterio = $_GET['criterio'];?>    

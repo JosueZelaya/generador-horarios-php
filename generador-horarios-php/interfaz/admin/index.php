@@ -158,6 +158,7 @@ chdir(dirname(__FILE__));
  <?php include_once './admin_materias_modal.php'; ?>
  <?php include_once './admin_aulas_modal.php'; ?>
  <?php include_once './admin_departamentos_modal.php'; ?>
+ <?php include_once './configuracion_modal.php'; ?>
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.

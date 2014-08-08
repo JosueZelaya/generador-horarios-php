@@ -16,6 +16,26 @@ var horaFinSeleccionada2="";
 var areaHTML="";
 
 $(function (){
+    
+    $(document).on("click","#aprobar",function(){
+        var año=$("#año").val();
+        var ciclo=$("#ciclo").val();
+        var dataString = 'año='+año+"&ciclo="+ciclo; 
+        $.ajax({            
+            type: "GET",
+            url: "./configurar_ciclo.php",
+            data: dataString,            
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);
+                if(datos==="ok"){                    
+                    $('#configuracion_modal').modal("hide");
+                }else{
+                    $("#mensaje_modal_config").html(datos);
+                }                
+            }
+        });
+    });
+    
     $(document).on("click","#generarHorario",function(){
         limpiarMain();
         addFiltro();
@@ -66,7 +86,7 @@ $(function (){
             error: function(datos){
                 bootbox.alert("error: "+datos,function(){});
             }
-        });    
+        });
     });
 
     $(document).on("click","#mostrarHorario",function(){        

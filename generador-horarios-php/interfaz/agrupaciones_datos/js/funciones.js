@@ -33,32 +33,6 @@ $(document).ready(function() {
                     }
                 });
                 $("#paginacion").html(""); 
-                
-                
-//                nuevos= ui.item.alumnos_nuevos;
-//                otros = ui.item.otros_alumnos;
-//                nuevos = parseInt(nuevos);
-//                otros = parseInt(otros);
-//                total = nuevos+otros;                
-//                $('#mostrarMaterias').slideUp('fast',function(){
-//                   $('#mostrarMaterias').html(                    
-//                    "<tr>"+
-//                    "<td>1</td>"+
-//                    "<td>"+ui.item.value+"</td>"+
-//                    "<td>"+ui.item.nombre_depar+"</td>"+
-//                    "<td>"+ui.item.ciclos+"</td>"+
-//                    "<td><div style='cursor: pointer;' href='#' id='alumnos_nuevos' class='campoModificable n"+ui.item.id+"' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='modificarAgrupacion.php' data-title='Alumnos Nuevos'>"+nuevos+"</div></td>"+
-//                    "<td><div style='cursor: pointer;' href='#' id='otros_alumnos' class='campoModificable o"+ui.item.id+"' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='modificarAgrupacion.php' data-title='Otros Alumnos'>"+otros+"</div></td>"+
-//                    "<td><div id='"+ui.item.id+"'>"+total+"</td>"+                    
-//                    "<td><div style='cursor: pointer;' href='#' id='num_grupos' class='campoModificable ng"+ui.item.id+"' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>"+ui.item.num_grupos+"</div></td>"+                    
-//                    "<td><div style='cursor: pointer;' href='#' id='num_grupos_l' class='campoModificable ngl"+ui.item.id+"' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>"+ui.item.num_grupos_l+"</div></td>"+                    
-//                    "<td><div style='cursor: pointer;' href='#' id='num_grupos_d' class='campoModificable ngd"+ui.item.id+"' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>"+ui.item.num_grupos_d+"</div></td>"+                    
-//                    "<td><div style='cursor: pointer;' href='#' id='alumnos_grupo' class='campoModificable na"+ui.item.id+"' data-type='text' data-placement='bottom' data-pk="+ui.item.id+" data-url='modificarAgrupacion.php' data-title='Numero de Grupos'>"+ui.item.alumnos_grupo+"</div></td>"+                    
-//                    "</tr>"
-//                    );                                                            
-//                });                
-//                $('#mostrarMaterias').slideDown('fast');
-//                $("#paginacion").html("");
             }
         });
     });

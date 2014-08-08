@@ -24,7 +24,10 @@ require_once '../../reglas_negocio/ManejadorGrupos.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
-require_once 'config.php';
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 $facultad="";
 $aulas="";

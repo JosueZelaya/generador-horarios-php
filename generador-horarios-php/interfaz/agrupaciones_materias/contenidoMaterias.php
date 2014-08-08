@@ -1,10 +1,14 @@
 <?php
 chdir(dirname(__FILE__));
 include_once 'paginacionConfig.php';
-include 'config.php';
 require_once '../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if($ciclo==1){
     $ciclo = "impar";

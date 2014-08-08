@@ -1,10 +1,13 @@
 <?php
 chdir(dirname(__FILE__));
-require_once 'config.php';
 require_once '../../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorMaterias.php';
 chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 ManejadorSesion::sec_session_start();
 

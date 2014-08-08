@@ -16,7 +16,7 @@
                     <ul class="dropdown-menu">
                       <li><a id="miInfo" class="miInfo" href="#">Mi información</a></li>
                       <li><a href="#">Privacidad</a></li>
-                      <li><a href="#">Configuración</a></li>
+                      <li><a href="#configuracion_modal" data-toggle="modal">Configuración</a></li>
                       <li class="divider"></li>
                       <li class="dropdown-header">¡Hasta Pronto!</li>
                       <li><a href="../autenticacion/logout.php">Salir</a></li>                              

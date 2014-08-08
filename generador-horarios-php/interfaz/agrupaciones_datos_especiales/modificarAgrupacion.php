@@ -1,8 +1,12 @@
 <?php
 
 chdir(dirname(__FILE__));
-require_once 'config.php';
 require_once '../../reglas_negocio/ManejadorAgrupaciones.php';
+chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if($_POST){
     if($_POST['pk'] && $_POST['name'] && $_POST['value']){       

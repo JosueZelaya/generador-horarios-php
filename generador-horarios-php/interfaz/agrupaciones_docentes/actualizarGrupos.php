@@ -1,9 +1,14 @@
 <?php
 
 chdir(dirname(__FILE__));
-include 'config.php';
 require_once '../../reglas_negocio/Grupo.php';
+chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorGrupos.php';
+chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if(isset($_GET)){
     if(isset($_GET['grupos'])){        
