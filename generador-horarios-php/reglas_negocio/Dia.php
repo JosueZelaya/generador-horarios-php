@@ -61,4 +61,13 @@ class Dia {
             $index++;
         }
     }
+    
+    public function getHoraXID($idHora){
+        foreach ($this->horas as $hora){
+            if($hora->getIdHora() == $idHora){
+                return $hora;
+            }
+        }
+        return null;
+    }
 }

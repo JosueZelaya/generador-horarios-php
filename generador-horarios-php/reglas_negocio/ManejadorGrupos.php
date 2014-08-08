@@ -47,6 +47,22 @@ abstract class ManejadorGrupos {
         return $grupos;
     }
     
+    /** Obtener grupo de todos los grupos de la facultad
+     * 
+     * @param int $id_grupo
+     * @param String $tipo
+     * @param int $id_agrupacion
+     * @param Grupo[] $grupos
+     */
+    public static function getGrupo($id_grupo,$tipo,$id_agrupacion,$grupos){
+        foreach ($grupos as $grupo){
+            if($grupo->getId_grupo() == $id_grupo && $grupo->getAgrup()->getId() == $id_agrupacion && $grupo->getTipo() == $tipo){
+                return $grupo;
+            }
+        }
+        return null;
+    }
+
     public static function getTipos(){
         $consulta = "SELECT * FROM tipos_grupos";
         $resul = Conexion::consulta($consulta);
