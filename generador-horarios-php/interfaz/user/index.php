@@ -112,7 +112,7 @@ chdir(dirname(__FILE__));
                 <a href="#admin_users_modal" data-toggle="modal">
                     <!--<img width="140px" height="140px" src="../imagenes/placeholder-usuarios.jpg" class="img-circle">-->
                     <span class="index_icon"><i class="fa fa-users fa-lg"></i></span>
-                    <h2>Administrar Docentes y Usuarios</h2>
+                    <h2>Administrar Personal</h2>
                     <p>Agregar, modificar y eliminar Docentes y Usuarios</p>
                 </a>                    
               <p><a href="#admin_users_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
@@ -152,10 +152,10 @@ chdir(dirname(__FILE__));
         <?php endif; ?>
     </div>
  </div>
- <?php include_once 'admin_users_modal.php'; ?> 
- <?php include_once './admin_materias_modal.php'; ?>
- <?php include_once './admin_aulas_modal.php'; ?>
- <?php include_once './admin_departamentos_modal.php'; ?>
+ <?php include_once 'adminUsersModal.php'; ?> 
+ <?php include_once './adminMateriasModal.php'; ?>
+ <?php include_once './adminAulasModal.php'; ?>
+ <?php include_once './adminDepartamentosModal.php'; ?>
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.

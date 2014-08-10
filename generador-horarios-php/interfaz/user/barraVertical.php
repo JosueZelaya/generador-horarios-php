@@ -14,7 +14,9 @@
             </ul>
         </div>
         <a href="#" id="abrirHorario" class="btn btn-default" role="button"> Abrir</a>
+        <?php if($_SESSION['usuario_login'] == "admin") : ?>
         <a href="#" id="guardarHorario" class="btn btn-default" role="button"> Guardar</a>
+        <?php endif; ?>
         <a href="#" class="btn btn-default" role="button"> Exportar</a>
         <a href="#" class="btn btn-default" role="button"> Imprimir</a>
     </div>    

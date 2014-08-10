@@ -238,15 +238,15 @@ $(function (){
         });
     });
    
-    $(document).on("click","#intercambioHorario",function(){
-        limpiarMain();
-        addContent();         
+    $(document).on("click","#intercambioHorario",function(){        
         $.ajax({            
             type: "GET",
             url: "./hayHorarioGenerado.php",
             success: function(datos){
                 datos = jQuery.parseJSON(datos);            
                 if(datos==="si"){
+                    limpiarMain();
+                    addContent(); 
                     $.ajax({
                         type: "GET",
                         url: "./areaIntercambio.php",
