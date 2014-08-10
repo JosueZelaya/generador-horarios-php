@@ -46,7 +46,9 @@ ManejadorSesion::sec_session_start();
     
     <ul class='nav nav-tabs'>
         <li id='agregar_docentes' class='active'><a href='#'>Docentes</a></li>
+        <?php if($_SESSION['usuario_login'] == "admin") : ?>
         <li  id='agregar_usuarios'><a href='#'>Usuarios</a></li>
+        <?php endif; ?>
     </ul>
     <br/>
     

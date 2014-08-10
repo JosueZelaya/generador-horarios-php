@@ -13,6 +13,14 @@ include_once '../../reglas_negocio/Dia.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/Hora.php';
 chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/Agrupacion.php';
+chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/Materia.php';
+chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/Departamento.php';
+chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/Carrera.php';
+chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorMaterias.php';
@@ -122,12 +130,32 @@ function asignarInfo($año,$ciclo) {
     return $facultad;
 }
 
+function esPropietario($deparSesion,$grupos){
+    if($deparSesion != "todos"){
+        foreach ($grupos as $grupo) {
+            if($grupo->getId_grupo() == 0){
+                continue;
+            }
+            $materiasGrupo = $grupo->getAgrup()->getMaterias();
+            foreach ($materiasGrupo as $materia){
+                if($materia->getCarrera()->getDepartamento()->getId() != $deparSesion){
+                    return false;
+                }
+            }
+        }
+    }
+    return true;
+}
+
 function inicioIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2){
     global $facultad;
     $grupos1 = ManejadorGrupos::getGruposEnRangoHoras($desde1, $hasta1, $facultad->getAulas(), $aula1, $dia1);
     $grupos2 = ManejadorGrupos::getGruposEnRangoHoras($desde2, $hasta2, $facultad->getAulas(), $aula2, $dia2);
     if(count($grupos1) != count($grupos2)){
         exit(json_encode(1));
+    }
+    if(!esPropietario($_SESSION['id_departamento'],$grupos1) || !esPropietario($_SESSION['id_departamento'],$grupos2)){
+        exit(json_encode(11));
     }
     $msgs = capacidadesAulas($grupos1, $grupos2, $aula1, $aula2);
     if(count($msgs)!=0){

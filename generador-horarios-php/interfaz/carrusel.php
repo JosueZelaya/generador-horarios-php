@@ -17,7 +17,7 @@ and open the template in the editor.
             <img src="imagenes/imagen1.jpg" alt="First slide">            
           <div class="container">
             <div class="carousel-caption">
-              <h1>Simulador Para la Asignación de Aulas y Horarios, Facultad Multidisciplinario de Occidente</h1>
+              <h1>Sistema Para la Asignación de Aulas y Horarios, Facultad Multidisciplinario de Occidente</h1>
               <!--<p>Note: If you're viewing this page via a <code>file://</code> URL, the "next" and "previous" Glyphicon buttons on the left and right might not load/display properly due to web browser security rules.</p>-->
               <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
             </div>

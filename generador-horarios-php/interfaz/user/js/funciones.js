@@ -1,5 +1,6 @@
 //Exit 10 = cuando no se ha seleccionado nada en las cuadriculas
 //Exit 0 = cuando fue exitoso
+//Exit 11 = no esta autorizado
 
 var diaAntes="";
 var inicioAntes="";
@@ -373,6 +374,8 @@ $(function (){
                     segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
                 else if(msj === 10)
                     bootbox.alert("Debe seleccionar al menos 1 hora en cada area de intercambio");
+                else if(msj === 11)
+                    bootbox.alert("Ud no está autorizado para este intercambio, realice una solicitud al administrador");
                 else{
                     bootbox.confirm(msj,function(resultado){
                         if(resultado===true){
@@ -775,20 +778,22 @@ function obtenerIdHora(valor,tipo){
 }
 
 function construirHorario(anio,ciclo){
-    var dataString = "op=construir&anio="+anio+"&ciclo="+ciclo;
-    $.ajax({
-        type: "GET",
-        url: "open.php",
-        data: dataString,
-        success: function(datos){
-            datos = jQuery.parseJSON(datos);            
-            if(datos === 0)
-                bootbox.alert("Horario cargado",function(){
-                    window.location.href = 'index.php';
-                });
-        },
-        error: function(datos){
-            bootbox.alert("error: "+datos,function(){});
-        }
-    });
+    setTimeout(function(){
+        var dataString = "op=construir&anio="+anio+"&ciclo="+ciclo;
+        $.ajax({
+            type: "GET",
+            url: "open.php",
+            data: dataString,
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);            
+                if(datos === 0)
+                    bootbox.alert("Horario cargado",function(){
+                        window.location.href = 'index.php';
+                    });
+            },
+            error: function(datos){
+                bootbox.alert("error: "+datos,function(){});
+            }
+        });
+    },1000);
 }

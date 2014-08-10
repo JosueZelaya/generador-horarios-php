@@ -26,10 +26,8 @@ $("#autenticarse").submit(function(event){
         url: "autenticacion/login.php",        
         data: serializedData,
         success: function(data){
-            if(data==='Bienvenido Usuario'){
-                window.location.replace('areaUsuarios.php');   
-            }else if(data==='Bienvenido Admin'){
-                window.location.replace('admin/index.php');
+            if(data==='Bienvenido Usuario' || data==='Bienvenido Admin'){
+                window.location.replace('user/index.php');   
             }else{
                 $("#resultadoLogin").html(data);
             }            

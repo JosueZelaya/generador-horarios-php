@@ -17,7 +17,7 @@ chdir(dirname(__FILE__));
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Simulador de Horarios de Clase</title>
+<title>Generador de Horarios de Clase</title>
 
 <!-- Bootstrap -->
 <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -27,28 +27,13 @@ chdir(dirname(__FILE__));
 </head>
 <body>
 <?php if (ManejadorSesion::comprobar_sesion() == true) : ?>
-<?php
-      
-        if($_SESSION['usuario_login']=="admin"){
-            header("Location: admin/index.php");
-        }else{
-            header("Location: areaUsuarios.php");
-        }
-      
-      ?>
+<?php header("Location: user/index.php") ?>
 <?php else : ?>
 <!-- Barra de menu -->
 <?php include 'menuPrincipal.php';?>
 
 <!-- Carousel -->
 <?php include 'carrusel.php';?>
-
-
-<!-- Mensajes Marketing -->
-<?php //include 'mensajesMarketing.php';?>
-    
-    <!-- Footer -->
-    <?php // include "footer.php";?>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script type="text/javascript" src="js/jquery-ui/jquery-1.10.2.js"></script>
