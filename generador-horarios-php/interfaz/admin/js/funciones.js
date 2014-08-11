@@ -18,22 +18,30 @@ var areaHTML="";
 $(function (){
     
     $(document).on("click","#aprobar",function(){
+        $("#mensaje_modal_config").html("");
+        var btn = $(this);
+        btn.button('loading');
         var año=$("#año").val();
         var ciclo=$("#ciclo").val();
-        var dataString = 'año='+año+"&ciclo="+ciclo; 
+        var clonar=$("#año_clonar").val();
+        var clonar_horario=document.getElementById('clonar_horario').checked;
+        var forzar=document.getElementById('forzar').checked;        
+        var dataString = 'año='+año+"&ciclo="+ciclo+"&año_clonar="+clonar+"&clonar_horario="+clonar_horario+"&forzar="+forzar;        
         $.ajax({            
             type: "GET",
             url: "./configurar_ciclo.php",
             data: dataString,            
             success: function(datos){
                 datos = jQuery.parseJSON(datos);
-                if(datos==="ok"){                    
-                    $('#configuracion_modal').modal("hide");
+                if(datos==="ok"){
+                    $('#configuracion_modal').modal("hide");                    
                 }else{
-                    $("#mensaje_modal_config").html(datos);
-                }                
+                    $("#mensaje_modal_config").html("<font color='red'>"+datos+"</font>");                 
+                }               
             }
-        });
+        }).always(function(){
+            btn.button('reset');
+        });;                
     });
     
     $(document).on("click","#generarHorario",function(){

@@ -12,12 +12,8 @@ $ciclo = $cicloinfo['ciclo'];
 if (isset($_GET)){
     ManejadorSesion::sec_session_start();
     if(isset($_GET['term'])){
-        $buscarComo = $_GET['term'];        
-        if($ciclo==1){
-              echo json_encode(ManejadorAgrupaciones::buscarAgrupacionSoloNombre($buscarComo,$_SESSION['id_departamento'],$año,"impar"));                  
-        }else{
-              echo json_encode(ManejadorAgrupaciones::buscarAgrupacionSoloNombre($buscarComo,$_SESSION['id_departamento'],$año,"par"));                  
-        }        
+        $buscarComo = $_GET['term'];  
+        echo json_encode(ManejadorAgrupaciones::buscarAgrupacionSoloNombre($buscarComo,$_SESSION['id_departamento'],$año,$ciclo));        
     }else if(isset($_GET['materia'])){
         $materia_a_buscar = $_GET['materia'];               
         $arrayMaterias = ManejadorAgrupaciones::getAgrupacionesPorNombre($materia_a_buscar,$_SESSION['id_departamento'],$año,$ciclo);            

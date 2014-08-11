@@ -49,6 +49,28 @@ abstract class ManejadorMaterias {
         }
     }
     
+    /** Devuelve todas las materias del ciclo indicado par/impar
+     * 
+     * @param type $ciclo
+     */
+    public static function getTodasMateriasDeCiclo($ciclo){
+        $materias = array();
+        $restriccion="";
+        if($ciclo==2 || $ciclo=="par"){
+            $restriccion = "ciclo_carrera%2=0";
+        }else{
+            $restriccion = "ciclo_carrera%2!=0";
+        }
+        $consulta = "SELECT * FROM materias WHERE $restriccion ORDER BY cod_materia";
+        $respuesta = Conexion::consulta($consulta);
+        while($fila = pg_fetch_array($respuesta)){
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],"","");
+            $materia = new Materia($fila['cod_materia'],$fila['nombre_materia'],$fila['ciclo_carrera'],$fila['uv'],$carrera,"","");
+            $materias[] = $materia;
+        }
+        return $materias;
+    }
+    
     public static function getTodasMaterias($ciclo,$año,$todas_agrups,$todas_carreras){
         $materias = array();
         if($ciclo == 1){
