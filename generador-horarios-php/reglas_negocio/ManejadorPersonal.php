@@ -141,23 +141,21 @@ abstract class ManejadorPersonal{
         public static function agregarUsuario($usuario){
 		if(ManejadorPersonal::existeUsuario($usuario)){
                     if(self::usuarioHabilitado($usuario)){
-                        throw new Exception("Ya existe un usuario con ese login");
+                        throw new Exception("Login no disponble");
                     }else{
-                        $consulta = "SELECT * FROM docentes WHERE id_docente='".$usuario->getDocente()."'";
-                        $respuesta = conexion::consulta2($consulta);
-                        if($respuesta['activo']=='t'){
+                        $docente = self::getDocente($usuario->getDocente());
+                        if(self::docenteActivo($docente)){
                             $consulta = "UPDATE usuarios SET habilitado='t',id_docente='".$usuario->getDocente()."',password='".$usuario->getPassword()."' WHERE login='".$usuario->getLogin()."'";
                             conexion::consulta($consulta);
                         }else{
                             throw new Exception("Docente incorrecto!");
-                        }                        
+                        }                                                
                     }                    
                 }else{
                     $consulta = "";
                     if($usuario->getLogin()!=="" && $usuario->getPassword()!==""){
-                        $consulta = "SELECT * FROM docentes WHERE id_docente='".$usuario->getDocente()."'";
-                        $respuesta = conexion::consulta2($consulta);
-                        if($respuesta['activo']=='t'){
+                        $docente = self::getDocente($usuario->getDocente());
+                        if(self::docenteActivo($docente)){
                             $consulta = "INSERT INTO usuarios (login,password,id_docente) VALUES ('".
                                 $usuario->getLogin()."','".
                                 $usuario->getPassword()."','".                                
@@ -165,7 +163,7 @@ abstract class ManejadorPersonal{
                             conexion::consulta($consulta);
                         }else{
                             throw new Exception("Docente incorrecto!");
-                        }                        
+                        }
                     }else{
                         throw new Exception("Debe ingresar un login y un password");
                     }
@@ -322,17 +320,17 @@ abstract class ManejadorPersonal{
 //            }
         }
         
-        public static function ocultarDocente($docente){
+        public static function desactivarDocente($docente){
             if(ManejadorPersonal::existe($docente)){
-                $docente->ocultar();
+                $docente->desactivar();
             }else{
                 throw new Exception("Ese docente no existe en la BD");
             }
         }
     
-        public static function ocultarUsuario($usuario){
+        public static function desactivarUsuario($usuario){
             if(ManejadorPersonal::existeUsuario($usuario)){
-                $usuario->ocultar();
+                $usuario->desactivar();
             }else{
                 throw new Exception("Ese usuario no existe en la BD");
             }
@@ -346,9 +344,14 @@ abstract class ManejadorPersonal{
             }            		
 	}
         
-        public static function modificarUsuario($actual,$nueva){            
-            if(ManejadorPersonal::existeUsuario($actual)){                
-                    $nueva->guardar();  //Se guarda el usuario               
+        public static function modificarUsuario($actual,$nuevo){            
+            if(ManejadorPersonal::existeUsuario($actual)){
+                $docente = self::getDocente($nuevo->getDocente()->getIdDocente());
+                if(self::docenteActivo($docente)){
+                    $nuevo->guardar();  //Se guarda el usuario
+                }else{
+                    throw new Exception("Docente incorrecto!");
+                }                    
             }else{
                 throw new Exception("No existe el usuario que se quiere modificar");
             }            		
