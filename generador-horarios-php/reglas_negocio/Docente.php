@@ -125,7 +125,7 @@ class Docente {
         $this->apellidos = $apellidos;
     }
 
-    public function ocultar(){
+    public function desactivar(){
         $consulta = "UPDATE docentes SET activo='f' WHERE id_docente='".$this->idDocente."';";            
         conexion::consulta($consulta);
         $consulta = "UPDATE usuarios SET habilitado='f' WHERE id_docente='".$this->idDocente."';";
