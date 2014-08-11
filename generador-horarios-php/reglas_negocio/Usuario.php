@@ -112,7 +112,7 @@ class Usuario{
             $this->id = $id;
         }
         
-        public function ocultar(){            
+        public function desactivar(){            
             $consulta = "UPDATE usuarios SET habilitado='f' WHERE id_usuario='".$this->getId()."';";
             conexion::consulta($consulta);
         }
