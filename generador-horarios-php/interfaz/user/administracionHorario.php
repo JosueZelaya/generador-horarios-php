@@ -39,6 +39,8 @@ include_once '../../reglas_negocio/ManejadorHoras.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorDocentes.php';
 chdir(dirname(__FILE__));
+include_once '../../reglas_negocio/ManejadorPersonal.php';
+chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorCargos.php';
 chdir(dirname(__FILE__));
 include_once '../../reglas_negocio/ManejadorCarreras.php';
@@ -130,23 +132,6 @@ function asignarInfo($año,$ciclo) {
     return $facultad;
 }
 
-function esPropietario($deparSesion,$grupos){
-    if($deparSesion != "todos"){
-        foreach ($grupos as $grupo) {
-            if($grupo->getId_grupo() == 0){
-                continue;
-            }
-            $materiasGrupo = $grupo->getAgrup()->getMaterias();
-            foreach ($materiasGrupo as $materia){
-                if($materia->getCarrera()->getDepartamento()->getId() != $deparSesion){
-                    return false;
-                }
-            }
-        }
-    }
-    return true;
-}
-
 function inicioIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2){
     global $facultad;
     $grupos1 = ManejadorGrupos::getGruposEnRangoHoras($desde1, $hasta1, $facultad->getAulas(), $aula1, $dia1);
@@ -154,24 +139,26 @@ function inicioIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$ha
     if(count($grupos1) != count($grupos2)){
         exit(json_encode(1));
     }
-    if(!esPropietario($_SESSION['id_departamento'],$grupos1) || !esPropietario($_SESSION['id_departamento'],$grupos2)){
+    if(!ManejadorPersonal::esPropietario($_SESSION['id_departamento'],$grupos1) || !ManejadorPersonal::esPropietario($_SESSION['id_departamento'],$grupos2)){
         exit(json_encode(11));
     }
     $msgs = capacidadesAulas($grupos1, $grupos2, $aula1, $aula2);
     if(count($msgs)!=0){
         exit(json_encode(imprimirMensajesAulas($msgs)));
     }
-    exit(json_encode(0));
+    segundaFaseIntercambio($aula1, $dia1, $desde1, $hasta1, $aula2, $dia2, $desde2, $hasta2);
 }
 
 function segundaFaseIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2){
     global $facultad;
+    global $año;
+    global $ciclo;
     $grupos1 = ManejadorGrupos::getGruposEnRangoHoras($desde1, $hasta1, $facultad->getAulas(), $aula1, $dia1);
     $grupos2 = ManejadorGrupos::getGruposEnRangoHoras($desde2, $hasta2, $facultad->getAulas(), $aula2, $dia2);
     $msgs[0][] = array_unique(testIntercambio($grupos2,$grupos1,$dia1,$dia2,$facultad->getAulas(),$aula1,$aula2,$desde1,$hasta1,$desde2,$hasta2));
     $msgs[0][] = array_unique(testIntercambio($grupos1,$grupos2,$dia2,$dia1,$facultad->getAulas(),$aula2,$aula1,$desde2,$hasta2,$desde1,$hasta1));
     if(count($msgs[0][0])==0 && count($msgs[0][1])==0){
-        exit(json_encode(0));
+        realizarIntercambio($aula1,$dia1,$desde1,$hasta1,$aula2,$dia2,$desde2,$hasta2,$año,$ciclo);
     } else{
         $msgs[1] = getDatosHorasIntercambio($desde1, $hasta1, $desde2, $hasta2);
         $msgs[2] = array('dia1'=>$dia1,'dia2'=>$dia2);

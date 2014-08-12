@@ -370,8 +370,11 @@ $(function (){
                 var msj = jQuery.parseJSON(data);
                 if(msj === 1)
                     bootbox.alert("Eliga numero de horas iguales en cada bloque de intercambio");
-                else if(msj === 0)
-                    segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
+                else if(msj === 0){
+                    mostrarAreaIntercambio1(aula1);
+                    mostrarAreaIntercambio2(aula2);
+                    resetearDiasHoras();
+                }
                 else if(msj === 10)
                     bootbox.alert("Debe seleccionar al menos 1 hora en cada area de intercambio");
                 else if(msj === 11)
@@ -704,7 +707,9 @@ function segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta
                     }
                 });
             } else{
-                realizarIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2);
+                mostrarAreaIntercambio1(aula1);
+                mostrarAreaIntercambio2(aula2);
+                resetearDiasHoras();
             }
         }
     });

@@ -28,7 +28,6 @@ if($_GET){
     $facultad = $_SESSION['facultad'];
     $reservaciones = ManejadorReservaciones::getTodasReservaciones($año,$ciclo);
     ManejadorReservaciones::asignarRerservaciones($reservaciones, $facultad->getAulas());
-    
 }
 
 function getIdDia($dia){
