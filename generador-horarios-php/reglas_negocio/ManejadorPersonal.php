@@ -8,39 +8,39 @@ require_once 'Docente.php';
 abstract class ManejadorPersonal{
 	
     public static function getUsuario($login){
-            if (ereg("[^A-Za-z0-9._ ]+",$login)) {	//EVITAR QUE EN EL LOGIN APAREZCAN CARACTERES ESPECIALES
-                    throw new Exception("¡Login Inválido!");	
-            } 
-            else{
-                    $sql_consulta = "SELECT * FROM usuarios NATURAL JOIN docentes WHERE login='".$login."' AND habilitado='t';";                        
-                    $respuesta = conexion::consulta2($sql_consulta);
-                    if($respuesta['login']==""){
-                        $sql_consulta = "SELECT * FROM usuarios WHERE login='".$login."' AND habilitado='t'";                        
-                        $respuesta = conexion::consulta2($sql_consulta);
-                        $usuario = new Usuario();
-                        $usuario->setlogin($respuesta['login']);                            
-                        //Si el password no está encriptado en la base de datos se encripta acá
-                        //Borrar la siguiente línea si el password ya está encriptado en la BD
-                        $password = hash('sha512',$respuesta['password']);                        
-                        $usuario->setPassword($password);
-                        $usuario->setHabilitado($respuesta['habilitado']);
-                        $usuario->setDepartamento("todos");
-                    }else{
-                        $usuario = new Usuario();
-                        $usuario->setlogin($respuesta['login']);                            
-                        //Si el password no está encriptado en la base de datos se encripta acá
-                        //Borrar la siguiente línea si el password ya está encriptado en la BD
-                        $password = hash('sha512',$respuesta['password']);                        
-                        $usuario->setPassword($password);
-                        $usuario->setHabilitado($respuesta['habilitado']);
-                        $usuario->setNombres($respuesta['nombres']);
-                        $usuario->setApellidos($respuesta['apellidos']);                        
-                        $usuario->setDepartamento($respuesta['id_depar']);  
-                        $docente = self::getDocente($respuesta['id_docente']);
-                        $usuario->setDocente($docente);
-                    }
-                    return $usuario;
-            }		
+        if (ereg("[^A-Za-z0-9._ ]+",$login)) {	//EVITAR QUE EN EL LOGIN APAREZCAN CARACTERES ESPECIALES
+                throw new Exception("¡Login Inválido!");	
+        } 
+        else{
+            $sql_consulta = "SELECT * FROM usuarios NATURAL JOIN docentes WHERE login='".$login."' AND habilitado='t';";                        
+            $respuesta = conexion::consulta2($sql_consulta);
+            if($respuesta['login']==""){
+                $sql_consulta = "SELECT * FROM usuarios WHERE login='".$login."' AND habilitado='t'";                        
+                $respuesta = conexion::consulta2($sql_consulta);
+                $usuario = new Usuario();
+                $usuario->setlogin($respuesta['login']);                            
+                //Si el password no está encriptado en la base de datos se encripta acá
+                //Borrar la siguiente línea si el password ya está encriptado en la BD
+                $password = hash('sha512',$respuesta['password']);                        
+                $usuario->setPassword($password);
+                $usuario->setHabilitado($respuesta['habilitado']);
+                $usuario->setDepartamento("todos");
+            }else{
+                $usuario = new Usuario();
+                $usuario->setlogin($respuesta['login']);                            
+                //Si el password no está encriptado en la base de datos se encripta acá
+                //Borrar la siguiente línea si el password ya está encriptado en la BD
+                $password = hash('sha512',$respuesta['password']);                        
+                $usuario->setPassword($password);
+                $usuario->setHabilitado($respuesta['habilitado']);
+                $usuario->setNombres($respuesta['nombres']);
+                $usuario->setApellidos($respuesta['apellidos']);                        
+                $usuario->setDepartamento($respuesta['id_depar']);  
+                $docente = self::getDocente($respuesta['id_docente']);
+                $usuario->setDocente($docente);
+            }
+            return $usuario;
+        }		
     }
     
     public static function getUsuarioPorId($id){            
@@ -108,68 +108,68 @@ abstract class ManejadorPersonal{
     }
     
     public static function agregarDocente($docente){
-		if(ManejadorPersonal::existe($docente)){
-                    if(self::docenteActivo($docente)){
-                        throw new Exception("El docente ya ha sido agregado anteriormente");
-                    }else{
-                        if($docente->getCargo()==""){
-                            $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo=NULL WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
-                        }else{
-                            $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo='".$docente->getCargo()."' WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
-                        }                     
-                     conexion::consulta($consulta);
-                    }                    
+        if(ManejadorPersonal::existe($docente)){
+            if(self::docenteActivo($docente)){
+                throw new Exception("El docente ya ha sido agregado anteriormente");
+            }else{
+                if($docente->getCargo()==""){
+                    $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo=NULL WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
                 }else{
-                    if($docente->getNombres()!=="" && $docente->getApellidos()!==""){
-                        $consulta = "INSERT INTO docentes (nombres,apellidos, contratacion,id_depar,cargo) VALUES ('".
-                                $docente->getNombres()."','".
-                                $docente->getApellidos()."','".                                
-                                $docente->getContratacion()."','".
-                                $docente->getDepar()."',";
-                                if($docente->getCargo()==""){
-                                    $consulta = $consulta."NULL)";
-                                }else{
-                                    $consulta = $consulta.$docente->getCargo().")";
-                                }                                                      
-                        conexion::consulta($consulta);
-                    }else{
-                        throw new Exception("Debe ingresar nombres y apellidos");
-                    }
-                }
-	}
+                    $consulta = "UPDATE docentes SET activo='t',contratacion='".$docente->getContratacion()."',id_depar='".$docente->getDepar()."',cargo='".$docente->getCargo()."' WHERE nombres='".$docente->getNombres()."' AND apellidos='".$docente->getApellidos()."'";
+                }                     
+             conexion::consulta($consulta);
+            }                    
+        }else{
+            if($docente->getNombres()!=="" && $docente->getApellidos()!==""){
+                $consulta = "INSERT INTO docentes (nombres,apellidos, contratacion,id_depar,cargo) VALUES ('".
+                        $docente->getNombres()."','".
+                        $docente->getApellidos()."','".                                
+                        $docente->getContratacion()."','".
+                        $docente->getDepar()."',";
+                        if($docente->getCargo()==""){
+                            $consulta = $consulta."NULL)";
+                        }else{
+                            $consulta = $consulta.$docente->getCargo().")";
+                        }                                                      
+                conexion::consulta($consulta);
+            }else{
+                throw new Exception("Debe ingresar nombres y apellidos");
+            }
+        }
+    }
         
     public static function agregarUsuario($usuario){
-            if(ManejadorPersonal::existeUsuario($usuario)){
-                if(self::usuarioHabilitado($usuario)){
-                    throw new Exception("Ya existe un usuario con ese login");
-                }else{
-                    $consulta = "SELECT * FROM docentes WHERE id_docente='".$usuario->getDocente()."'";
-                    $respuesta = conexion::consulta2($consulta);
-                    if($respuesta['activo']=='t'){
-                        $consulta = "UPDATE usuarios SET habilitado='t',id_docente='".$usuario->getDocente()."',password='".$usuario->getPassword()."' WHERE login='".$usuario->getLogin()."'";
-                        conexion::consulta($consulta);
-                    }else{
-                        throw new Exception("Docente incorrecto!");
-                    }                        
-                }                    
+        if(ManejadorPersonal::existeUsuario($usuario)){
+            if(self::usuarioHabilitado($usuario)){
+                throw new Exception("Ya existe un usuario con ese login");
             }else{
-                $consulta = "";
-                if($usuario->getLogin()!=="" && $usuario->getPassword()!==""){
-                    $consulta = "SELECT * FROM docentes WHERE id_docente='".$usuario->getDocente()."'";
-                    $respuesta = conexion::consulta2($consulta);
-                    if($respuesta['activo']=='t'){
-                        $consulta = "INSERT INTO usuarios (login,password,id_docente) VALUES ('".
-                            $usuario->getLogin()."','".
-                            $usuario->getPassword()."','".                                
-                            $usuario->getDocente()."')";                                
-                        conexion::consulta($consulta);
-                    }else{
-                        throw new Exception("Docente incorrecto!");
-                    }                        
+                $consulta = "SELECT * FROM docentes WHERE id_docente='".$usuario->getDocente()."'";
+                $respuesta = conexion::consulta2($consulta);
+                if($respuesta['activo']=='t'){
+                    $consulta = "UPDATE usuarios SET habilitado='t',id_docente='".$usuario->getDocente()."',password='".$usuario->getPassword()."' WHERE login='".$usuario->getLogin()."'";
+                    conexion::consulta($consulta);
                 }else{
-                    throw new Exception("Debe ingresar un login y un password");
-                }
+                    throw new Exception("Docente incorrecto!");
+                }                        
+            }                    
+        }else{
+            $consulta = "";
+            if($usuario->getLogin()!=="" && $usuario->getPassword()!==""){
+                $consulta = "SELECT * FROM docentes WHERE id_docente='".$usuario->getDocente()."'";
+                $respuesta = conexion::consulta2($consulta);
+                if($respuesta['activo']=='t'){
+                    $consulta = "INSERT INTO usuarios (login,password,id_docente) VALUES ('".
+                        $usuario->getLogin()."','".
+                        $usuario->getPassword()."','".                                
+                        $usuario->getDocente()."')";                                
+                    conexion::consulta($consulta);
+                }else{
+                    throw new Exception("Docente incorrecto!");
+                }                        
+            }else{
+                throw new Exception("Debe ingresar un login y un password");
             }
+        }
     }
 
     public static function existe($docente){
@@ -282,7 +282,7 @@ abstract class ManejadorPersonal{
             $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND d.activo='t' ORDER BY d.nombres ASC LIMIT 25;";                    
             $respuesta = conexion::consulta($sql_consulta);
             while ($fila = pg_fetch_array($respuesta)){
-                $docente = new Docente("","","","","");
+                $docente = new Docente("","","");
                 $docente->setIdDocente($fila['id_docente']);
                 $docente->setNombres($fila['nombres']);
                 $docente->setApellidos($fila['apellidos']);
@@ -353,7 +353,7 @@ abstract class ManejadorPersonal{
             throw new Exception("No existe el usuario que se quiere modificar");
         }            		
     }
-    
+        
     public static function esPropietario($deparSesion,$grupos){
         if($deparSesion != "todos"){
             foreach ($grupos as $grupo) {

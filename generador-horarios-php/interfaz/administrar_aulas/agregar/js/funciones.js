@@ -25,6 +25,5 @@ $(function(){
                 $("#resultado").html("Los datos no se pudieron enviar!");
             }
         });
-    });    
-    
+    });
 });

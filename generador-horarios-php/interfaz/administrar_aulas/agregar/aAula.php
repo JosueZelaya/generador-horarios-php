@@ -1,6 +1,5 @@
 <?php
 chdir(dirname(__FILE__));
-require_once 'config.php';
 require_once '../../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorAulas.php';
@@ -38,4 +37,3 @@ if (ManejadorSesion::comprobar_sesion() == true){
 }else{
     echo json_encode("No está autorizado para realizar esta acción");
 }
-?>

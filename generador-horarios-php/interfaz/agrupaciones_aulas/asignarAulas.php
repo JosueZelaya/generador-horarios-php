@@ -1,9 +1,11 @@
 <?php
 chdir(dirname(__FILE__));
-require_once 'config.php';
-chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorAulas.php';
 chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if(isset($_GET)){
     if(isset($_GET['materias'])     && 

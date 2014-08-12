@@ -3,9 +3,16 @@
 abstract class Conexion {
 	
 	public static function conectar(){
-		$cadena_de_conexion = "host=localhost port=5432 dbname=horarios_bd user=horarios_bd password=password connect_timeout=5";
-		$conexion = pg_connect($cadena_de_conexion) or die ('No se ha podido conectar a la Base de Datos');
-		return $conexion;	
+            $dbinfo = parse_ini_file('dbinfo.ini');
+            $host = $dbinfo['host'];
+            $puerto = $dbinfo['puerto'];
+            $dbname = $dbinfo['base_de_datos'];
+            $user = $dbinfo['usuario'];
+            $password = $dbinfo['password'];
+            $timeout = $dbinfo['timeout'];
+            $cadena_de_conexion = "host=$host port=$puerto dbname=$dbname user=$user password=$password connect_timeout=$timeout";
+            $conexion = pg_connect($cadena_de_conexion) or die ('No se ha podido conectar a la Base de Datos');
+            return $conexion;	
 	}
 	
 	public static function desconectar($conexion){

@@ -412,63 +412,10 @@ class ManejadorHoras {
         return $tabla;
     }
     
-//    public static function getHorarioEnHora_depar($idDia,$idHora,$idDepar,$aulas){
-//        $horario = array();
-//        foreach ($aulas as $aula){
-//            $dias = $aula->getDias();                  
-//            foreach ($dias as $dia){
-//                $horas = $dia->getHoras();
-//                $grupoAnterior=null;
-//                foreach ($horas as $hora){
-//                    $grupo = $hora->getGrupo();
-//                    if(!$hora->estaDisponible() && $grupo->getAgrup() != null){
-//                        $materias = $grupo->getAgrup()->getMaterias();
-//                        foreach ($materias as $materia){
-//                            if($dia->getId()==$idDia && $hora->getIdHora()==$idHora && $materia->getCarrera()->getDepartamento()->getId() == $idDepar){                                                        
-//                                if($grupoAnterior!=null && $grupoAnterior===$grupo){
-//                                    $indiceUltimaHora = count($horario[$grupo->getTipo()])-1;
-//                                    $horario[$grupo->getTipo()][$indiceUltimaHora]['horaFin'] = $hora->getFin();                                    
-//                                }else{
-//                                    $arrayGrupo = [
-//                                    "aula" => $aula->getNombre(),
-//                                    "dia" => $dia->getNombre(),
-//                                    "horaInicio" => $hora->getInicio(),                                
-//                                    "horaFin" => $hora->getFin(),
-//                                    "grupo" => $grupo->getId_grupo(),
-//                                    "nombre" => $materia->getNombre(),   
-//                                    "tipo" => $grupo->getTipo(),
-//                                    "more" => false,
-//                                    "cloned" => false];
-//                                    $propietarios = ManejadorGrupos::obtenerCodigoPropietario($grupo->getAgrup()->getMaterias());
-//                                    if(count(array_unique($propietarios))>1){
-//                                        $arrayGrupo['cloned']=true;
-//                                    } elseif(count($propietarios)>1){
-//                                        $arrayGrupo['more']=true;
-//                                    }
-//                                    $horario[$grupo->getTipo()][] = $arrayGrupo;
-//                                    $grupoAnterior = $hora->getGrupo();
-//                                }
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }            
-//        }
-//        return $horario;
-//    }
-    
-    
     private static function getInfoHoraVacia($index,$dias,$hora){
         return ["texto" => "",                
                 "idHora" => $hora->getIdHora(),
                 "dia" => $dias[$index]->getNombre()];        
-    }
-    
-    private static function getInfoHoraReservada($index,$dias,$hora){
-        return ["texto" => "reservada",                
-                "idHora" => $hora->getIdHora(),
-                "dia" => $dias[$index]->getNombre()];
     }
     
     /** Encontrar todas las horas que aun estan disponibles para una asignacion despues de generar un horario

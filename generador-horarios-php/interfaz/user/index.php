@@ -113,7 +113,7 @@ chdir(dirname(__FILE__));
                     <!--<img width="140px" height="140px" src="../imagenes/placeholder-usuarios.jpg" class="img-circle">-->
                     <span class="index_icon"><i class="fa fa-users fa-lg"></i></span>
                     <h2>Administrar Personal</h2>
-                    <p>Agregar, modificar y eliminar Docentes y Usuarios</p>
+                    <p>Agregar, modificar y eliminar Docentes y/o Usuarios</p>
                 </a>                    
               <p><a href="#admin_users_modal" data-toggle="modal" class="btn btn-default" href="#" role="button">Entrar &raquo;</a></p>
             </div>
@@ -156,6 +156,7 @@ chdir(dirname(__FILE__));
  <?php include_once './adminMateriasModal.php'; ?>
  <?php include_once './adminAulasModal.php'; ?>
  <?php include_once './adminDepartamentosModal.php'; ?>
+ <?php include_once './configuracionModal.php'; ?>
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.

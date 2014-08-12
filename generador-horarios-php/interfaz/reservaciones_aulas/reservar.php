@@ -1,13 +1,15 @@
 <?php
 chdir(dirname(__FILE__));
-include 'config.php';
-chdir(dirname(__FILE__));
 include '../../reglas_negocio/ManejadorReservaciones.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if($_GET){    
     ManejadorSesion::sec_session_start();

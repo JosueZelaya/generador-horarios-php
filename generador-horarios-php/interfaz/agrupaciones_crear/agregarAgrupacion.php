@@ -1,13 +1,16 @@
 <?php
 
 chdir(dirname(__FILE__));
-include 'config.php';
 require_once '../../reglas_negocio/MateriaAgrupacion.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorAgrupaciones.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/Carrera.php';
 chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if(isset($_GET)){
     if(isset($_GET['materias'])){        

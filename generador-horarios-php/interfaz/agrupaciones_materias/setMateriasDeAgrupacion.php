@@ -1,11 +1,14 @@
 <?php
 
 chdir(dirname(__FILE__));
-include 'config.php';
 require_once '../../reglas_negocio/MateriaAgrupacion.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorAgrupaciones.php';
+chdir(dirname(__FILE__));
 
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if(isset($_GET)){
     if(isset($_GET['materias']) && isset($_GET['agrupacion'])){       
@@ -18,11 +21,10 @@ if(isset($_GET)){
             }else{                
                 $materias = array();
                 for ($i = 0; $i < count($arrayMaterias); $i++) {
-                    $materia = new MateriaAgrupacion();
-                    $materia->setCodigo($arrayMaterias[$i]["codigo"]);
-                    $carrera = new Carrera($arrayMaterias[$i]["id_carrera"],"","","");
-                    $materia->setCarrera($carrera);                                        
-                    $materia->setPlan_estudio($arrayMaterias[$i]["plan_estudio"]);                    
+                    $materia = new Materia("","","","","","","");
+                    $materia->setCodigo($arrayMaterias[$i]["codigo"]);                    
+                    $carrera = new Carrera($arrayMaterias[$i]["id_carrera"],$arrayMaterias[$i]["plan_estudio"],"","");
+                    $materia->setCarrera($carrera);                    
                     $materias[]=$materia;                    
                 }
                 try{

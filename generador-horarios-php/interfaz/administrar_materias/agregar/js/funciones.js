@@ -47,6 +47,5 @@ $(function(){
 //        });       
 //        $inputs.prop("disabled", false);        
 //        event.preventDefault();
-    });    
-    
+    });
 });

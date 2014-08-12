@@ -1,9 +1,13 @@
 <?php
 require_once '../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
-include 'config.php';
 include_once 'paginacionConfig.php';
 require_once '../../reglas_negocio/ManejadorAgrupaciones.php';
+chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if($_GET){
     

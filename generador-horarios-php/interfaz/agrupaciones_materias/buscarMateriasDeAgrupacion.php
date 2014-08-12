@@ -1,8 +1,12 @@
 <?php
 
 chdir(dirname(__FILE__));
-include 'config.php';
 require_once '../../reglas_negocio/ManejadorMaterias.php';
+chdir(dirname(__FILE__));
+
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 
 if (isset($_GET)){
     if(isset($_GET['agrupacion'])){
@@ -16,8 +20,8 @@ if (isset($_GET)){
             $arrayMaterias[$cont]["nombre"] = $materia->getNombre();
             $arrayMaterias[$cont]["carrera"] = $materia->getCarrera()->getNombre();   
             $arrayMaterias[$cont]["id_carrera"] = $materia->getCarrera()->getCodigo();
-            $arrayMaterias[$cont]["plan_estudio"] = $materia->getPlan_estudio();
-            $arrayMaterias[$cont]["departamento"] = $materia->getDepartamento()->getNombre();            
+            $arrayMaterias[$cont]["plan_estudio"] = $materia->getCarrera()->getPlanEstudio();
+            $arrayMaterias[$cont]["departamento"] = $materia->getCarrera()->getDepartamento()->getNombre();            
             $cont++;
         }
         echo json_encode($arrayMaterias);

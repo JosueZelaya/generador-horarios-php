@@ -17,6 +17,34 @@ var horaFinSeleccionada2="";
 var areaHTML="";
 
 $(function (){
+    
+    $(document).on("click","#aprobar",function(){
+        $("#mensaje_modal_config").html("");
+        var btn = $(this);
+        btn.button('loading');
+        var año=$("#año").val();
+        var ciclo=$("#ciclo").val();
+        var clonar=$("#año_clonar").val();
+        var clonar_horario=document.getElementById('clonar_horario').checked;
+        var forzar=document.getElementById('forzar').checked;        
+        var dataString = 'año='+año+"&ciclo="+ciclo+"&año_clonar="+clonar+"&clonar_horario="+clonar_horario+"&forzar="+forzar;        
+        $.ajax({            
+            type: "GET",
+            url: "./configurarCiclo.php",
+            data: dataString,            
+            success: function(datos){
+                datos = jQuery.parseJSON(datos);
+                if(datos==="ok"){
+                    $('#configuracion_modal').modal("hide");                    
+                }else{
+                    $("#mensaje_modal_config").html("<font color='red'>"+datos+"</font>");                 
+                }               
+            }
+        }).always(function(){
+            btn.button('reset');
+        });;                
+    });
+    
     $(document).on("click","#generarHorario",function(){
         limpiarMain();
         addFiltro();
@@ -371,9 +399,7 @@ $(function (){
                 if(msj === 1)
                     bootbox.alert("Eliga numero de horas iguales en cada bloque de intercambio");
                 else if(msj === 0){
-                    mostrarAreaIntercambio1(aula1);
-                    mostrarAreaIntercambio2(aula2);
-                    resetearDiasHoras();
+                    actualizarIntercambio(aula1,aula2);
                 }
                 else if(msj === 10)
                     bootbox.alert("Debe seleccionar al menos 1 hora en cada area de intercambio");
@@ -707,9 +733,7 @@ function segundaFaseIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta
                     }
                 });
             } else{
-                mostrarAreaIntercambio1(aula1);
-                mostrarAreaIntercambio2(aula2);
-                resetearDiasHoras();
+                actualizarIntercambio(aula1,aula2);
             }
         }
     });
@@ -726,19 +750,23 @@ function realizarIntercambio(aula1,dia1,desde1,hasta1,aula2,dia2,desde2,hasta2){
             if(msj !== 0){
                 bootbox.alert(msj);
             } else{
-                if($("#search").length){
-                    mostrarAreaIntercambio1(aula2);
-                    resetearDiasHoras();
-                    $("div.row:eq(3)").html('');
-                    bootbox.alert("Intercambio realizado");
-                } else{
-                    mostrarAreaIntercambio1(aula1);
-                    mostrarAreaIntercambio2(aula2);
-                    resetearDiasHoras();
-                }
+                actualizarIntercambio(aula1,aula2);
             }
         }
     });
+}
+
+function actualizarIntercambio(aula1,aula2){
+    if($("#search").length){
+        mostrarAreaIntercambio1(aula2);
+        resetearDiasHoras();
+        $("div.row:eq(3)").html('');
+        bootbox.alert("Intercambio realizado");
+    }else{
+        mostrarAreaIntercambio1(aula1);
+        mostrarAreaIntercambio2(aula2);
+        resetearDiasHoras();
+    }
 }
 
 function paginacion(numPags){

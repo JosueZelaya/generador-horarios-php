@@ -49,6 +49,28 @@ abstract class ManejadorMaterias {
         }
     }
     
+    /** Devuelve todas las materias del ciclo indicado par/impar
+     * 
+     * @param type $ciclo
+     */
+    public static function getTodasMateriasDeCiclo($ciclo){
+        $materias = array();
+        $restriccion="";
+        if($ciclo==2 || $ciclo=="par"){
+            $restriccion = "ciclo_carrera%2=0";
+        }else{
+            $restriccion = "ciclo_carrera%2!=0";
+        }
+        $consulta = "SELECT * FROM materias WHERE $restriccion ORDER BY cod_materia";
+        $respuesta = Conexion::consulta($consulta);
+        while($fila = pg_fetch_array($respuesta)){
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],"","");
+            $materia = new Materia($fila['cod_materia'],$fila['nombre_materia'],$fila['ciclo_carrera'],$fila['uv'],$carrera,"","");
+            $materias[] = $materia;
+        }
+        return $materias;
+    }
+    
     public static function getTodasMaterias($ciclo,$año,$todas_agrups,$todas_carreras){
         $materias = array();
         if($ciclo == 1){
@@ -260,17 +282,15 @@ abstract class ManejadorMaterias {
         $consulta = "SELECT * FROM agrupacion NATURAL JOIN materia_agrupacion NATURAL JOIN materias NATURAL JOIN carreras NATURAL JOIN departamentos WHERE id_agrupacion='$id_agrupacion' AND año='$año' AND ciclo='$ciclo';";
         $respuesta = conexion::consulta($consulta);
         while ($row = pg_fetch_array($respuesta)){
-            $materia = new MateriaAgrupacion();
+            $materia = new Materia("","","","","","","");
             $materia->setCodigo($row['cod_materia']);
-            $materia->setNombre($row['nombre_materia']);
-            $materia->setPlan_estudio($row['plan_estudio']);
-            $materia->setCarrera(new Carrera($row['id_carrera'],"",$row['nombre_carrera'],""));
-            $materia->setDepartamento(new Departamento($row['id_depar'], $row['nombre_depar']));            
+            $materia->setNombre($row['nombre_materia']);            
+            $materia->setCarrera(new Carrera($row['id_carrera'],$row['plan_estudio'],$row['nombre_carrera'],new Departamento($row['id_depar'], $row['nombre_depar'])));
             $materias[] = $materia;
         }                   			
         return $materias;
     }
-    
+
     public static function materiasSonIguales($materia1,$materia2){
         $carrera1 = $materia1->getCarrera();
         $carrera2 = $materia2->getCarrera();

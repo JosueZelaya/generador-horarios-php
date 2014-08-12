@@ -1,7 +1,7 @@
 $(document).ready(function() {
     
     var materias=[];
-    var agrupacion;
+    var agrupacion="";
     
     $(document).on("keydown.autocomplete","#buscar_materia",function(){        
         $(this).autocomplete({
@@ -189,6 +189,46 @@ $(document).ready(function() {
         }
     });
     
+    $("#eliminar_agrupacion").click(function(){
+        if(agrupacion===""){
+            $("#panelAgrupaciones").removeClass("panel-warning").addClass("panel-danger");
+                $("#panelAgrupaciones").removeClass("panel-success").addClass("panel-danger");
+                $("#cabeceraPanel").html("<p class='center'> Error: Primero debe elegir una agrupación</p>");
+        }else if(materias.length<=1){
+                $("#panelAgrupaciones").removeClass("panel-success").addClass("panel-danger");
+                $("#cabeceraPanel").html("<p class='center'> Error: Esta materia no está agrupada con ninguna otra.<br/>\n\
+                                          <a href='../administrar_materias/eliminar/index.php'>¿Desea eliminar la materia?</a></p>");
+        }else{
+            var mensaje = "¿Realmente desea eliminar esta agrupación?<br/>Se eliminarán con ella todos sus datos y deberá volver a ingresarlos para cada materia";
+            bootbox.confirm(mensaje, function(resultado) {
+                if(resultado===true){
+                    var dataString = "agrupacion="+agrupacion;
+                    $.ajax({
+                        dataType: "json",
+                        type: "GET",
+                        url: "./eliminarAgrupacion.php",
+                        data: dataString,
+                        success: function(data){
+                            if(data==="ok"){
+                                $("#panelAgrupaciones").removeClass("panel-danger").addClass("panel-success");
+                                $("#panelAgrupaciones").removeClass("panel-warning").addClass("panel-success");                    
+                                $("#contenido_materias_arrastradas").html("");
+                                $("#cabecera_materias_arrastradas").html("");
+                                $("#cabeceraPanel").html("Agrupación Eliminada");
+                                materias = [];
+                            }else{
+                                $("#panelAgrupaciones").removeClass("panel-success").addClass("panel-danger");
+                                $("#panelAgrupaciones").removeClass("panel-warning").addClass("panel-danger");
+                                $("#cabeceraPanel").html(data);
+                                materias = [];
+                            }
+                        }
+                    });
+                }
+            });
+        }
+    });
+    
     $("#actualizar_agrupacion").click(function(){
         var materiasEnviar;        
         materiasEnviar = jQuery.makeArray(materias);
@@ -205,7 +245,7 @@ $(document).ready(function() {
                     $("#panelAgrupaciones").removeClass("panel-warning").addClass("panel-success");                    
                     $("#contenido_materias_arrastradas").html("");
                     $("#cabecera_materias_arrastradas").html("");
-                    $("#cabeceraPanel").html("Agrupación Creada Exitosamente");
+                    $("#cabeceraPanel").html("Agrupación Actualizada Exitosamente");
                     materias = [];                    
                 }else{
                     $("#panelAgrupaciones").removeClass("panel-success").addClass("panel-danger");
@@ -215,7 +255,7 @@ $(document).ready(function() {
                     $("#cabeceraPanel").html(data);
                     materias = [];                    
                 }                
-                                
+                agrupacion="";
             }
         });
         

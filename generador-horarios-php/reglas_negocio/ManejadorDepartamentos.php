@@ -28,10 +28,21 @@ abstract class ManejadorDepartamentos {
         conexion::consulta2($consulta);
     }
     
+    /*
+     * QUITA LOS DEPARTAMENTOS QUE SON ESPECIALES PARA QUE NO SE MUESTREN AL USUARIO.
+     */
     public static function quitarDepartamentosEspeciales($departamentos){
-        $departamentosFiltrados=array();
+        $departamentosFiltrados=array();        
+        $departamentosEspeciales=["PLAN ESPECIAL","DOCENTES DE RESPALDO","POSTGRADO"];
         foreach ($departamentos as $dpt) {
-            if($dpt->getNombre()!="PLAN ESPECIAL" && $dpt->getNombre()!="DOCENTES DE RESPALDO" && $dpt->getNombre()!="POSTGRADO"){
+            $es_especial=FALSE;
+            $nombre_depar = strtoupper($dpt->getNombre());
+            foreach ($departamentosEspeciales as $dpt_especial) {
+                if($nombre_depar==strtoupper($dpt_especial)){
+                    $es_especial=TRUE;
+                }
+            }
+            if(!$es_especial){
                 $departamentosFiltrados[] = $dpt;
             }
         }

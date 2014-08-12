@@ -10,9 +10,15 @@
                   <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
                 </div>                
             </div>
-            <div id="formularioAgrupacion" class="container-fluid">
-                <button id="actualizar_agrupacion" class="btn btn-success center center-block">Actualizar Agrupacion</button>
-            </div>
+            <br/>
+            <div class="row">
+                <div id="formularioAgrupacion" class="container-fluid col-lg-6">
+                    <button id="actualizar_agrupacion" class="btn btn-info center center-block"><span class="glyphicon glyphicon-refresh"></span> Actualizar Agrupacion</button>                
+                </div>
+                <div id="formularioAgrupacion" class="container-fluid col-lg-6">
+                    <button id="eliminar_agrupacion" class="btn btn-danger center center-block"><span class="glyphicon glyphicon-trash"></span> Eliminar Agrupacion</button>
+                </div>
+            </div>                        
             <hr size="100%" />
             <div   id="mostrar_agrupacion" class="container-fluid">
                 <div class="table-responsive">
@@ -49,5 +55,4 @@
             </div>
         </div>        
     </div>
-    
 </div>
