@@ -14,7 +14,7 @@ if($_GET){
         $id = $_GET['id'];
         $usuario = ManejadorPersonal::getDocente($id);        
         try{
-            ManejadorPersonal::ocultarDocente($usuario);
+            ManejadorPersonal::desactivarDocente($usuario);
             echo json_encode("ok");
         }catch(Exception $e){
             echo json_encode($e->getMessage());

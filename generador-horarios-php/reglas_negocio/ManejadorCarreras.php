@@ -17,6 +17,16 @@ abstract class ManejadorCarreras {
         return $carreras;
     }
     
+    public static function getCarrerasDeDepartamento($id_departamento){
+        $sql_consulta = "SELECT * FROM carreras NATURAL JOIN departamentos WHERE id_depar='$id_departamento' ORDER BY nombre_carrera";
+        $respuesta = Conexion::consulta($sql_consulta);
+        while ($fila = pg_fetch_array($respuesta)){
+            $carrera = new Carrera($fila['id_carrera'],$fila['plan_estudio'],$fila['nombre_carrera'],new Departamento($fila['id_depar'],$fila['nombre_depar']));
+            $carreras[] = $carrera;
+        }
+        return $carreras;
+    }
+    
     public static function getCarrera($codigo,$plan,$carreras){
         foreach ($carreras as $carrera){
             if($carrera->getCodigo() == $codigo && $carrera->getPlanEstudio() == $plan){

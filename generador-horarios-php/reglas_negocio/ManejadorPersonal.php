@@ -3,7 +3,10 @@
 chdir(dirname(__FILE__));
 require_once '../acceso_datos/Conexion.php';
 require_once 'Usuario.php';
+chdir(dirname(__FILE__));
 require_once 'Docente.php';
+chdir(dirname(__FILE__));
+require_once 'Departamento.php';
 
 abstract class ManejadorPersonal{
 	
@@ -12,7 +15,7 @@ abstract class ManejadorPersonal{
                 throw new Exception("¡Login Inválido!");	
         } 
         else{
-            $sql_consulta = "SELECT * FROM usuarios NATURAL JOIN docentes WHERE login='".$login."' AND habilitado='t';";                        
+            $sql_consulta = "SELECT * FROM usuarios NATURAL JOIN docentes NATURAL JOIN departamentos WHERE login='".$login."' AND habilitado='t';";                        
             $respuesta = conexion::consulta2($sql_consulta);
             if($respuesta['login']==""){
                 $sql_consulta = "SELECT * FROM usuarios WHERE login='".$login."' AND habilitado='t'";                        
@@ -24,7 +27,7 @@ abstract class ManejadorPersonal{
                 $password = hash('sha512',$respuesta['password']);                        
                 $usuario->setPassword($password);
                 $usuario->setHabilitado($respuesta['habilitado']);
-                $usuario->setDepartamento("todos");
+                $usuario->setDepartamento(new Departamento("todos","todos"));
             }else{
                 $usuario = new Usuario();
                 $usuario->setlogin($respuesta['login']);                            
@@ -35,7 +38,7 @@ abstract class ManejadorPersonal{
                 $usuario->setHabilitado($respuesta['habilitado']);
                 $usuario->setNombres($respuesta['nombres']);
                 $usuario->setApellidos($respuesta['apellidos']);                        
-                $usuario->setDepartamento($respuesta['id_depar']);  
+                $usuario->setDepartamento(new Departamento($respuesta['id_depar'],$respuesta['nombre_depar']));                
                 $docente = self::getDocente($respuesta['id_docente']);
                 $usuario->setDocente($docente);
             }
@@ -216,8 +219,13 @@ abstract class ManejadorPersonal{
         return $habilitado;
     }
 
-    public static function getCuantosDocentesExisten(){
-        $consulta = "SELECT COUNT(*) FROM docentes WHERE activo='t'";
+    public static function getCuantosDocentesExisten($id_departamento="todos"){
+        $consulta="";
+        if($id_departamento=="todos"){
+            $consulta = "SELECT COUNT(*) FROM docentes NATURAL JOIN departamentos WHERE activo='t'";
+        }else{
+            $consulta = "SELECT COUNT(*) FROM docentes NATURAL JOIN departamentos WHERE id_depar='$id_departamento' AND activo='t'";
+        }        
         $respuesta = conexion::consulta2($consulta);
         return $respuesta['count'];
     }
@@ -228,10 +236,15 @@ abstract class ManejadorPersonal{
         return $respuesta['count'];
     }
 
-    public static function getTodosDocentesConPaginacion($pagina,$numeroResultados){
+    public static function getTodosDocentesConPaginacion($pagina,$numeroResultados,$id_departamento="todos"){
         $docentes = array();
         $pagina = ($pagina-1)*$numeroResultados;
-        $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE d.activo='t' ORDER BY d.nombres ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        $sql_consulta="";
+        if($id_departamento=="todos"){
+            $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.id_depar,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE d.activo='t' ORDER BY d.nombres ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        }else{
+            $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.id_depar,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE dd.id_depar='$id_departamento' AND d.activo='t' ORDER BY d.nombres ASC LIMIT ".$numeroResultados." OFFSET ".$pagina;
+        }        
         $respuesta = conexion::consulta($sql_consulta);
         while ($fila = pg_fetch_array($respuesta)){
             $docente = new Docente("","","","","");
@@ -274,32 +287,33 @@ abstract class ManejadorPersonal{
         return $usuarios;
     }
 
-    public static function buscarDocente($buscarComo){
+    public static function buscarDocente($buscarComo,$id_departamento="todos"){
         $docentes = array();
-//            if (ereg("[^A-Za-z0-9._ ]+",$buscarComo)) {	//EVITAR QUE APAREZCAN CARACTERES ESPECIALES
-//			throw new Exception("¡Carácteres Inválidos!");	
-//            } else{
-            $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND d.activo='t' ORDER BY d.nombres ASC LIMIT 25;";                    
-            $respuesta = conexion::consulta($sql_consulta);
-            while ($fila = pg_fetch_array($respuesta)){
-                $docente = new Docente("","","");
-                $docente->setIdDocente($fila['id_docente']);
-                $docente->setNombres($fila['nombres']);
-                $docente->setApellidos($fila['apellidos']);
-                $docente->setContratacion($fila['contratacion']);
-                $docente->setDepar($fila['nombre_depar']);
-                $cargo = $fila['cargo'];
-                if($cargo!=""){
-                    $consulta = "SELECT * FROM cargo WHERE id='".$cargo."'";
-                    $fila = Conexion::consulta2($consulta);
-                    $docente->setCargo($fila['nombre']);
-                }else{
-                    $docente->setCargo($cargo);
-                }
-                $docentes[] = $docente;
-            }                   			
-            return $docentes;
-//            }
+        $sql_consulta="";
+        if($id_departamento=="todos"){
+            $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.id_depar,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND d.activo='t' ORDER BY d.nombres ASC LIMIT 25;";
+        }else{
+            $sql_consulta = "SELECT d.id_docente,d.nombres,d.apellidos,d.contratacion,d.cargo,d.activo,dd.id_depar,dd.nombre_depar FROM docentes AS d NATURAL JOIN departamentos AS dd WHERE (nombres || ' ' || apellidos) iLIKE '%$buscarComo%' AND dd.id_depar='$id_departamento' AND d.activo='t' ORDER BY d.nombres ASC LIMIT 25;";
+        }        
+        $respuesta = conexion::consulta($sql_consulta);
+        while ($fila = pg_fetch_array($respuesta)){
+            $docente = new Docente("","","","","");
+            $docente->setIdDocente($fila['id_docente']);
+            $docente->setNombres($fila['nombres']);
+            $docente->setApellidos($fila['apellidos']);
+            $docente->setContratacion($fila['contratacion']);
+            $docente->setDepar($fila['nombre_depar']);
+            $cargo = $fila['cargo'];
+            if($cargo!=""){
+                $consulta = "SELECT * FROM cargo WHERE id='".$cargo."'";
+                $fila = Conexion::consulta2($consulta);
+                $docente->setCargo($fila['nombre']);
+            }else{
+                $docente->setCargo($cargo);
+            }
+            $docentes[] = $docente;
+        }                   			
+        return $docentes;
     }
 
     public static function buscarUsuario($buscarComo){
@@ -322,17 +336,17 @@ abstract class ManejadorPersonal{
 //            }
     }
 
-    public static function ocultarDocente($docente){
+    public static function desactivarDocente($docente){
         if(ManejadorPersonal::existe($docente)){
-            $docente->ocultar();
+            $docente->desactivar();
         }else{
             throw new Exception("Ese docente no existe en la BD");
         }
     }
 
-    public static function ocultarUsuario($usuario){
+    public static function desactivarUsuario($usuario){
         if(ManejadorPersonal::existeUsuario($usuario)){
-            $usuario->ocultar();
+            $usuario->desactivar();
         }else{
             throw new Exception("Ese usuario no existe en la BD");
         }

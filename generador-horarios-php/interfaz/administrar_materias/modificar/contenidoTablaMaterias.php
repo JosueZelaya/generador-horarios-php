@@ -16,6 +16,8 @@ if(session_status()==PHP_SESSION_NONE){
 }
 
 $materias;
+$id_departamento = $_SESSION['id_departamento'];
+
 
 if($_GET){    
     if(isset($_GET['pagina'])){
@@ -23,16 +25,22 @@ if($_GET){
     }    
     if(isset($_GET['materia'])){
         $materia_a_buscar = $_GET['materia'];
-        $materias = ManejadorMaterias::getMateriasParaAgrupar($materia_a_buscar,"todos",$_SESSION['id_departamento']);               
+        $materias = ManejadorMaterias::getMateriasParaAgrupar($materia_a_buscar,"todos",$id_departamento);
     }else{
         if(isset($_SESSION['datos_tabla_materias'])){
             $materias = $_SESSION['datos_tabla_materias'];
         }else{
             $materias = ManejadorMaterias::getTodasMateriasSinPaginacion();
+            if($id_departamento!="todos"){
+                $materias = ManejadorMaterias::obtenerMateriasDeDepartamento($materias,$id_departamento,"todos");
+            }
         }
     }    
 }else{
     $materias = ManejadorMaterias::getTodasMateriasSinPaginacion();
+    if($id_departamento!="todos"){
+        $materias = ManejadorMaterias::obtenerMateriasDeDepartamento($materias,$id_departamento,"todos");
+    }
 }
 
 $_SESSION['datos_tabla_materias'] = $materias;

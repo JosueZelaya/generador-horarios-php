@@ -13,6 +13,7 @@ require_once '../../../reglas_negocio/Docente.php';
 chdir(dirname(__FILE__));
 
 ManejadorSesion::sec_session_start();
+$id_departamento = $_SESSION['id_departamento'];
 
 if($_POST){
     if($_POST['pk'] && $_POST['name'] && $_POST['value']){
@@ -21,10 +22,10 @@ if($_POST){
         $campo = $_POST['name'];
         $valor = $_POST['value'];
         
-        $docenteActual = new Docente("","","");
+        $docenteActual = new Docente("","","","","");
         $docenteActual = ManejadorPersonal::getDocente($id);
         
-        $docenteNuevo = new Docente("","","");
+        $docenteNuevo = new Docente("","","","","");
         $docenteNuevo->setIdDocente($docenteActual->getIdDocente());
         $docenteNuevo->setNombres($docenteActual->getNombres());
         $docenteNuevo->setApellidos($docenteActual->getApellidos());
@@ -60,9 +61,20 @@ if($_POST){
         }
         
         try{
-            ManejadorPersonal::modificarDocente($docenteActual,$docenteNuevo);
-            $respuesta = array('status'=>'ok','msg'=>'¡Docente Modificado!');
-            print json_encode($respuesta);
+            if($campo=="departamento"){
+                if($id_departamento=="todos" || ($id_departamento!="todos" && $id_departamento==$valor)){
+                    ManejadorPersonal::modificarDocente($docenteActual,$docenteNuevo);
+                    $respuesta = array('status'=>'ok','msg'=>'¡Docente Modificado!');
+                    print json_encode($respuesta);
+                }else{
+                    $respuesta = array('status'=>'error','msg'=>'¡No está autorizado para cambiar de departamento a un docente!');
+                    print json_encode($respuesta);
+                }
+            }else{
+                ManejadorPersonal::modificarDocente($docenteActual,$docenteNuevo);
+                $respuesta = array('status'=>'ok','msg'=>'¡Docente Modificado!');
+                print json_encode($respuesta);
+            }            
         }catch(Exception $ex){
             $respuesta = array('status'=>'error','msg'=>$ex->getMessage());
             print json_encode($respuesta);            

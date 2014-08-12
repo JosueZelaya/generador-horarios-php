@@ -11,6 +11,8 @@ if(session_status()!=PHP_SESSION_ACTIVE){
     ManejadorSesion::sec_session_start();
 }
 
+$id_departamento = $_SESSION['id_departamento'];
+$nombre_departamento = $_SESSION['nombre_departamento'];
 
 if (ManejadorSesion::comprobar_sesion() == true) : ?>
 <div class="panel panel-default col-sm-12">
@@ -24,7 +26,12 @@ if (ManejadorSesion::comprobar_sesion() == true) : ?>
                     <select id="carrera" name="carrera" class="form-control">
                     <?php
                         $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
-                        $carreras = ManejadorCarreras::getTodasCarreras($departamentos);
+                        $carreras = array();
+                        if($id_departamento!="todos"){                            
+                            $carreras = ManejadorCarreras::getCarrerasDeDepartamento($id_departamento);
+                        }else{
+                            $carreras = ManejadorCarreras::getTodasCarreras($departamentos);
+                        }                        
                         $cont=1;
                         foreach ($carreras as $carrera) {
                             echo "<option id='".$cont."' plan='".$carrera->getPlanEstudio()."' codigo='".$carrera->getCodigo()."' value='".$carrera->getCodigo()."'>".$carrera->getNombre().", plan: ".$carrera->getPlanEstudio()."</option>";
