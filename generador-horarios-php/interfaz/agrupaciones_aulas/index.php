@@ -38,7 +38,7 @@ and open the template in the editor.
     <body>
         <?php if (ManejadorSesion::comprobar_sesion() == true) : ?>   
             <!-- Barra de menu -->
-            <?php include 'menuPrincipal.php';?>
+            <?php include '../user/menuPrincipal.php';?>
      
             <div class="row">
 

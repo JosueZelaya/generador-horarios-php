@@ -9,6 +9,7 @@ and open the template in the editor.
 require_once '../../../reglas_negocio/ManejadorSesion.php';
 
 ManejadorSesion::sec_session_start();
+chdir(dirname(__FILE__));
 ?>
 
 <html lang="es">
@@ -43,7 +44,7 @@ ManejadorSesion::sec_session_start();
     <?php if (ManejadorSesion::comprobar_sesion() == true) : ?>      
     
     <!-- Barra de menu -->
-    <?php include 'menuPrincipal.php';?>  
+    <?php include '../../user/menuPrincipal.php';?>
     
     <ul class='nav nav-tabs'>
         <li id='modificar_docentes' class='active'><a href='#'>Docentes</a></li>
