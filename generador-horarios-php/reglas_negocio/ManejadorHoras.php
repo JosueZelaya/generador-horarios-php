@@ -222,12 +222,12 @@ class ManejadorHoras {
      * @param boolean $ultimoRecurso true si es para ultimo recurso la busqueda (buscar en todo el dia)
      * @return Hora[] horas disponibles en las que se puede asignar el grupoHora
      */
-    public static function buscarHoras($docentes,$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulasConCapa,$aulas,$ultimoRecurso){
+    public static function buscarHoras($docentes,$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulasConCapa,$aulas,$ultimoRecurso,$choques){
         $horasDisponibles = null;
         for($x=0; $x<count($aulasConCapa); $x++){
 /*>>>>>>>>>>>>>>*/error_log ("A probar en aula ".$aulasConCapa[$x]->getNombre(),0);
             $dia = $aulasConCapa[$x]->getDia($nombre_dia);
-            $resul = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,$ultimoRecurso,false,false);
+            $resul = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,$ultimoRecurso,$choques,false);
             if($resul != null && is_array($resul)){
                 $horasDisponibles = $resul;
                 break;
@@ -249,18 +249,18 @@ class ManejadorHoras {
      * @param Aula[] $aulas array de aulas que tienen capacidad para asignar al grupo
      * @return Hora[] = array de horas para asignar al grupo
      */
-    public static function buscarHorasConChoque($agrupacion,$docentes,$cantidadHoras,$desde,$hasta,$nombre_dia,$aulas){
-        $horasDisponibles = null;
-        for($x=0; $x<count($aulas); $x++){
-/*>>>>>>>>>>>>>>*/error_log ("A probar con choque en aula ".$aulas[$x]->getNombre(),0);
-            $dia = $aulas[$x]->getDia($nombre_dia);
-            $horasDisponibles = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,false,true,false);
-            if($horasDisponibles != null){
-                break;
-            }
-        }
-        return $horasDisponibles;
-    }
+//    public static function buscarHorasConChoque($agrupacion,$docentes,$cantidadHoras,$desde,$hasta,$nombre_dia,$aulas){
+//        $horasDisponibles = null;
+//        for($x=0; $x<count($aulas); $x++){
+///*>>>>>>>>>>>>>>*/error_log ("A probar con choque en aula ".$aulas[$x]->getNombre(),0);
+//            $dia = $aulas[$x]->getDia($nombre_dia);
+//            $horasDisponibles = self::buscarHorasDisponibles($docentes,$dia->getHoras(),$cantidadHoras,$desde,$hasta,$nombre_dia,$agrupacion,$aulas,false,true,false);
+//            if($horasDisponibles != null){
+//                break;
+//            }
+//        }
+//        return $horasDisponibles;
+//    }
     
     /**
      * Para ver si ya se asignó el grupo en un día
