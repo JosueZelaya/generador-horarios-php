@@ -145,7 +145,17 @@ class Facultad {
         return $respuesta['max'];
     }
     
-    /** Sirve para clonar las materias de un año y ciclo dado, al nuevo año y ciclo especificado.
+    /** Sirve para clonar la información de un ciclo determinado a otro.
+     * Información que se clona:
+     * - Materias
+     * - Fusiones de materias
+     * - Grupos
+     * - Docentes y grupos asignados
+     * - Horario de docentes
+     * - Reservaciones de aula
+     * - Reservaciones de aula para materias
+     * 
+     * NOTA:  NO INCLUYE el horario generado a partir de una simulación
      * 
      * @param int $año_ant = el año que se desea clonar
      * @param int $ciclo_ant = el ciclo que se desea clonar
