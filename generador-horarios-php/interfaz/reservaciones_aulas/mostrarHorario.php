@@ -2,7 +2,7 @@
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/ManejadorSesion.php';
 chdir(dirname(__FILE__));
-require_once '../admin/funciones.php';
+require_once '../user/funciones.php';
 chdir(dirname(__FILE__));
 require_once '../../reglas_negocio/Facultad.php';
 chdir(dirname(__FILE__));
