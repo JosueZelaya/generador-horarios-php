@@ -16,10 +16,12 @@ class Departamento {
     private $id;
     private $nombre;
     private $activo;
+    private $carreras;
     
     function __construct($id, $nombre) {
         $this->id = $id;
         $this->nombre = $nombre;
+        $this->carreras = array();
     }
 
     public function getId() {
@@ -48,6 +50,18 @@ class Departamento {
         }else{
             return FALSE;
         }
+    }
+    
+    public function getCarreras() {
+        return $this->carreras;
+    }
+
+    public function setCarreras($carreras) {
+        $this->carreras = $carreras;
+    }
+    
+    public function addCarrera($carrera){
+        $this->carreras[] = $carrera;
     }
     
 }

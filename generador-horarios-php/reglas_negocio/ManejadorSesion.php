@@ -1,7 +1,11 @@
 <?php
 chdir(dirname(__FILE__));
 require_once 'ManejadorPersonal.php';
+chdir(dirname(__FILE__));
+require_once 'Departamento.php';
+chdir(dirname(__FILE__));
 require_once 'Usuario.php';
+chdir(dirname(__FILE__));
 
 abstract class ManejadorSesion{
 	
@@ -12,13 +16,14 @@ abstract class ManejadorSesion{
                     //Obtenemos el navegador y sistema operativo del usuario
                     $user_navegador = $_SERVER['HTTP_USER_AGENT'];                    
                     // XSS protection as we might print this value
-                    $user_nombre = preg_replace("/[^a-zA-Z0-9_\-]+/","",$usuario->getNombres());
+                    $user_nombre = preg_replace("/[^a-zA-Z0-9_\- ]+/","",$usuario->getNombres());
                     $usuario->setNombres($user_nombre);
                     // XSS protection as we might print this value
-                    $user_apellidos = preg_replace("/[^a-zA-Z0-9_\-]+/","",$usuario->getApellidos());
+                    $user_apellidos = preg_replace("/[^a-zA-Z0-9_\- ]+/","",$usuario->getApellidos());
                     $usuario->setApellidos($user_apellidos);
                     // XSS protection as we might print this value
-                    $user_departamento = preg_replace("/[^a-zA-Z0-9_\-]+/","",$usuario->getDepartamento());
+                    $user_departamento = preg_replace("/[^a-zA-Z0-9_\-]+/","",$usuario->getDepartamento()->getId());
+                    $nombre_depar = preg_replace("/[^a-zA-Z0-9_\- ]+/","",$usuario->getDepartamento()->getNombre());
                     $usuario->setDepartamento($user_departamento);
                     
                     $_SESSION['usuario_login']=$login;
@@ -28,7 +33,7 @@ abstract class ManejadorSesion{
                     $_SESSION['random_string'] = self::getRandomString(16);
                     $_SESSION['usuario_login_string'] = hash('sha512',$user_navegador.$usuario->getPassword().$_SESSION['random_string']);                    
                     $_SESSION['id_departamento'] = $user_departamento;
-                    
+                    $_SESSION['nombre_departamento'] = $nombre_depar;
                     return $usuario;
                     
                 } catch (Exception $e) {

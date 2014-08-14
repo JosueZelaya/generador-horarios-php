@@ -1,11 +1,19 @@
 <?php
 chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorPersonal.php';
 chdir(dirname(__FILE__));
 include 'paginacionConfig.php';
 chdir(dirname(__FILE__));
 
+if(session_status()!=PHP_SESSION_ACTIVE){
+    ManejadorSesion::sec_session_start();
+}
+
 $usuarios;
+$id_departamento = $_SESSION['id_departamento'];
+$nombre_departamento = $_SESSION['nombre_departamento'];
 
 if($_GET){    
     if(isset($_GET['pagina'])){
@@ -13,7 +21,11 @@ if($_GET){
     }    
 }
 
-$usuarios = ManejadorPersonal::getTodosDocentesConPaginacion($pagina, $numeroResultados);
+if($id_departamento=="todos"){
+    $usuarios = ManejadorPersonal::getTodosDocentesConPaginacion($pagina, $numeroResultados);
+}else{
+    $usuarios = ManejadorPersonal::getTodosDocentesConPaginacion($pagina, $numeroResultados, $id_departamento);
+}
 
 foreach ($usuarios as $usuario) {
     echo "<tr>".

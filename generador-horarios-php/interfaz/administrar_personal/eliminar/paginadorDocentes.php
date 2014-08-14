@@ -1,11 +1,23 @@
 <?php
 chdir(dirname(__FILE__));
+require_once '../../../reglas_negocio/ManejadorSesion.php';
+chdir(dirname(__FILE__));
 require_once '../../../reglas_negocio/ManejadorPersonal.php';
 chdir(dirname(__FILE__));
 include 'paginacionConfig.php';
 chdir(dirname(__FILE__));
 
-$cantidadPersonas = ManejadorPersonal::getCuantosDocentesExisten();
+if(session_status()!=PHP_SESSION_ACTIVE){
+    ManejadorSesion::sec_session_start();
+}
+
+$id_departamento = $_SESSION['id_departamento'];
+$cantidadPersonas=0;
+if($id_departamento=="todos"){
+    $cantidadPersonas = ManejadorPersonal::getCuantosDocentesExisten();
+}else{
+    $cantidadPersonas = ManejadorPersonal::getCuantosDocentesExisten($id_departamento);
+}
 $paginasNecesarias = ceil($cantidadPersonas/$numeroResultados); //Redondea al número mayor con la función ceil()
 $css_class = 'paginaDocentesEliminar';
 if($_GET){

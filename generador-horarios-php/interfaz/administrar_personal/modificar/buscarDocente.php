@@ -10,24 +10,38 @@ require_once '../../../reglas_negocio/ManejadorCargos.php';
 chdir(dirname(__FILE__));
 
 ManejadorSesion::sec_session_start();
+
+$id_departamento = $_SESSION['id_departamento'];
+$nombre_departamento = $_SESSION['nombre_departamento'];
+
 if (ManejadorSesion::comprobar_sesion() == true){
     if (isset($_GET)){
         if(isset($_GET['term'])){
             $buscarComo = $_GET['term'];
-            $usuarios = ManejadorPersonal::buscarDocente($buscarComo);
-            
-            $departamentos_string="[";
-            $cont=1;
-            $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
-            foreach ($departamentos as $departamento) {
-                if(count($departamentos)==$cont){
-                    $departamentos_string = $departamentos_string."{value: '".$departamento->getId()."', text: '".$departamento->getNombre()."'}";
-                }else{
-                    $departamentos_string = $departamentos_string."{value: '".$departamento->getId()."', text: '".$departamento->getNombre()."'},";
-                }
+            $usuarios = array();
+            if($id_departamento=="todos"){
+                $usuarios = ManejadorPersonal::buscarDocente($buscarComo);
+            }else{
+                $usuarios = ManejadorPersonal::buscarDocente($buscarComo,$id_departamento);
             }
-            $departamentos_string= $departamentos_string."]";
-            
+            $departamentos=array();
+            $departamentos_string="";
+            if($id_departamento=="todos"){
+                $departamentos_string="[";
+                $cont=1;
+                $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
+                foreach ($departamentos as $departamento) {
+                    if(count($departamentos)==$cont){
+                        $departamentos_string = $departamentos_string."{value: '".$departamento->getId()."', text: '".$departamento->getNombre()."'}";
+                    }else{
+                        $departamentos_string = $departamentos_string."{value: '".$departamento->getId()."', text: '".$departamento->getNombre()."'},";
+                    }
+                }
+                $departamentos_string= $departamentos_string."]";
+            }else{
+                $departamentos_string="[{value: '".$id_departamento."',text: '".$nombre_departamento."'}]";
+            }
+                 
             $cargos_string="[{value: 'ninguno', text: 'ninguno'},";
             $cont=1;
             $cargos = ManejadorCargos::obtenerTodosCargos();

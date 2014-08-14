@@ -11,6 +11,8 @@ if(session_status()!=PHP_SESSION_ACTIVE){
     ManejadorSesion::sec_session_start();
 }
 
+$id_departamento = $_SESSION['id_departamento'];
+$nombre_departamento = $_SESSION['nombre_departamento'];
 
 if (ManejadorSesion::comprobar_sesion() == true) : ?>
 <div class="panel panel-default col-sm-12">
@@ -47,15 +49,19 @@ if (ManejadorSesion::comprobar_sesion() == true) : ?>
             </div>
             <div class="form-group">
                 <label for="departamento" class="col-lg-2 control-label">Departamento</label>
-                <div class="col-lg-4">
-                    <select id="departamento" name="departamento" class="form-control">
-                    <?php
-                        $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
-                        foreach ($departamentos as $departamento) {
-                            echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
-                        }
-                    ?>
-                    </select>
+                <div class="col-lg-4">                    
+                    <select id='departamento' name='departamento' class='form-control'>
+                    <?php                                             
+                        if($id_departamento!="todos"){
+                            echo "<option value='".$id_departamento."'>".$nombre_departamento."</option>";
+                        }else{
+                            $departamentos = ManejadorDepartamentos::quitarDepartamentosEspeciales(ManejadorDepartamentos::getDepartamentos());
+                            foreach ($departamentos as $departamento) {
+                                echo "<option value='".$departamento->getId()."'>".$departamento->getNombre()."</option>";
+                            }
+                        }                        
+                    ?>        
+                    </select>    
                 </div>
             </div>
             <div class="form-group">
