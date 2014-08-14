@@ -49,7 +49,9 @@ include_once '../../reglas_negocio/ManejadorGrupos.php';
 chdir(dirname(__FILE__));
 include_once 'funciones.php';
 chdir(dirname(__FILE__));
-include_once 'config.php';
+$cicloinfo = parse_ini_file('../cicloinfo.ini');
+$año = $cicloinfo['año'];
+$ciclo = $cicloinfo['ciclo'];
 ManejadorSesion::sec_session_start();
 
 if(isset($_SESSION['facultad'])){
@@ -94,6 +96,10 @@ if(isset($_GET['op'])){
 }
 
 function generarHorario($año,$ciclo){
+    $err = Facultad::comprobarDatosGeneracion($año, $ciclo);
+    if(count($err) > 0){
+        exit(json_encode(imprimirMensajeFaltantes($err)));
+    }
     $facultad = asignarInfo($año, $ciclo);
     $procesador = new Procesador($facultad->getAulas());
     $clasifDocentes = ManejadorDocentes::clasificarDocentes($facultad->getDocentes());

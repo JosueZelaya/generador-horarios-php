@@ -435,4 +435,28 @@ class Facultad {
         }
     }
     
+    public static function comprobarDatosGeneracion($año,$ciclo){
+        $errores = array();
+        //Determinar si hay grupos sin docente asignado
+        $consulta="(select id,id_agrupacion,año,ciclo,tipo,nombre_depar from grupo natural join materia_agrupacion natural join carreras natural join departamentos where año=$año and ciclo=$ciclo) except (select distinct id_grupo,id_agrupacion,año,ciclo,tipo_grupo,nombre_depar from docente_grupo natural join materia_agrupacion natural join carreras natural join departamentos where año=$año and ciclo=$ciclo)";
+        $respuesta = pg_fetch_all(Conexion::consulta($consulta));
+        if(is_array($respuesta)){
+            $depars = array();
+            foreach ($respuesta as $fila){
+                $depars[] = $fila['nombre_depar'];
+            }
+            $errores[] = "Existen grupos sin docente asignado en los departamentos: ".implode(", ", array_unique($depars));
+        }
+        //Determinar si hay agrupaciones que deben ocupar aula pero sin aula asignada
+        $consulta = "select id_agrupacion,año,ciclo,tipo_grupo,nombre_depar from info_agrup_aula natural join materia_agrupacion natural join carreras natural join departamentos where año=$año and ciclo=$ciclo except select id_agrupacion,año,ciclo,tipo_grupo,nombre_depar from lista_agrup_aula natural join materia_agrupacion natural join carreras natural join departamentos where año=$año and ciclo=$ciclo";
+        $respuesta = pg_fetch_all(Conexion::consulta($consulta));
+        if(is_array($respuesta)){
+            $depars = array();
+            foreach ($respuesta as $fila){
+                $depars[] = $fila['nombre_depar'];
+            }
+            $errores[] = "Existen agrupaciones que necesitan tener asignada un aula, en los departamentos: ".implode(", ", array_unique($depars));
+        }
+        return $errores;
+    }
 }

@@ -310,3 +310,14 @@ function imprimirResultadoBusqueda(){
     $retorno .= '<div id="page-selection"></div></center>';
     return $retorno;
 }
+
+function imprimirMensajeFaltantes($err){
+    $retorno = '<div class="panel panel-danger">'.
+            '<div class="panel-heading">Conflictos</div>'.
+            '<ul class="list-group">';
+    foreach ($err as $error){
+        $retorno.= '<li class="list-group-item">'.$error.'</li>';
+    }
+    $retorno .= '</ul></div>';
+    return $retorno;
+}

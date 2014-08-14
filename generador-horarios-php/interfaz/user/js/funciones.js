@@ -573,8 +573,10 @@ function generarHorario(){
             success: function(data){
                 var msj = jQuery.parseJSON(data);
                 if(msj !== 0){
-                    bootbox.alert("Error en generacion de horario: "+data);
                     limpiarMain();
+                    bootbox.alert(msj,function(){
+                        window.location.href = 'index.php';
+                    });
                 } else{
                     limpiarMain();
                     addFiltro();
