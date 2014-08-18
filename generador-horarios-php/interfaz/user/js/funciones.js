@@ -18,6 +18,10 @@ var areaHTML="";
 
 $(function (){
     
+    $(document).on("click","#goToIndex",function(){
+        window.location.href = 'index.php';
+    });
+    
     $(document).on("click","#aprobar",function(){
         $("#mensaje_modal_config").html("");
         var btn = $(this);
@@ -42,7 +46,7 @@ $(function (){
             }
         }).always(function(){
             btn.button('reset');
-        });;                
+        });;            
     });
     
     $(document).on("click","#generarHorario",function(){

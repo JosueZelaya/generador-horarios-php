@@ -8,7 +8,7 @@
         </div>
         <div class="collapse navbar-collapse" id="enlacesBarra">
             <ul class="nav navbar-nav navbar-right">                
-                <li><a class="active" href="#" >Inicio</a></li>
+                <li><a class="active" href="#" id="goToIndex">Inicio</a></li>
                 <li><a href="#" >Acerca de</a></li>
                 <li><a href="#" >Contactanos</a></li>
                 <li class="dropdown">
