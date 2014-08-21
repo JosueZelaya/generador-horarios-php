@@ -15,6 +15,7 @@ chdir(dirname(__FILE__));
     <title>Horario de Docentes</title>
     <link rel="stylesheet" type="text/css" href="../../js/jquery-ui/css/smoothness/css/smoothness/jquery-ui-1.10.4.custom.min.css">
     <link rel="stylesheet" type="text/css" href="../../js/jqwidgets/styles/jqx.base.css" />
+    <link rel="stylesheet" type="text/css" href="../../js/jqwidgets/styles/jqx.bootstrap.css" />
     <link href="css/index.css" rel="stylesheet" type="text/css">
     <link rel="stylesheet" type="text/css" href="../../css/font-awesome.min.css" />
     <link rel="stylesheet" type="text/css" href="../../bootstrap/css/bootstrap.min.css" />

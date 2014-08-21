@@ -22,8 +22,10 @@ $(document).ready(function() {
             source: dataAdapter,
             width: '50%',
             height: 25,
+            theme: 'bootstrap',
             autoComplete: true,
             searchMode: 'containsignorecase',
+            placeHolder: 'Nombre docente',
             displayMember: 'Name',
             valueMember: 'Id'
     });
@@ -43,15 +45,6 @@ $(document).ready(function() {
                         $("#mostrarHorario").html(msj);
                     }
                 });
-            }
-        }
-    });
-    
-    $('#cmbDocentes').on('unselect', function (event) {
-        var args = event.args;
-        if (args != undefined) {
-            var item = event.args.item; if (item != null) {
-                idDocente = 0;
             }
         }
     });
