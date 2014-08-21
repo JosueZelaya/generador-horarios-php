@@ -14,13 +14,14 @@ ManejadorSesion::sec_session_start();
         <link href="../bootstrap/xeditable/css/bootstrap-editable.css" rel="stylesheet">                
         <!-- Estilo de pagina -->
         <link href="css/index.css" rel="stylesheet" type="text/css">
-    
+        <!-- FontAwesome -->
+        <link rel="stylesheet" href="../css/font-awesome.min.css">
     </head>
     <body>                        
         <?php if (ManejadorSesion::comprobar_sesion() == true) :
                 include 'menuPrincipal.php';
         ?>
-        <div id="mostrarHorario">            
+        <div id="mostrarHorario">
             <?php                                                          
                 include_once './mostrarHorario.php';
             ?>

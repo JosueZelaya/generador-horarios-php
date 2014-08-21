@@ -58,6 +58,26 @@ abstract class ManejadorDocentes{
         return $horario;
     }
     
+    public static function horarioDocenteEnDia($horario,$tabla,$dias){
+        $horasCompletas = $dias[0]->getHoras();
+        if($horario != null){
+            $horasDoc = array_reverse($horario[0]->getHoras());
+            for($i=0;$i<count($horasCompletas);$i++){
+                if(count($horasDoc)>0 && $horasCompletas[$i]->getIdHora() == end($horasDoc)->getIdHora()){
+                    $tabla[1][$i] = array("texto"=>"Hora asignada","idHora"=>$horasCompletas[$i]->getIdHora());
+                    array_pop($horasDoc);
+                } else{
+                    $tabla[1][$i] = array("texto"=>"","idHora"=>$horasCompletas[$i]->getIdHora());
+                }
+            }
+        } else{
+            for($i=0;$i<count($horasCompletas);$i++){
+                $tabla[1][$i] = array("texto"=>"","idHora"=>$horasCompletas[$i]->getIdHora());
+            }
+        }
+        return $tabla;
+    }
+
     /** Asumiendo que un docente tiene el mismo horario de lunes a viernes, se busca la hora comun entre los docentes que imparten un solo grupo
      *  para determinar el inicio de la clase
      * @param Docente[] $docentes
@@ -190,6 +210,41 @@ abstract class ManejadorDocentes{
                             "id"=>$row['id_docente']);
         }        
         return $datos;
+    }
+    
+    public static function getDocentesDepartamento($idDepar){
+        $datos = array();
+        if($idDepar=="todos"){
+            $consulta = "SELECT * FROM docentes WHERE activo='t'";
+        }else{
+            $consulta = "SELECT * FROM docentes WHERE id_depar='$idDepar' AND activo='t'";
+        }        
+        $respuesta = conexion::consulta($consulta);
+        while ($row = pg_fetch_array($respuesta)){
+            $datos[] = array("Name"=>$row['nombres']." ".$row['apellidos'],
+                            "Id"=>$row['id_docente']);
+        }        
+        return $datos;
+    }
+    
+    public static function guardarHorarioDocente($año,$ciclo,$desde,$hasta,$idDocente){
+        try{
+            self::borrarHorarioDocente($idDocente, $año, $ciclo);
+            for($i=1;$i<=5;$i++){
+                for($j=$desde;$j<=$hasta;$j++){
+                    $query = "INSERT INTO docente_horario VALUES($idDocente,$i,$j,$año,$ciclo)";
+                    Conexion::consulta($query);
+                }
+            }
+            return true;
+        } catch (Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+    
+    public static function borrarHorarioDocente($idDocente,$año,$ciclo){
+        $query = "DELETE FROM docente_horario WHERE id_docente=$idDocente AND año=$año AND ciclo=$ciclo";
+        Conexion::consulta($query);
     }
     
 }

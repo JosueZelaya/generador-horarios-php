@@ -56,7 +56,6 @@ and open the template in the editor.
     
     
     <script type="text/javascript" src="../js/jquery-ui/jquery-1.10.2.js"></script>
-    <script type="text/javascript" src="../js/jquery-ui/jquery-1.10.2.js"></script>
     <script type="text/javascript" src="../js/jquery-ui/ui/jquery.ui.core.js"></script>
     <script type="text/javascript" src="../js/jquery-ui/ui/jquery.ui.widget.js"></script>
     <script type="text/javascript" src="../js/jquery-ui/ui/jquery.ui.mouse.js"></script>

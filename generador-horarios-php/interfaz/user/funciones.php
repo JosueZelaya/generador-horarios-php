@@ -161,6 +161,25 @@ function create_model($facultad){
     return $modelo;
 }
 
+function crearModelDia($horas){
+    $cols = 2;
+    $rows = count($horas);
+    $modelo = array();
+    for($i=0;$i<$cols;$i++){
+        $modelo[$i] = array();
+        for($y=0;$y<$rows;$y++){
+            if ($i == 0) {
+                $inicio = $horas[$y]->getInicio();
+                $fin = $horas[$y]->getFin();
+                $modelo[$i][$y] = "$inicio - $fin";
+                continue;
+            }
+            $modelo[$i][$y] = '';
+        }
+    }
+    return $modelo;
+}
+
 function imprimirMallaMateria($horario){
     echo '<table class="table table-striped table-hover">'.
         '<thead>'.
@@ -236,6 +255,27 @@ function imprimirMallaParaReservaciones($tabla){
         }
         echo '</div>';
     }        
+}
+
+function imprimirMallaHorarioDocente($tabla){
+    $retorno = "";
+    for($i=0;$i<count($tabla);$i++){
+        $retorno .= "<div class='col'>";
+        for($j=0;$j<count($tabla[$i]);$j++){                
+            if($i==0){
+                $retorno .= "<div class='celda'><div class='centrar'>".$tabla[$i][$j]."</div></div>";
+            }else{
+                $celda = $tabla[$i][$j];
+                if($celda['texto']!=""){
+                    $retorno .= "<div id='hora".$celda['idHora']."' class='celda hora hora-asignada' data-hora='".$celda['idHora']."'><div class='centrar'>".$celda['texto']."</div></div>";
+                } else{
+                    $retorno .= "<div id='hora".$celda['idHora']."' class='celda hora' data-hora='".$celda['idHora']."'><div class='centrar'>Hora libre</div></div>";
+                }
+            }
+        }
+        $retorno .= '</div>';
+    }
+    return $retorno;
 }
 
 //Obtiene nombre de dia; se usa en imprimirMallaParaReservaciones

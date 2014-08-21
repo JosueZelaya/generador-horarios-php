@@ -130,7 +130,7 @@ $(document).ready(function() {
                                 
             }
         });
-    });  
+    });
     
     $(document).on("click",".quitarDocente",function(){
         quitarDocente($(this).attr('indiceDocente'),$(this).attr('docente'));

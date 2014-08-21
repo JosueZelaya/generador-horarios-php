@@ -18,7 +18,7 @@ chdir(dirname(__FILE__));
 <!-- Estilo de pagina -->
 <link href="css/index.css" rel="stylesheet" type="text/css">
 <!-- FontAwesome -->
-<link rel="stylesheet" href="css/font-awesome.min.css">
+<link rel="stylesheet" href="../css/font-awesome.min.css">
 </head>
 <body>
 

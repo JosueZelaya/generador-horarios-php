@@ -39,7 +39,7 @@ if($_GET){
         $aulas = $facultad->getAulas();
     }
     if(isset($_GET['aula'])){
-        $aula = $_GET['aula'];  
+        $aula = $_GET['aula'];
     }
 }else{
     $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos($año,$ciclo), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),$año,$ciclo);
@@ -72,11 +72,11 @@ if($_GET){
         }
         ?>
     </select>     
-    <a class="btn btn-lg btn-primary" href="#" id='reservarHoras'>
-        <i class="fa fa-retweet fa-lg"></i> Reservar
+    <a class="btn btn-primary" href="#" id='reservarHoras'>
+        <i class="fa fa-lock fa-lg"></i> Reservar
     </a>                    
-    <a class="btn btn-lg btn-primary" href="#" id='liberarHoras'>
-        <i class="fa fa-retweet fa-lg"></i> Liberar
+    <a class="btn btn-primary" href="#" id='liberarHoras'>
+        <i class="fa fa-chain-broken fa-lg"></i> Liberar
     </a> 
 </form>            
 <br/>
