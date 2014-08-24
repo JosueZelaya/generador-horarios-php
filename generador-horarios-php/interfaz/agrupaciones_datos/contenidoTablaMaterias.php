@@ -17,12 +17,17 @@ if($_GET){
         $agrupacion_a_buscar = $_GET['agrupacion'];               
         $arrayMaterias = ManejadorAgrupaciones::getAgrupacionesPorNombre($agrupacion_a_buscar,$_SESSION['id_departamento'],$año,$ciclo);            
         $idAgrupaciones=array();
+        $materias_agregadas=array();
         $arrayMateriasFiltradas = array();
         foreach ($arrayMaterias as $materia) {           
             if(yaSeContoAgrupacion($materia->getIdAgrupacion(),$idAgrupaciones)){
+                if(!yaSeAgregoMateria($materia, $materias_agregadas)){
                 agregar_materia_a_la_agrupacion($materia->getIdAgrupacion(),$arrayMaterias,$materia->getNombre()." carrera: ".$materia->getCarrera());
+                    $materias_agregadas[] = $materia;
+                }                
             }else{
                 $arrayMateriasFiltradas[] = $materia;
+                $materias_agregadas[] = $materia;
                 $idAgrupaciones[]=$materia->getIdAgrupacion();
             }
         }
@@ -31,12 +36,17 @@ if($_GET){
     }else{
         $arrayMaterias = ManejadorAgrupaciones::getAgrupacionesDepartamento($_SESSION['id_departamento'],$año,$ciclo);
         $idAgrupaciones=array();
+        $materias_agregadas=array();
         $arrayMateriasFiltradas = array();
         foreach ($arrayMaterias as $materia) {           
             if(yaSeContoAgrupacion($materia->getIdAgrupacion(),$idAgrupaciones)){
+                if(!yaSeAgregoMateria($materia, $materias_agregadas)){
                 agregar_materia_a_la_agrupacion($materia->getIdAgrupacion(),$arrayMaterias,$materia->getNombre()." carrera: ".$materia->getCarrera());
+                    $materias_agregadas[] = $materia;
+                }                
             }else{
                 $arrayMateriasFiltradas[] = $materia;
+                $materias_agregadas[] = $materia;
                 $idAgrupaciones[]=$materia->getIdAgrupacion();
             }
         }
@@ -96,6 +106,15 @@ for ($i = $inicio; $i < $fin; $i++) {
 function yaSeContoAgrupacion($idAgrupacion,$idAgrupaciones){
     foreach ($idAgrupaciones as $id) {
         if($idAgrupacion==$id){            
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+function yaSeAgregoMateria($materia,$materias){    
+    foreach ($materias as $mat) {
+        if($materia->getCodigo()==$mat->getCodigo() && $materia->getCarrera()==$mat->getCarrera() && $materia->getPlan_estudio()==$mat->getPlan_estudio()){            
             return TRUE;
         }
     }
