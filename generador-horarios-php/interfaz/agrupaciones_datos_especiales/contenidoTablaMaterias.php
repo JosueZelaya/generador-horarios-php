@@ -17,13 +17,18 @@ if($_GET){
         $agrupacion_a_buscar = $_GET['agrupacion'];               
         $arrayMaterias = ManejadorAgrupaciones::getAgrupacionesPorNombre($agrupacion_a_buscar,$_SESSION['id_departamento'],$año,$ciclo);            
         $idAgrupaciones=array();
+        $materias_agregadas=array();
         $arrayMateriasFiltradas = array();
         foreach ($arrayMaterias as $materia) {           
             if(yaSeContoAgrupacion($materia->getIdAgrupacion(),$idAgrupaciones)){
-                agregar_materia_a_la_agrupacion($materia->getIdAgrupacion(),$arrayMaterias,$materia->getNombre()." carrera: ".$materia->getCarrera());
+                if(!yaSeAgregoMateria($materia, $materias_agregadas)){
+                    agregar_materia_a_la_agrupacion($materia->getIdAgrupacion(),$arrayMaterias,$materia->getNombre()." carrera: ".$materia->getCarrera());
+                    $materias_agregadas[] = $materia;
+                }                
             }else{
                 $arrayMateriasFiltradas[] = $materia;
                 $idAgrupaciones[]=$materia->getIdAgrupacion();
+                $materias_agregadas[] = $materia;
             }
         }
         $_SESSION['contenido_tabla'] = $arrayMateriasFiltradas;        
@@ -31,13 +36,18 @@ if($_GET){
     }else{
         $arrayMaterias = ManejadorAgrupaciones::getAgrupacionesDepartamento($_SESSION['id_departamento'],$año,$ciclo);
         $idAgrupaciones=array();
+        $materias_agregadas=array();
         $arrayMateriasFiltradas = array();
         foreach ($arrayMaterias as $materia) {           
             if(yaSeContoAgrupacion($materia->getIdAgrupacion(),$idAgrupaciones)){
-                agregar_materia_a_la_agrupacion($materia->getIdAgrupacion(),$arrayMaterias,$materia->getNombre()." carrera: ".$materia->getCarrera());
+                if(!yaSeAgregoMateria($materia, $materias_agregadas)){
+                    agregar_materia_a_la_agrupacion($materia->getIdAgrupacion(),$arrayMaterias,$materia->getNombre()." carrera: ".$materia->getCarrera());
+                    $materias_agregadas[] = $materia;
+                }                
             }else{
                 $arrayMateriasFiltradas[] = $materia;
                 $idAgrupaciones[]=$materia->getIdAgrupacion();
+                $materias_agregadas[] = $materia;
             }
         }
         $_SESSION['contenido_tabla'] = $arrayMateriasFiltradas;        
@@ -109,10 +119,18 @@ function yaSeContoAgrupacion($idAgrupacion,$idAgrupaciones){
     return FALSE;
 }
 
+function yaSeAgregoMateria($materia,$materias){    
+    foreach ($materias as $mat) {
+        if($materia->getCodigo()==$mat->getCodigo() && $materia->getCarrera()==$mat->getCarrera() && $materia->getPlan_estudio()==$mat->getPlan_estudio()){            
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
 function agregar_materia_a_la_agrupacion($id,$agrupaciones,$materia){
     foreach ($agrupaciones as $agrupacion) {
         if($agrupacion->getIdAgrupacion()==$id){
-//            $agrupacion->setMaterias($agrupacion->getMaterias().", ".$materia);
             $agrupacion->addMateria($materia);
             break;
         }
