@@ -26,10 +26,26 @@ if($_GET){
         echo json_encode("ok");
     } catch (Exception $ex) {
         echo json_encode($ex->getMessage());
+    }
+    $facultad="";
+    if(isset($_SESSION['reservaciones_facultad'])){
+        $facultad = $_SESSION['reservaciones_facultad'];
+    }else{
+        $facultad = asignarInfo($año, $ciclo);
     }    
-    $facultad = $_SESSION['facultad'];
     $reservaciones = ManejadorReservaciones::getTodasReservaciones($año,$ciclo);
     ManejadorReservaciones::asignarRerservaciones($reservaciones, $facultad->getAulas());
+}
+
+function asignarInfo($año,$ciclo) {
+    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos(), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),$año,$ciclo);
+    $facultad->setAgrupaciones(ManejadorAgrupaciones::getAgrupaciones($año, $ciclo, $facultad->getAulas()));
+    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos(),$año,$ciclo,$facultad->getDepartamentos()));
+    $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
+    $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($ciclo,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
+    ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
+    return $facultad;
 }
 
 function getIdDia($dia){
