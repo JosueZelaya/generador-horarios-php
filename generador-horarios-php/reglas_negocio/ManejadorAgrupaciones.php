@@ -179,7 +179,7 @@ abstract class ManejadorAgrupaciones {
             $materia->setOtrosAlumnos($row['otros_alumnos']);
             $materia->setAlumnosGrupo($row['alumnos_grupo']);
             $materia->setNumeroGruposLaboratorio($row['num_grupos_l']);
-            $materia->setNumeroGruposDiscusion($row['num_grupos_d']);https://www.facebook.com/paula.gonzarestrepo
+            $materia->setNumeroGruposDiscusion($row['num_grupos_d']);
             $materia->addMateria($row['nombre_materia']." carrera: ".$row['nombre_carrera']);
             $materia->setCarrera($row['nombre_carrera']);
             $materia->setUnidadesValorativas($row['uv']);
