@@ -10,6 +10,7 @@ include_once '../acceso_datos/Conexion.php';
 require_once 'Agrupacion.php';
 require_once 'MateriaAgrupacion.php';
 require_once 'ManejadorMaterias.php';
+require_once 'Facultad.php';
 
 abstract class ManejadorAgrupaciones {
  
@@ -382,54 +383,66 @@ abstract class ManejadorAgrupaciones {
         }
     }
     
-    public static function modificarAgrupacion($id,$campo,$dato,$año,$ciclo){
+    public static function modificarAgrupacion($id,$campo,$dato,$año,$ciclo){        
         if($campo=="num_grupos_d"){
-            $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='3'";
-            Conexion::consulta($consulta);
-            $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='3'";
-            Conexion::consulta($consulta);
-            if($dato!='0' || $dato!='00'){
-                $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
-                for ($i = 1; $i <= $dato; $i++) {
-                    if($i == $dato){
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3)";
-                    }else{
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3),";                    
-                    }
-                }                         
-                Conexion::consulta2($consulta);
+            if(Facultad::hayDatosEnHorario($año, $ciclo)){
+                throw new Exception("Error: No se permite modificar este campo porque ya hay un horario generado.");
+            }else{
+                $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='3'";
+                Conexion::consulta($consulta);
+                $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='3'";
+                Conexion::consulta($consulta);
+                if($dato!='0' || $dato!='00'){
+                    $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
+                    for ($i = 1; $i <= $dato; $i++) {
+                        if($i == $dato){
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3)";
+                        }else{
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3),";                    
+                        }
+                    }                         
+                    Conexion::consulta2($consulta);
+                }            
             }            
         }else if($campo=="num_grupos_l"){
-            $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='2'";
-            Conexion::consulta($consulta);
-            $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='2'";
-            Conexion::consulta($consulta);
-            if($dato!='0' || $dato!='00'){
-                $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
-                for ($i = 1; $i <= $dato; $i++) {
-                    if($i == $dato){
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2)";
-                    }else{
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2),";                    
-                    }
-                }                         
-                Conexion::consulta2($consulta);            
+            if(Facultad::hayDatosEnHorario($año, $ciclo)){
+                throw new Exception("Error: No se permite modificar este campo porque ya hay un horario generado.");
+            }else{
+                $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='2'";
+                Conexion::consulta($consulta);
+                $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='2'";
+                Conexion::consulta($consulta);
+                if($dato!='0' || $dato!='00'){
+                    $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
+                    for ($i = 1; $i <= $dato; $i++) {
+                        if($i == $dato){
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2)";
+                        }else{
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2),";                    
+                        }
+                    }                         
+                    Conexion::consulta2($consulta);            
+                }            
             }            
         }else if($campo=="num_grupos"){
-            $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='1'";
-            Conexion::consulta($consulta);
-            $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='1'";
-            Conexion::consulta($consulta);
-            if($dato!='0' || $dato!='00'){
-                $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
-                for ($i = 1; $i <= $dato; $i++) {
-                    if($i == $dato){
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1)";
-                    }else{
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1),";                    
-                    }
-                }                         
-                Conexion::consulta2($consulta);
+            if(Facultad::hayDatosEnHorario($año, $ciclo)){
+                throw new Exception("Error: No se permite modificar este campo porque ya hay un horario generado.");
+            }else{
+                $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='1'";
+                Conexion::consulta($consulta);
+                $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='1'";
+                Conexion::consulta($consulta);
+                if($dato!='0' || $dato!='00'){
+                    $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
+                    for ($i = 1; $i <= $dato; $i++) {
+                        if($i == $dato){
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1)";
+                        }else{
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1),";                    
+                        }
+                    }                         
+                    Conexion::consulta2($consulta);
+                }            
             }            
         }else{
             $consulta = "UPDATE agrupacion SET ".$campo."='".$dato."' WHERE id_agrupacion='".$id."'";
