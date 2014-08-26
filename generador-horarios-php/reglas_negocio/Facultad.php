@@ -437,6 +437,16 @@ class Facultad {
     
     public static function comprobarDatosGeneracion($año,$ciclo){
         $errores = array();
+        //Determinar si hay agrupaciones sin grupos
+        $consulta="select id_agrupacion,nombre_depar from materia_agrupacion natural join carreras natural join departamentos where id_agrupacion not in (select id_agrupacion from grupo where año=$año and ciclo=$ciclo) and año=$año and ciclo=$ciclo";
+        $respuesta = pg_fetch_all(Conexion::consulta($consulta));
+        if(is_array($respuesta)){
+            $depars = array();
+            foreach ($respuesta as $fila){
+                $depars[] = $fila['nombre_depar'];
+            }
+            $errores[] = "Existen materias sin grupos en los departamentos: ".implode(", ", array_unique($depars));
+        }
         //Determinar si hay grupos sin docente asignado
         $consulta="(select id,id_agrupacion,año,ciclo,tipo,nombre_depar from grupo natural join materia_agrupacion natural join carreras natural join departamentos where año=$año and ciclo=$ciclo) except (select distinct id_grupo,id_agrupacion,año,ciclo,tipo_grupo,nombre_depar from docente_grupo natural join materia_agrupacion natural join carreras natural join departamentos where año=$año and ciclo=$ciclo)";
         $respuesta = pg_fetch_all(Conexion::consulta($consulta));
