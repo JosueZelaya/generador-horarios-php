@@ -10,6 +10,7 @@ include_once '../acceso_datos/Conexion.php';
 require_once 'Agrupacion.php';
 require_once 'MateriaAgrupacion.php';
 require_once 'ManejadorMaterias.php';
+require_once 'Facultad.php';
 
 abstract class ManejadorAgrupaciones {
  
@@ -132,7 +133,7 @@ abstract class ManejadorAgrupaciones {
             $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion WHERE nombre_materia iLIKE '$nombre' AND año='$año' AND ciclo='$ciclo';";
             $respuesta = conexion::consulta($consulta); 
 
-            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
+            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.plan_estudio,m.id_carrera,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
             $cont=1;
             while ($row = pg_fetch_array($respuesta)){
                 $id_agrupacion = $row['id_agrupacion'];
@@ -152,7 +153,7 @@ abstract class ManejadorAgrupaciones {
             $consulta = "SELECT id_agrupacion FROM materias NATURAL JOIN materia_agrupacion NATURAL JOIN carreras WHERE nombre_materia iLIKE '$nombre' AND id_depar='$idDepartamento' AND año='$año' AND ciclo='$ciclo';";
             $respuesta = conexion::consulta($consulta); 
 
-            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
+            $consulta = "SELECT DISTINCT a.id_agrupacion,a.alumnos_nuevos,a.otros_alumnos,a.alumnos_grupo,a.horas_clase,a.horas_lab_semana,a.horas_discu_semana,a.lab_dis_alter,m.cod_materia,m.plan_estudio,m.id_carrera,m.uv,m.nombre_materia,ma.ciclo,ma.año,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='1') AS num_grupos,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='2') AS num_grupos_l,(SELECT COUNT(*) FROM grupo WHERE id_agrupacion=a.id_agrupacion AND tipo='3') AS num_grupos_d,c.nombre_carrera,d.nombre_depar,d.id_depar FROM agrupacion AS a NATURAL JOIN materia_agrupacion AS ma NATURAL JOIN materias AS m NATURAL JOIN carreras AS c NATURAL JOIN departamentos AS d WHERE ";
             $cont=1;
             while ($row = pg_fetch_array($respuesta)){
                 $id_agrupacion = $row['id_agrupacion'];
@@ -170,6 +171,7 @@ abstract class ManejadorAgrupaciones {
         while ($row = pg_fetch_array($respuesta)){
             $materia = new MateriaAgrupacion();
             $materia->setCodigo($row['cod_materia']);
+            $materia->setPlan_estudio($row['plan_estudio']);
             $materia->setNombre($row['nombre_materia']);
             $materia->setDepartamento(new Departamento($row['id_depar'],$row['nombre_depar']));
             $materia->setNumeroGrupos($row['num_grupos']);
@@ -381,54 +383,66 @@ abstract class ManejadorAgrupaciones {
         }
     }
     
-    public static function modificarAgrupacion($id,$campo,$dato,$año,$ciclo){
+    public static function modificarAgrupacion($id,$campo,$dato,$año,$ciclo){        
         if($campo=="num_grupos_d"){
-            $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='3'";
-            Conexion::consulta($consulta);
-            $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='3'";
-            Conexion::consulta($consulta);
-            if($dato!='0' || $dato!='00'){
-                $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
-                for ($i = 1; $i <= $dato; $i++) {
-                    if($i == $dato){
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3)";
-                    }else{
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3),";                    
-                    }
-                }                         
-                Conexion::consulta2($consulta);
+            if(Facultad::hayDatosEnHorario($año, $ciclo)){
+                throw new Exception("Error: No se permite modificar este campo porque ya hay un horario generado.");
+            }else{
+                $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='3'";
+                Conexion::consulta($consulta);
+                $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='3'";
+                Conexion::consulta($consulta);
+                if($dato!='0' || $dato!='00'){
+                    $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
+                    for ($i = 1; $i <= $dato; $i++) {
+                        if($i == $dato){
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3)";
+                        }else{
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,3),";                    
+                        }
+                    }                         
+                    Conexion::consulta2($consulta);
+                }            
             }            
         }else if($campo=="num_grupos_l"){
-            $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='2'";
-            Conexion::consulta($consulta);
-            $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='2'";
-            Conexion::consulta($consulta);
-            if($dato!='0' || $dato!='00'){
-                $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
-                for ($i = 1; $i <= $dato; $i++) {
-                    if($i == $dato){
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2)";
-                    }else{
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2),";                    
-                    }
-                }                         
-                Conexion::consulta2($consulta);            
+            if(Facultad::hayDatosEnHorario($año, $ciclo)){
+                throw new Exception("Error: No se permite modificar este campo porque ya hay un horario generado.");
+            }else{
+                $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='2'";
+                Conexion::consulta($consulta);
+                $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='2'";
+                Conexion::consulta($consulta);
+                if($dato!='0' || $dato!='00'){
+                    $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
+                    for ($i = 1; $i <= $dato; $i++) {
+                        if($i == $dato){
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2)";
+                        }else{
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,2),";                    
+                        }
+                    }                         
+                    Conexion::consulta2($consulta);            
+                }            
             }            
         }else if($campo=="num_grupos"){
-            $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='1'";
-            Conexion::consulta($consulta);
-            $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='1'";
-            Conexion::consulta($consulta);
-            if($dato!='0' || $dato!='00'){
-                $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
-                for ($i = 1; $i <= $dato; $i++) {
-                    if($i == $dato){
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1)";
-                    }else{
-                        $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1),";                    
-                    }
-                }                         
-                Conexion::consulta2($consulta);
+            if(Facultad::hayDatosEnHorario($año, $ciclo)){
+                throw new Exception("Error: No se permite modificar este campo porque ya hay un horario generado.");
+            }else{
+                $consulta = "DELETE FROM docente_grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo_grupo='1'";
+                Conexion::consulta($consulta);
+                $consulta = "DELETE FROM grupo WHERE id_agrupacion='".$id."' AND año='".$año."' AND ciclo='".$ciclo."' AND tipo='1'";
+                Conexion::consulta($consulta);
+                if($dato!='0' || $dato!='00'){
+                    $consulta = "INSERT INTO grupo (id,id_agrupacion,año,ciclo,tipo) VALUES ";            
+                    for ($i = 1; $i <= $dato; $i++) {
+                        if($i == $dato){
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1)";
+                        }else{
+                            $consulta = $consulta."(".$i.",".$id.",$año,$ciclo,1),";                    
+                        }
+                    }                         
+                    Conexion::consulta2($consulta);
+                }            
             }            
         }else{
             $consulta = "UPDATE agrupacion SET ".$campo."='".$dato."' WHERE id_agrupacion='".$id."'";

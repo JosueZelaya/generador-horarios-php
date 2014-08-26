@@ -42,18 +42,7 @@ if($_GET){
         $aula = $_GET['aula'];
     }
 }else{
-    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos($año,$ciclo), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),$año,$ciclo);
-    $facultad->setAgrupaciones(ManejadorAgrupaciones::getAgrupaciones($año, $ciclo,$facultad->getAulas()));
-    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos(),$año,$ciclo,$facultad->getDepartamentos()));
-    $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
-    $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
-    if($ciclo==1){
-        $cicloPar=FALSE;
-    }  else {
-        $cicloPar=TRUE;
-    }
-    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($cicloPar,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
-    ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
+    $facultad = asignarInfo($año, $ciclo);
     $_SESSION['reservaciones_facultad'] = $facultad;
     $aulas = $facultad->getAulas();
     $aula = $aulas[0]->getNombre();
@@ -85,3 +74,14 @@ if($_GET){
 $modelo = create_model($facultad);         
 $tabla = ManejadorAulas::getHorarioEnAula($aulas,$aula,$modelo);                
 imprimirMallaParaReservaciones($tabla);
+
+function asignarInfo($año,$ciclo) {
+    $facultad = new Facultad(ManejadorDepartamentos::getDepartamentos(),  ManejadorCargos::obtenerTodosCargos(), ManejadorReservaciones::getTodasReservaciones($año,$ciclo),$año,$ciclo);
+    $facultad->setAgrupaciones(ManejadorAgrupaciones::getAgrupaciones($año, $ciclo, $facultad->getAulas()));
+    $facultad->setDocentes(ManejadorDocentes::obtenerTodosDocentes($facultad->getCargos(),$año,$ciclo,$facultad->getDepartamentos()));
+    $facultad->setCarreras(ManejadorCarreras::getTodasCarreras($facultad->getDepartamentos()));
+    $facultad->setGrupos(ManejadorGrupos::obtenerGrupos($año, $ciclo, $facultad->getAgrupaciones(), $facultad->getDocentes()));
+    $facultad->setMaterias(ManejadorMaterias::getTodasMaterias($ciclo,$año,$facultad->getAgrupaciones(),$facultad->getCarreras(),$facultad->getAulas()));
+    ManejadorReservaciones::asignarRerservaciones($facultad->getReservaciones(),$facultad->getAulas());
+    return $facultad;
+}
