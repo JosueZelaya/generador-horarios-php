@@ -21,19 +21,23 @@ abstract class ManejadorPersonal{
                 $sql_consulta = "SELECT * FROM usuarios WHERE login='".$login."' AND habilitado='t'";                        
                 $respuesta = conexion::consulta2($sql_consulta);
                 $usuario = new Usuario();
-                $usuario->setlogin($respuesta['login']);                            
+                $usuario->setlogin($respuesta['login']);                     
+                $usuario->setId($respuesta['id_usuario']);
+                $password = $respuesta['password'];
                 //Si el password no está encriptado en la base de datos se encripta acá
                 //Borrar la siguiente línea si el password ya está encriptado en la BD
-                $password = hash('sha512',$respuesta['password']);                        
+                //$password = hash('sha512',$respuesta['password']);                        
                 $usuario->setPassword($password);
                 $usuario->setHabilitado($respuesta['habilitado']);
-                $usuario->setDepartamento(new Departamento("todos","todos"));
+                $usuario->setDepartamento(new Departamento("todos","todos"));                
             }else{
                 $usuario = new Usuario();
-                $usuario->setlogin($respuesta['login']);                            
+                $usuario->setlogin($respuesta['login']);  
+                $usuario->setId($respuesta['id_usuario']);
+                $password = $respuesta['password'];
                 //Si el password no está encriptado en la base de datos se encripta acá
                 //Borrar la siguiente línea si el password ya está encriptado en la BD
-                $password = hash('sha512',$respuesta['password']);                        
+                //$password = hash('sha512',$respuesta['password']);                        
                 $usuario->setPassword($password);
                 $usuario->setHabilitado($respuesta['habilitado']);
                 $usuario->setNombres($respuesta['nombres']);
@@ -50,10 +54,11 @@ abstract class ManejadorPersonal{
         $sql_consulta = "SELECT * FROM usuarios WHERE id_usuario='".$id."' AND habilitado='t'";                        
         $respuesta = conexion::consulta2($sql_consulta);
         $usuario = new Usuario();
-        $usuario->setlogin($respuesta['login']);                            
+        $usuario->setlogin($respuesta['login']);
+        $password = $respuesta['password'];
         //Si el password no está encriptado en la base de datos se encripta acá
         //Borrar la siguiente línea si el password ya está encriptado en la BD
-        $password = hash('sha512',$respuesta['password']);                        
+        //$password = hash('sha512',$respuesta['password']);                        
         $usuario->setPassword($password);
         $usuario->setHabilitado($respuesta['habilitado']);
         $usuario->setId($id);
@@ -384,4 +389,23 @@ abstract class ManejadorPersonal{
         }
         return true;
     }
+    
+    public static function cambiarPassword($usuario,$passActual,$passNuevo){
+        if($passActual!=$passNuevo){
+            if($usuario->getPassword()==hash('sha512',$passActual)){
+                if($passNuevo!=""){
+                    $usuario->setPassword(hash('sha512',$passNuevo));
+                    $usuario->actualizarPassword();
+                }else{
+                    throw new Exception("Debe ingresar un nuevo password");
+                }            
+            }else{
+                throw new Exception("Su password actual no coincide");
+            }
+        }else{
+            throw new Exception("Su nuevo password debe ser diferente al actual");
+        }        
+    }
+    
+    
 }

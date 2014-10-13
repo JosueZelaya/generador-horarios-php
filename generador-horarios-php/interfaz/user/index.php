@@ -153,10 +153,11 @@ chdir(dirname(__FILE__));
     </div>
  </div>
  <?php include_once 'adminUsersModal.php'; ?> 
- <?php include_once './adminMateriasModal.php'; ?>
- <?php include_once './adminAulasModal.php'; ?>
- <?php include_once './adminDepartamentosModal.php'; ?>
- <?php include_once './configuracionModal.php'; ?>
+ <?php include_once 'adminMateriasModal.php'; ?>
+ <?php include_once 'adminAulasModal.php'; ?>
+ <?php include_once 'adminDepartamentosModal.php'; ?>
+ <?php include_once 'configuracionModal.php'; ?>
+ <?php include_once 'cambiarPasswordModal.php'; ?>
  <?php else : ?> 
     <p>
         <span class="">Usted no está autorizado para acceder a esta página.</span> Por favor <a href="../index.php">Autentíquese</a>.
@@ -167,6 +168,7 @@ chdir(dirname(__FILE__));
 <script type="text/javascript" src="../js/jquery-ui/jquery-1.10.2.js"></script>  
 <script type="text/javascript" src="../bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="js/funciones.js"></script>
+<script type="text/javascript" src="js/cambiarPassword.js"></script>
 <script type="text/javascript" src="../js/bootbox.min.js"></script>
 <script type="text/javascript" src="../js/jquery.bootpag.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap.combobox.js"></script>

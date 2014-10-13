@@ -117,10 +117,21 @@ class Usuario{
         conexion::consulta($consulta);
     }
         
-    public function guardar(){
-         $consulta = "UPDATE usuarios SET login='".$this->login."',"
+    public function guardar(){        
+        $consulta = "UPDATE usuarios SET login='".$this->login."',"
         . "id_docente='".$this->docente->getIdDocente()."'"
         . " WHERE id_usuario='".$this->id."'";
-        conexion::consulta($consulta);
+        conexion::consulta($consulta);        
     }
+    
+    public function actualizarPassword(){
+        if($this->password!=""){
+            $consulta = "UPDATE usuarios SET password='".$this->password."'"            
+            . " WHERE id_usuario='".$this->id."'";
+            conexion::consulta($consulta);
+        }else{
+            throw new Exception("Debe definir un password");
+        }        
+    }
+    
 }

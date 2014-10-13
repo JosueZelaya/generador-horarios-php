@@ -14,8 +14,8 @@
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">Bienvenido <?php echo htmlentities($_SESSION['usuario_login']);?>! <b class="caret"></b></a>
                     <ul class="dropdown-menu">
-                      <li><a id="miInfo" class="miInfo" href="#">Mi información</a></li>
-                      <li><a href="#">Privacidad</a></li>
+                      <!--<li><a id="miInfo" class="miInfo" href="#">Mi información</a></li>-->
+                      <li><a href="#cambiar_password" data-toggle="modal">Cambiar Password</a></li>                    
                       <?php if($_SESSION['usuario_login'] == "admin") : ?>
                       <li><a href="#configuracion_modal" data-toggle="modal">Configuración</a></li>
                       <?php endif; ?>
