@@ -110,7 +110,7 @@ function imprimirMalla($tabla){
                         echo "<div class='celda-hora grupo ".$celda['codigo'].$celda['grupo'].$celda['tipo'].$i."' data-grupo='".$celda['codigo'].$celda['grupo'].$celda['tipo'].$i."' data-iniciobloque='".$celda['inicioBloque']."' data-finbloque='".$celda['finBloque']."' data-hora='".$celda['idHora']."' data-dia='".$celda['dia']."'>";
                         if($j<3){
                             echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='bottom' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
-                        }else{
+                    }else{
                             echo "<div rel='popover' class='verInfoGrupo centrar' data-toggle='popover' data-placement='top' data-content='".$contenido."'>".$celda['texto'].'</div></div>';
                         }                    
                     }else{
@@ -123,9 +123,7 @@ function imprimirMalla($tabla){
                             echo '</div>';
                         }                    
                     }                                        
-                }else{
-                    //¿hay que poner algo?
-                }                
+                }               
             }
         }
         echo '</div>';

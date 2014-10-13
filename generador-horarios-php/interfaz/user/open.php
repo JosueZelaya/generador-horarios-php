@@ -49,7 +49,7 @@ function showInit(){
 
 function construirHorario($año,$ciclo){
     $facultad = asignarInfo($año, $ciclo);
-    $query = "select cod_aula,(select d.nombre_dia from dias as d where d.id=a.id_dia),id_hora,id_agrupacion,id_grupo,(select t.tipo from tipos_grupos as t where t.id=a.tipo_grupo),id_docente from asignaciones as a natural join aulas where año=$año and ciclo=$ciclo order by id_agrupacion,id_grupo,tipo_grupo";
+    $query = "select cod_aula,(select d.nombre_dia from dias as d where d.id=a.id_dia) as nombre_dia,id_hora,id_agrupacion,id_grupo,(select t.tipo from tipos_grupos as t where t.id=a.tipo_grupo) as tipo,id_docente from asignaciones as a natural join aulas where año=$año and ciclo=$ciclo order by id_agrupacion,id_grupo,tipo_grupo";
     $resultados = Conexion::consulta($query);
     $id_grupo = 0;
     $tipo = "";
