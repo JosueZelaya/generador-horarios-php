@@ -169,7 +169,8 @@ abstract class ManejadorDocentes{
         return $docentes;
     }
     
-    public static function extraerGruposDeDocentes($docentes){        
+    public static function extraerGruposDeDocentes($docentes){
+        $grupos = array();
         foreach ($docentes as $docente) {
             $gruposDoc = $docente->getGrupos();
             foreach ($gruposDoc as $grupo) {
